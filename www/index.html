@@ -55,6 +55,7 @@ button{font-family:inherit;cursor:pointer}
 .cats-viewport{overflow:hidden;border-radius:24px}
 .cats-track{display:flex;transition:transform .55s ease;will-change:transform}
 .cats-page{min-width:100%;display:grid;grid-template-columns:repeat(4,1fr);gap:14px;padding:2px}
+.cats-page-mobile{display:none}
 .cat-card{background:var(--panel);border:1px solid #2e2e2e;border-radius:22px;padding:18px;box-shadow:var(--shadow);transition:transform .2s,border-color .2s;display:block}
 .cat-card:hover{transform:translateY(-3px);border-color:var(--accent)}
 .cat-card img{height:130px;width:100%;object-fit:contain;margin-bottom:14px}
@@ -65,18 +66,21 @@ button{font-family:inherit;cursor:pointer}
 .cats-dots{display:flex;gap:8px;justify-content:center;margin-top:14px}
 .cats-dot{width:8px;height:8px;border-radius:50%;background:#3a3a3a;border:none;padding:0}
 .cats-dot.is-active{background:var(--accent);width:22px;border-radius:4px}
+.cats-dots-mobile{display:none}
 
 .grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
 .buyers-carousel{position:relative}
 .buyers-viewport{overflow:hidden;border-radius:24px}
 .buyers-track{display:flex;transition:transform .55s ease;will-change:transform}
 .buyers-page{min-width:100%;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;padding:2px}
+.buyers-page-mobile{display:none}
 .buyers-arrow{width:40px;height:40px;border-radius:50%;border:1px solid #3a3a3a;background:#1a1a1a;color:#fff;font-size:20px;display:flex;align-items:center;justify-content:center;transition:background .2s,border-color .2s}
 .buyers-arrow:hover{background:var(--accent);border-color:var(--accent)}
 .buyers-arrow:disabled{opacity:.35;cursor:default}
 .buyers-dots{display:flex;gap:8px;justify-content:center;margin-top:14px}
 .buyers-dot{width:8px;height:8px;border-radius:50%;background:#3a3a3a;border:none;padding:0}
 .buyers-dot.is-active{background:var(--accent);width:22px;border-radius:4px}
+.buyers-dots-mobile{display:none}
 .product-card{background:var(--panel);border:1px solid #2d2d2d;border-radius:24px;overflow:hidden;box-shadow:var(--shadow);transition:border-color .2s}
 .product-card:hover{border-color:var(--accent)}
 .product-media{height:260px;background:#181818;padding:20px;display:flex;align-items:center;justify-content:center}
@@ -111,11 +115,13 @@ button{font-family:inherit;cursor:pointer}
 .reviews-head img.brand-logo{width:96px;height:auto}
 .rating{font-size:42px;font-weight:800;line-height:1}
 .stars{font-size:22px;letter-spacing:3px;color:#fff}
-.reviews-head .to-2gis{margin-left:auto;background:var(--accent);color:#fff;padding:10px 18px;border-radius:999px;font-weight:700;font-size:14px}
+.review-controls{display:flex;align-items:center;gap:8px;margin-left:auto}
+.reviews-head .to-2gis{background:var(--accent);color:#fff;padding:10px 18px;border-radius:999px;font-weight:700;font-size:14px}
 .reviews-head .to-2gis:hover{background:var(--accent-2)}
-.review-slider{display:flex;align-items:stretch;gap:12px}
+.review-slider{display:block}
 .review-viewport{flex:1;overflow:hidden;border-radius:20px}
 .review-track{display:flex;transition:transform .6s ease;will-change:transform}
+.review-track-mobile{display:none}
 .review-slide{min-width:100%;display:grid;grid-template-columns:repeat(2,1fr);gap:14px;padding:2px}
 .review-card{background:#191919;border:1px solid #2d2d2d;border-radius:18px;padding:26px;min-height:260px;display:flex;flex-direction:column}
 .review-author{font-weight:700;margin-bottom:6px;font-size:17px}
@@ -126,6 +132,7 @@ button{font-family:inherit;cursor:pointer}
 .review-dots{display:flex;gap:8px;justify-content:center;margin-top:18px}
 .review-dot{width:8px;height:8px;border-radius:50%;background:#3a3a3a;border:none;padding:0}
 .review-dot.is-active{background:var(--accent);width:22px;border-radius:4px}
+.review-dots-mobile{display:none}
 
 .contacts{display:grid;grid-template-columns:1fr 1.2fr;gap:24px;background:var(--panel);border:1px solid #2d2d2d;border-radius:30px;padding:26px;box-shadow:var(--shadow)}
 .contacts h2{margin:0 0 18px;font-size:32px;font-weight:800;letter-spacing:-.5px}
@@ -160,13 +167,23 @@ button{font-family:inherit;cursor:pointer}
   .search{grid-column:1/-1;width:100%}
   .nav{margin-left:0}
   .grid{grid-template-columns:1fr}
-  .buyers-page{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .buyers-page-desktop{display:none}
+  .buyers-page-mobile{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+  .buyers-dots-desktop{display:none}
+  .buyers-dots-mobile{display:flex}
   .catalog-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .section-title{font-size:26px}
   .section-controls{gap:8px}
   .section-link{font-size:13px}
-  .cats-page{grid-template-columns:repeat(2,1fr)}
+  .cats-page-desktop{display:none}
+  .cats-page-mobile{display:grid;grid-template-columns:repeat(2,1fr)}
+  .cats-dots-desktop{display:none}
+  .cats-dots-mobile{display:flex}
+  .review-track-desktop{display:none}
+  .review-track-mobile{display:flex}
   .review-slide{grid-template-columns:1fr}
+  .review-dots-desktop{display:none}
+  .review-dots-mobile{display:flex}
   .promo-card{grid-template-columns:1fr}
   .promo-title{font-size:28px}
   .promo-text{font-size:15px}
@@ -175,6 +192,9 @@ button{font-family:inherit;cursor:pointer}
   .hero-slide h2{font-size:32px}
   .hero-arrow{display:none}
   .cats-arrow,.review-arrow{width:36px;height:36px;font-size:18px}
+  .reviews-head{align-items:flex-start}
+  .review-controls{order:2;margin-left:0}
+  .reviews-head .to-2gis{order:3}
 }
 </style></head><body><div class="page">
     <div class="topbar">
@@ -216,9 +236,10 @@ button{font-family:inherit;cursor:pointer}
         </div>
       </div>
       <div class="cats-carousel" data-cats>
-        <div class="cats-viewport"><div class="cats-track"><div class="cats-page"><a class="cat-card" href="/catalog/iphone/"><img src="/assets/71075e37-9ee6-4009-862e-e0bf9c82514a" alt="iPhone" loading="lazy"><div class="cat-card-name">iPhone</div></a><a class="cat-card" href="/catalog/air-pods/"><img src="/assets/975099b9-5a58-45bf-a38a-37ff983f8fe1" alt="AirPods" loading="lazy"><div class="cat-card-name">AirPods</div></a><a class="cat-card" href="/catalog/mac/"><img src="/assets/f3ec2d64-21df-45ea-be75-1ace880cd186" alt="Mac" loading="lazy"><div class="cat-card-name">Mac</div></a><a class="cat-card" href="/catalog/apple-watch/"><img src="/assets/41d5931d-6cc9-42b6-81f6-b2390a9f6a11" alt="Apple Watch" loading="lazy"><div class="cat-card-name">Apple Watch</div></a></div><div class="cats-page"><a class="cat-card" href="/catalog/ipad/"><img src="/assets/d810e2af-3cde-48ee-9c67-f30de1e86a9a" alt="iPad" loading="lazy"><div class="cat-card-name">iPad</div></a><a class="cat-card" href="/catalog/samsung/"><img src="/assets/9d58180e-8bcd-47be-a7a8-7ef2e1ff2355" alt="Samsung" loading="lazy"><div class="cat-card-name">Samsung</div></a><a class="cat-card" href="/catalog/dyson/"><img src="/assets/41dcc123-98c7-498d-bdf4-565418d37405" alt="Dyson" loading="lazy"><div class="cat-card-name">Dyson</div></a><a class="cat-card" href="/catalog/igrovye-pristavki/"><img src="/assets/bbd91f35-88fe-4497-b634-d5c82c378ccb" alt="Игровые приставки" loading="lazy"><div class="cat-card-name">Игровые приставки</div></a></div><div class="cats-page"><a class="cat-card" href="/catalog/aksessuary/"><img src="/assets/cc4c8c05-7560-4cfd-a1be-edb5ad056ba1" alt="Аксессуары" loading="lazy"><div class="cat-card-name">Аксессуары</div></a><a class="cat-card" href="/catalog/google/"><img src="/assets/192666e9-6396-4e65-9530-5245012cd0ac" alt="Google Pixel" loading="lazy"><div class="cat-card-name">Google Pixel</div></a><a class="cat-card" href="/catalog/tehnika-dlya-doma/"><img src="/assets/08f6cc15-796a-47f5-a96b-46cfe4ce4548" alt="Техника для дома" loading="lazy"><div class="cat-card-name">Техника для дома</div></a><a class="cat-card" href="/catalog/akustika/"><img src="/assets/6705b852-549c-4f20-a531-06f6e632ead5" alt="Акустика" loading="lazy"><div class="cat-card-name">Акустика</div></a></div><div class="cats-page"><a class="cat-card" href="/catalog/fitnes-braslety/"><img src="/assets/64fb5601-ccb8-4115-81e9-3e20d250c508" alt="Фитнес-браслеты" loading="lazy"><div class="cat-card-name">Фитнес-браслеты</div></a><a class="cat-card" href="/catalog/smartfony/"><img src="/assets/185b5c27-19e8-4293-842f-7347919137b3" alt="Смартфоны" loading="lazy"><div class="cat-card-name">Смартфоны</div></a><a class="cat-card" href="/catalog/planshety/"><img src="/assets/fdb2b58c-6fe4-40d6-a13c-c36dbc0d27f2" alt="Планшеты" loading="lazy"><div class="cat-card-name">Планшеты</div></a><a class="cat-card" href="/catalog/smart-chasy/"><img src="/assets/5cb0475d-18d6-4b48-a7e4-cc210a5b58b0" alt="Смарт-часы" loading="lazy"><div class="cat-card-name">Смарт-часы</div></a></div><div class="cats-page"><a class="cat-card" href="/catalog/noutbuki/"><img src="/assets/73a0d3ce-5f49-49ea-8fe0-48ef8a88b034" alt="Ноутбуки" loading="lazy"><div class="cat-card-name">Ноутбуки</div></a><a class="cat-card" href="/catalog/fototehnika/"><img src="/assets/d907fca0-57bc-48c9-a05d-ce00c55561ff" alt="Фототехника" loading="lazy"><div class="cat-card-name">Фототехника</div></a><a class="cat-card" href="/catalog/sistemy-virtualnoy-realnosti/"><img src="/assets/b2e3c169-3978-442e-9e07-c39f939453c8" alt="Системы виртуальной реальности" loading="lazy"><div class="cat-card-name">Системы виртуальной реальности</div></a></div></div></div>
+        <div class="cats-viewport"><div class="cats-track"><div class="cats-page cats-page-desktop"><a class="cat-card" href="/catalog/iphone/"><img src="/assets/71075e37-9ee6-4009-862e-e0bf9c82514a" alt="iPhone" loading="lazy"><div class="cat-card-name">iPhone</div></a><a class="cat-card" href="/catalog/air-pods/"><img src="/assets/975099b9-5a58-45bf-a38a-37ff983f8fe1" alt="AirPods" loading="lazy"><div class="cat-card-name">AirPods</div></a><a class="cat-card" href="/catalog/mac/"><img src="/assets/f3ec2d64-21df-45ea-be75-1ace880cd186" alt="Mac" loading="lazy"><div class="cat-card-name">Mac</div></a><a class="cat-card" href="/catalog/apple-watch/"><img src="/assets/41d5931d-6cc9-42b6-81f6-b2390a9f6a11" alt="Apple Watch" loading="lazy"><div class="cat-card-name">Apple Watch</div></a></div><div class="cats-page cats-page-desktop"><a class="cat-card" href="/catalog/ipad/"><img src="/assets/d810e2af-3cde-48ee-9c67-f30de1e86a9a" alt="iPad" loading="lazy"><div class="cat-card-name">iPad</div></a><a class="cat-card" href="/catalog/samsung/"><img src="/assets/9d58180e-8bcd-47be-a7a8-7ef2e1ff2355" alt="Samsung" loading="lazy"><div class="cat-card-name">Samsung</div></a><a class="cat-card" href="/catalog/dyson/"><img src="/assets/41dcc123-98c7-498d-bdf4-565418d37405" alt="Dyson" loading="lazy"><div class="cat-card-name">Dyson</div></a><a class="cat-card" href="/catalog/igrovye-pristavki/"><img src="/assets/bbd91f35-88fe-4497-b634-d5c82c378ccb" alt="Игровые приставки" loading="lazy"><div class="cat-card-name">Игровые приставки</div></a></div><div class="cats-page cats-page-desktop"><a class="cat-card" href="/catalog/aksessuary/"><img src="/assets/cc4c8c05-7560-4cfd-a1be-edb5ad056ba1" alt="Аксессуары" loading="lazy"><div class="cat-card-name">Аксессуары</div></a><a class="cat-card" href="/catalog/google/"><img src="/assets/192666e9-6396-4e65-9530-5245012cd0ac" alt="Google Pixel" loading="lazy"><div class="cat-card-name">Google Pixel</div></a><a class="cat-card" href="/catalog/tehnika-dlya-doma/"><img src="/assets/08f6cc15-796a-47f5-a96b-46cfe4ce4548" alt="Техника для дома" loading="lazy"><div class="cat-card-name">Техника для дома</div></a><a class="cat-card" href="/catalog/akustika/"><img src="/assets/6705b852-549c-4f20-a531-06f6e632ead5" alt="Акустика" loading="lazy"><div class="cat-card-name">Акустика</div></a></div><div class="cats-page cats-page-desktop"><a class="cat-card" href="/catalog/fitnes-braslety/"><img src="/assets/64fb5601-ccb8-4115-81e9-3e20d250c508" alt="Фитнес-браслеты" loading="lazy"><div class="cat-card-name">Фитнес-браслеты</div></a><a class="cat-card" href="/catalog/smartfony/"><img src="/assets/185b5c27-19e8-4293-842f-7347919137b3" alt="Смартфоны" loading="lazy"><div class="cat-card-name">Смартфоны</div></a><a class="cat-card" href="/catalog/planshety/"><img src="/assets/fdb2b58c-6fe4-40d6-a13c-c36dbc0d27f2" alt="Планшеты" loading="lazy"><div class="cat-card-name">Планшеты</div></a><a class="cat-card" href="/catalog/smart-chasy/"><img src="/assets/5cb0475d-18d6-4b48-a7e4-cc210a5b58b0" alt="Смарт-часы" loading="lazy"><div class="cat-card-name">Смарт-часы</div></a></div><div class="cats-page cats-page-desktop"><a class="cat-card" href="/catalog/noutbuki/"><img src="/assets/73a0d3ce-5f49-49ea-8fe0-48ef8a88b034" alt="Ноутбуки" loading="lazy"><div class="cat-card-name">Ноутбуки</div></a><a class="cat-card" href="/catalog/fototehnika/"><img src="/assets/d907fca0-57bc-48c9-a05d-ce00c55561ff" alt="Фототехника" loading="lazy"><div class="cat-card-name">Фототехника</div></a><a class="cat-card" href="/catalog/sistemy-virtualnoy-realnosti/"><img src="/assets/b2e3c169-3978-442e-9e07-c39f939453c8" alt="Системы виртуальной реальности" loading="lazy"><div class="cat-card-name">Системы виртуальной реальности</div></a></div><div class="cats-page cats-page-mobile"><a class="cat-card" href="/catalog/iphone/"><img src="/assets/71075e37-9ee6-4009-862e-e0bf9c82514a" alt="iPhone" loading="lazy"><div class="cat-card-name">iPhone</div></a><a class="cat-card" href="/catalog/air-pods/"><img src="/assets/975099b9-5a58-45bf-a38a-37ff983f8fe1" alt="AirPods" loading="lazy"><div class="cat-card-name">AirPods</div></a></div><div class="cats-page cats-page-mobile"><a class="cat-card" href="/catalog/mac/"><img src="/assets/f3ec2d64-21df-45ea-be75-1ace880cd186" alt="Mac" loading="lazy"><div class="cat-card-name">Mac</div></a><a class="cat-card" href="/catalog/apple-watch/"><img src="/assets/41d5931d-6cc9-42b6-81f6-b2390a9f6a11" alt="Apple Watch" loading="lazy"><div class="cat-card-name">Apple Watch</div></a></div><div class="cats-page cats-page-mobile"><a class="cat-card" href="/catalog/ipad/"><img src="/assets/d810e2af-3cde-48ee-9c67-f30de1e86a9a" alt="iPad" loading="lazy"><div class="cat-card-name">iPad</div></a><a class="cat-card" href="/catalog/samsung/"><img src="/assets/9d58180e-8bcd-47be-a7a8-7ef2e1ff2355" alt="Samsung" loading="lazy"><div class="cat-card-name">Samsung</div></a></div><div class="cats-page cats-page-mobile"><a class="cat-card" href="/catalog/dyson/"><img src="/assets/41dcc123-98c7-498d-bdf4-565418d37405" alt="Dyson" loading="lazy"><div class="cat-card-name">Dyson</div></a><a class="cat-card" href="/catalog/igrovye-pristavki/"><img src="/assets/bbd91f35-88fe-4497-b634-d5c82c378ccb" alt="Игровые приставки" loading="lazy"><div class="cat-card-name">Игровые приставки</div></a></div><div class="cats-page cats-page-mobile"><a class="cat-card" href="/catalog/aksessuary/"><img src="/assets/cc4c8c05-7560-4cfd-a1be-edb5ad056ba1" alt="Аксессуары" loading="lazy"><div class="cat-card-name">Аксессуары</div></a><a class="cat-card" href="/catalog/google/"><img src="/assets/192666e9-6396-4e65-9530-5245012cd0ac" alt="Google Pixel" loading="lazy"><div class="cat-card-name">Google Pixel</div></a></div><div class="cats-page cats-page-mobile"><a class="cat-card" href="/catalog/tehnika-dlya-doma/"><img src="/assets/08f6cc15-796a-47f5-a96b-46cfe4ce4548" alt="Техника для дома" loading="lazy"><div class="cat-card-name">Техника для дома</div></a><a class="cat-card" href="/catalog/akustika/"><img src="/assets/6705b852-549c-4f20-a531-06f6e632ead5" alt="Акустика" loading="lazy"><div class="cat-card-name">Акустика</div></a></div><div class="cats-page cats-page-mobile"><a class="cat-card" href="/catalog/fitnes-braslety/"><img src="/assets/64fb5601-ccb8-4115-81e9-3e20d250c508" alt="Фитнес-браслеты" loading="lazy"><div class="cat-card-name">Фитнес-браслеты</div></a><a class="cat-card" href="/catalog/smartfony/"><img src="/assets/185b5c27-19e8-4293-842f-7347919137b3" alt="Смартфоны" loading="lazy"><div class="cat-card-name">Смартфоны</div></a></div><div class="cats-page cats-page-mobile"><a class="cat-card" href="/catalog/planshety/"><img src="/assets/fdb2b58c-6fe4-40d6-a13c-c36dbc0d27f2" alt="Планшеты" loading="lazy"><div class="cat-card-name">Планшеты</div></a><a class="cat-card" href="/catalog/smart-chasy/"><img src="/assets/5cb0475d-18d6-4b48-a7e4-cc210a5b58b0" alt="Смарт-часы" loading="lazy"><div class="cat-card-name">Смарт-часы</div></a></div><div class="cats-page cats-page-mobile"><a class="cat-card" href="/catalog/noutbuki/"><img src="/assets/73a0d3ce-5f49-49ea-8fe0-48ef8a88b034" alt="Ноутбуки" loading="lazy"><div class="cat-card-name">Ноутбуки</div></a><a class="cat-card" href="/catalog/fototehnika/"><img src="/assets/d907fca0-57bc-48c9-a05d-ce00c55561ff" alt="Фототехника" loading="lazy"><div class="cat-card-name">Фототехника</div></a></div><div class="cats-page cats-page-mobile"><a class="cat-card" href="/catalog/sistemy-virtualnoy-realnosti/"><img src="/assets/b2e3c169-3978-442e-9e07-c39f939453c8" alt="Системы виртуальной реальности" loading="lazy"><div class="cat-card-name">Системы виртуальной реальности</div></a></div></div></div>
       </div>
-      <div class="cats-dots"><button class="cats-dot is-active" aria-label="cats page 1"></button><button class="cats-dot" aria-label="cats page 2"></button><button class="cats-dot" aria-label="cats page 3"></button><button class="cats-dot" aria-label="cats page 4"></button><button class="cats-dot" aria-label="cats page 5"></button></div>
+      <div class="cats-dots cats-dots-desktop"><button data-i="0" class="cats-dot cats-dot-desktop is-active" aria-label="cats page 1"></button><button data-i="1" class="cats-dot cats-dot-desktop" aria-label="cats page 2"></button><button data-i="2" class="cats-dot cats-dot-desktop" aria-label="cats page 3"></button><button data-i="3" class="cats-dot cats-dot-desktop" aria-label="cats page 4"></button><button data-i="4" class="cats-dot cats-dot-desktop" aria-label="cats page 5"></button></div>
+      <div class="cats-dots cats-dots-mobile"><button data-i="0" class="cats-dot cats-dot-mobile is-active" aria-label="cats mobile page 1"></button><button data-i="1" class="cats-dot cats-dot-mobile" aria-label="cats mobile page 2"></button><button data-i="2" class="cats-dot cats-dot-mobile" aria-label="cats mobile page 3"></button><button data-i="3" class="cats-dot cats-dot-mobile" aria-label="cats mobile page 4"></button><button data-i="4" class="cats-dot cats-dot-mobile" aria-label="cats mobile page 5"></button><button data-i="5" class="cats-dot cats-dot-mobile" aria-label="cats mobile page 6"></button><button data-i="6" class="cats-dot cats-dot-mobile" aria-label="cats mobile page 7"></button><button data-i="7" class="cats-dot cats-dot-mobile" aria-label="cats mobile page 8"></button><button data-i="8" class="cats-dot cats-dot-mobile" aria-label="cats mobile page 9"></button><button data-i="9" class="cats-dot cats-dot-mobile" aria-label="cats mobile page 10"></button></div>
     </section>
     
     <section class="section">
@@ -231,9 +252,10 @@ button{font-family:inherit;cursor:pointer}
         </div>
       </div>
       <div class="buyers-carousel" data-buyers>
-        <div class="buyers-viewport"><div class="buyers-track"><div class="buyers-page"><article class="product-card"><div class="product-media"><img src="/assets/iphone17-local.png" alt="Apple iPhone 17 256Gb" loading="lazy"></div><div class="product-body"><div class="product-title">Apple iPhone 17 256Gb</div><div class="product-sub">Black, черный</div><div class="product-meta"><span class="meta-chip">256 ГБ</span><span class="meta-chip">NANO SIM+ESIM</span></div><div class="color-dots"><span class="color-dot" style="background:#2f3444"></span><span class="color-dot" style="background:#f6f7f9"></span></div><div class="price">89 990 ₽</div></div></article><article class="product-card"><div class="product-media"><img src="/assets/iphone17air-local.png" alt="Apple iPhone 17 Air 256Gb" loading="lazy"></div><div class="product-body"><div class="product-title">Apple iPhone 17 Air 256Gb</div><div class="product-sub">Silver, серебристый</div><div class="product-meta"><span class="meta-chip">256 ГБ</span><span class="meta-chip">NANO SIM+ESIM</span></div><div class="color-dots"><span class="color-dot" style="background:#f6f7f9"></span><span class="color-dot" style="background:#2f3444"></span></div><div class="price">99 990 ₽</div></div></article><article class="product-card"><div class="product-media"><img src="/assets/iphone17pro-local.png" alt="Apple iPhone 17 Pro 256Gb" loading="lazy"></div><div class="product-body"><div class="product-title">Apple iPhone 17 Pro 256Gb</div><div class="product-sub">Cosmic Orange, оранжевый</div><div class="product-meta"><span class="meta-chip">256 ГБ</span><span class="meta-chip">NANO SIM+ESIM</span></div><div class="color-dots"><span class="color-dot" style="background:#ff7a1a"></span><span class="color-dot" style="background:#2f3444"></span><span class="color-dot" style="background:#f6f7f9"></span></div><div class="price">99 490 ₽</div></div></article><article class="product-card"><div class="product-media"><img src="/assets/iphone17promax-local.png" alt="Apple iPhone 17 Pro Max 256Gb" loading="lazy"></div><div class="product-body"><div class="product-title">Apple iPhone 17 Pro Max 256Gb</div><div class="product-sub">Deep Blue, тёмно-синий</div><div class="product-meta"><span class="meta-chip">256 ГБ</span><span class="meta-chip">NANO SIM+ESIM</span></div><div class="color-dots"><span class="color-dot" style="background:#2f3444"></span><span class="color-dot" style="background:#ff7a1a"></span></div><div class="price">110 490 ₽</div></div></article></div></div></div>
+        <div class="buyers-viewport"><div class="buyers-track"><div class="buyers-page buyers-page-desktop"><article class="product-card"><div class="product-media"><img src="/assets/iphone17-local.png" alt="Apple iPhone 17 256Gb" loading="lazy"></div><div class="product-body"><div class="product-title">Apple iPhone 17 256Gb</div><div class="product-sub">Black, черный</div><div class="product-meta"><span class="meta-chip">256 ГБ</span><span class="meta-chip">NANO SIM+ESIM</span></div><div class="color-dots"><span class="color-dot" style="background:#2f3444"></span><span class="color-dot" style="background:#f6f7f9"></span></div><div class="price">89 990 ₽</div></div></article><article class="product-card"><div class="product-media"><img src="/assets/iphone17air-local.png" alt="Apple iPhone 17 Air 256Gb" loading="lazy"></div><div class="product-body"><div class="product-title">Apple iPhone 17 Air 256Gb</div><div class="product-sub">Silver, серебристый</div><div class="product-meta"><span class="meta-chip">256 ГБ</span><span class="meta-chip">NANO SIM+ESIM</span></div><div class="color-dots"><span class="color-dot" style="background:#f6f7f9"></span><span class="color-dot" style="background:#2f3444"></span></div><div class="price">99 990 ₽</div></div></article><article class="product-card"><div class="product-media"><img src="/assets/iphone17pro-local.png" alt="Apple iPhone 17 Pro 256Gb" loading="lazy"></div><div class="product-body"><div class="product-title">Apple iPhone 17 Pro 256Gb</div><div class="product-sub">Cosmic Orange, оранжевый</div><div class="product-meta"><span class="meta-chip">256 ГБ</span><span class="meta-chip">NANO SIM+ESIM</span></div><div class="color-dots"><span class="color-dot" style="background:#ff7a1a"></span><span class="color-dot" style="background:#2f3444"></span><span class="color-dot" style="background:#f6f7f9"></span></div><div class="price">99 490 ₽</div></div></article><article class="product-card"><div class="product-media"><img src="/assets/iphone17promax-local.png" alt="Apple iPhone 17 Pro Max 256Gb" loading="lazy"></div><div class="product-body"><div class="product-title">Apple iPhone 17 Pro Max 256Gb</div><div class="product-sub">Deep Blue, тёмно-синий</div><div class="product-meta"><span class="meta-chip">256 ГБ</span><span class="meta-chip">NANO SIM+ESIM</span></div><div class="color-dots"><span class="color-dot" style="background:#2f3444"></span><span class="color-dot" style="background:#ff7a1a"></span></div><div class="price">110 490 ₽</div></div></article></div><div class="buyers-page buyers-page-mobile"><article class="product-card"><div class="product-media"><img src="/assets/iphone17-local.png" alt="Apple iPhone 17 256Gb" loading="lazy"></div><div class="product-body"><div class="product-title">Apple iPhone 17 256Gb</div><div class="product-sub">Black, черный</div><div class="product-meta"><span class="meta-chip">256 ГБ</span><span class="meta-chip">NANO SIM+ESIM</span></div><div class="color-dots"><span class="color-dot" style="background:#2f3444"></span><span class="color-dot" style="background:#f6f7f9"></span></div><div class="price">89 990 ₽</div></div></article><article class="product-card"><div class="product-media"><img src="/assets/iphone17air-local.png" alt="Apple iPhone 17 Air 256Gb" loading="lazy"></div><div class="product-body"><div class="product-title">Apple iPhone 17 Air 256Gb</div><div class="product-sub">Silver, серебристый</div><div class="product-meta"><span class="meta-chip">256 ГБ</span><span class="meta-chip">NANO SIM+ESIM</span></div><div class="color-dots"><span class="color-dot" style="background:#f6f7f9"></span><span class="color-dot" style="background:#2f3444"></span></div><div class="price">99 990 ₽</div></div></article></div><div class="buyers-page buyers-page-mobile"><article class="product-card"><div class="product-media"><img src="/assets/iphone17pro-local.png" alt="Apple iPhone 17 Pro 256Gb" loading="lazy"></div><div class="product-body"><div class="product-title">Apple iPhone 17 Pro 256Gb</div><div class="product-sub">Cosmic Orange, оранжевый</div><div class="product-meta"><span class="meta-chip">256 ГБ</span><span class="meta-chip">NANO SIM+ESIM</span></div><div class="color-dots"><span class="color-dot" style="background:#ff7a1a"></span><span class="color-dot" style="background:#2f3444"></span><span class="color-dot" style="background:#f6f7f9"></span></div><div class="price">99 490 ₽</div></div></article><article class="product-card"><div class="product-media"><img src="/assets/iphone17promax-local.png" alt="Apple iPhone 17 Pro Max 256Gb" loading="lazy"></div><div class="product-body"><div class="product-title">Apple iPhone 17 Pro Max 256Gb</div><div class="product-sub">Deep Blue, тёмно-синий</div><div class="product-meta"><span class="meta-chip">256 ГБ</span><span class="meta-chip">NANO SIM+ESIM</span></div><div class="color-dots"><span class="color-dot" style="background:#2f3444"></span><span class="color-dot" style="background:#ff7a1a"></span></div><div class="price">110 490 ₽</div></div></article></div></div></div>
       </div>
-      <div class="buyers-dots"><button class="buyers-dot is-active" aria-label="buyers page 1"></button></div>
+      <div class="buyers-dots buyers-dots-desktop"><button data-i="0" class="buyers-dot buyers-dot-desktop is-active" aria-label="buyers page 1"></button></div>
+      <div class="buyers-dots buyers-dots-mobile"><button data-i="0" class="buyers-dot buyers-dot-mobile is-active" aria-label="buyers mobile page 1"></button><button data-i="1" class="buyers-dot buyers-dot-mobile" aria-label="buyers mobile page 2"></button></div>
     </section>
     
     <section class="section" id="gift">
@@ -282,14 +304,20 @@ button{font-family:inherit;cursor:pointer}
             <div class="rating">4.9</div>
             <div class="stars">★★★★★</div>
           </a>
+          <div class="review-controls">
+            <button class="review-arrow prev" aria-label="prev">‹</button>
+            <button class="review-arrow next" aria-label="next">›</button>
+          </div>
           <a class="to-2gis" href="https://2gis.ru/nabchelny/firm/70000001065465431/tab/reviews?m=52.394279%2C55.739588%2F16.38" target="_blank" rel="noopener">Читать все на 2GIS</a>
         </div>
         <div class="review-slider">
-          <button class="review-arrow prev" aria-label="prev">‹</button>
-          <div class="review-viewport"><div class="review-track"><div class="review-slide"><article class="review-card"><div class="review-author">Артур А.</div><div class="review-date">Отзыв с 2GIS</div><p>Быстро подобрали iPhone 17, все показали и спокойно объяснили разницу между моделями. Отдельное спасибо консультанту, который не пытался продать что-то ненужное и честно рассказал про плюсы каждой версии.</p></article><article class="review-card"><div class="review-author">Алина Н.</div><div class="review-date">Отзыв с 2GIS</div><p>Нормальный сервис, вежливые ребята, без навязчивости. Покупкой довольна, телефон пришёл в оригинальной запечатанной упаковке, всё проверили вместе. Буду рекомендовать друзьям.</p></article></div><div class="review-slide"><article class="review-card"><div class="review-author">Роман Т.</div><div class="review-date">Отзыв с 2GIS</div><p>Брал iPhone 17 Pro, цена адекватная, по наличию всё как обещали. Упаковали аккуратно, приложили чек. Связь с магазином чёткая, отвечают быстро в мессенджерах.</p></article><article class="review-card"><div class="review-author">Виктория К.</div><div class="review-date">Отзыв с 2GIS</div><p>Понравилось, что можно сравнить модели на месте и сразу выбрать нужную память. Персонал терпеливо ответил на все вопросы, не торопили. Магазин выглядит современно и приятно.</p></article></div><div class="review-slide"><article class="review-card"><div class="review-author">Илья П.</div><div class="review-date">Отзыв с 2GIS</div><p>Оформили быстро, проверили устройство при мне, всё работало из коробки. Заодно подобрали защитное стекло и чехол. В следующий раз приду уже за AirPods.</p></article><article class="review-card"><div class="review-author">Марина Л.</div><div class="review-date">Отзыв с 2GIS</div><p>Консультация по делу, помогли выбрать между 17 и 17 Air. Спасибо за честность — сказали, что мне именно Air зайдёт лучше. Так и вышло, в руке ощущается совсем по-другому.</p></article></div><div class="review-slide"><article class="review-card"><div class="review-author">Руслан М.</div><div class="review-date">Отзыв с 2GIS</div><p>Хороший магазин, удобное расположение, приятное обслуживание. Брал iPhone сестре на день рождения, упаковали красиво и дали подарочный пакет. Остался очень доволен.</p></article><article class="review-card"><div class="review-author">Олег Д.</div><div class="review-date">Отзыв с 2GIS</div><p>Брал 17 Pro Max, всё оригинал, коробка и комплект в порядке. Активировали на месте, перенесли данные со старого телефона. Сервис на высоте, приятно иметь дело.</p></article></div><div class="review-slide"><article class="review-card"><div class="review-author">Екатерина С.</div><div class="review-date">Отзыв с 2GIS</div><p>Понравился подход: без спешки, с нормальными ответами на вопросы. Для меня смартфон — большая покупка, так что внимание важно. Всё объяснили, ничего не навязывали.</p></article><article class="review-card"><div class="review-author">Денис В.</div><div class="review-date">Отзыв с 2GIS</div><p>Для презентационного магазина выглядит достойно: чисто, понятно, удобно. Выбор большой, сразу видно актуальные модели. Зайду ещё за часами, если будет хорошая цена.</p></article></div></div></div>
-          <button class="review-arrow next" aria-label="next">›</button>
+          <div class="review-viewport">
+            <div class="review-track review-track-desktop"><div class="review-slide"><article class="review-card"><div class="review-author">Артур А.</div><div class="review-date">Отзыв с 2GIS</div><p>Быстро подобрали iPhone 17, все показали и спокойно объяснили разницу между моделями. Отдельное спасибо консультанту, который не пытался продать что-то ненужное и честно рассказал про плюсы каждой версии.</p></article><article class="review-card"><div class="review-author">Алина Н.</div><div class="review-date">Отзыв с 2GIS</div><p>Нормальный сервис, вежливые ребята, без навязчивости. Покупкой довольна, телефон пришёл в оригинальной запечатанной упаковке, всё проверили вместе. Буду рекомендовать друзьям.</p></article></div><div class="review-slide"><article class="review-card"><div class="review-author">Роман Т.</div><div class="review-date">Отзыв с 2GIS</div><p>Брал iPhone 17 Pro, цена адекватная, по наличию всё как обещали. Упаковали аккуратно, приложили чек. Связь с магазином чёткая, отвечают быстро в мессенджерах.</p></article><article class="review-card"><div class="review-author">Виктория К.</div><div class="review-date">Отзыв с 2GIS</div><p>Понравилось, что можно сравнить модели на месте и сразу выбрать нужную память. Персонал терпеливо ответил на все вопросы, не торопили. Магазин выглядит современно и приятно.</p></article></div><div class="review-slide"><article class="review-card"><div class="review-author">Илья П.</div><div class="review-date">Отзыв с 2GIS</div><p>Оформили быстро, проверили устройство при мне, всё работало из коробки. Заодно подобрали защитное стекло и чехол. В следующий раз приду уже за AirPods.</p></article><article class="review-card"><div class="review-author">Марина Л.</div><div class="review-date">Отзыв с 2GIS</div><p>Консультация по делу, помогли выбрать между 17 и 17 Air. Спасибо за честность — сказали, что мне именно Air зайдёт лучше. Так и вышло, в руке ощущается совсем по-другому.</p></article></div><div class="review-slide"><article class="review-card"><div class="review-author">Руслан М.</div><div class="review-date">Отзыв с 2GIS</div><p>Хороший магазин, удобное расположение, приятное обслуживание. Брал iPhone сестре на день рождения, упаковали красиво и дали подарочный пакет. Остался очень доволен.</p></article><article class="review-card"><div class="review-author">Олег Д.</div><div class="review-date">Отзыв с 2GIS</div><p>Брал 17 Pro Max, всё оригинал, коробка и комплект в порядке. Активировали на месте, перенесли данные со старого телефона. Сервис на высоте, приятно иметь дело.</p></article></div><div class="review-slide"><article class="review-card"><div class="review-author">Екатерина С.</div><div class="review-date">Отзыв с 2GIS</div><p>Понравился подход: без спешки, с нормальными ответами на вопросы. Для меня смартфон — большая покупка, так что внимание важно. Всё объяснили, ничего не навязывали.</p></article><article class="review-card"><div class="review-author">Денис В.</div><div class="review-date">Отзыв с 2GIS</div><p>Для презентационного магазина выглядит достойно: чисто, понятно, удобно. Выбор большой, сразу видно актуальные модели. Зайду ещё за часами, если будет хорошая цена.</p></article></div></div>
+            <div class="review-track review-track-mobile"><div class="review-slide"><article class="review-card"><div class="review-author">Артур А.</div><div class="review-date">Отзыв с 2GIS</div><p>Быстро подобрали iPhone 17, все показали и спокойно объяснили разницу между моделями. Отдельное спасибо консультанту, который не пытался продать что-то ненужное и честно рассказал про плюсы каждой версии.</p></article></div><div class="review-slide"><article class="review-card"><div class="review-author">Алина Н.</div><div class="review-date">Отзыв с 2GIS</div><p>Нормальный сервис, вежливые ребята, без навязчивости. Покупкой довольна, телефон пришёл в оригинальной запечатанной упаковке, всё проверили вместе. Буду рекомендовать друзьям.</p></article></div><div class="review-slide"><article class="review-card"><div class="review-author">Роман Т.</div><div class="review-date">Отзыв с 2GIS</div><p>Брал iPhone 17 Pro, цена адекватная, по наличию всё как обещали. Упаковали аккуратно, приложили чек. Связь с магазином чёткая, отвечают быстро в мессенджерах.</p></article></div><div class="review-slide"><article class="review-card"><div class="review-author">Виктория К.</div><div class="review-date">Отзыв с 2GIS</div><p>Понравилось, что можно сравнить модели на месте и сразу выбрать нужную память. Персонал терпеливо ответил на все вопросы, не торопили. Магазин выглядит современно и приятно.</p></article></div><div class="review-slide"><article class="review-card"><div class="review-author">Илья П.</div><div class="review-date">Отзыв с 2GIS</div><p>Оформили быстро, проверили устройство при мне, всё работало из коробки. Заодно подобрали защитное стекло и чехол. В следующий раз приду уже за AirPods.</p></article></div><div class="review-slide"><article class="review-card"><div class="review-author">Марина Л.</div><div class="review-date">Отзыв с 2GIS</div><p>Консультация по делу, помогли выбрать между 17 и 17 Air. Спасибо за честность — сказали, что мне именно Air зайдёт лучше. Так и вышло, в руке ощущается совсем по-другому.</p></article></div><div class="review-slide"><article class="review-card"><div class="review-author">Руслан М.</div><div class="review-date">Отзыв с 2GIS</div><p>Хороший магазин, удобное расположение, приятное обслуживание. Брал iPhone сестре на день рождения, упаковали красиво и дали подарочный пакет. Остался очень доволен.</p></article></div><div class="review-slide"><article class="review-card"><div class="review-author">Олег Д.</div><div class="review-date">Отзыв с 2GIS</div><p>Брал 17 Pro Max, всё оригинал, коробка и комплект в порядке. Активировали на месте, перенесли данные со старого телефона. Сервис на высоте, приятно иметь дело.</p></article></div><div class="review-slide"><article class="review-card"><div class="review-author">Екатерина С.</div><div class="review-date">Отзыв с 2GIS</div><p>Понравился подход: без спешки, с нормальными ответами на вопросы. Для меня смартфон — большая покупка, так что внимание важно. Всё объяснили, ничего не навязывали.</p></article></div><div class="review-slide"><article class="review-card"><div class="review-author">Денис В.</div><div class="review-date">Отзыв с 2GIS</div><p>Для презентационного магазина выглядит достойно: чисто, понятно, удобно. Выбор большой, сразу видно актуальные модели. Зайду ещё за часами, если будет хорошая цена.</p></article></div></div>
+          </div>
         </div>
-        <div class="review-dots"><button class="review-dot is-active" aria-label="reviews slide 1"></button><button class="review-dot" aria-label="reviews slide 2"></button><button class="review-dot" aria-label="reviews slide 3"></button><button class="review-dot" aria-label="reviews slide 4"></button><button class="review-dot" aria-label="reviews slide 5"></button></div>
+        <div class="review-dots review-dots-desktop"><button data-i="0" class="review-dot review-dot-desktop is-active" aria-label="reviews slide 1"></button><button data-i="1" class="review-dot review-dot-desktop" aria-label="reviews slide 2"></button><button data-i="2" class="review-dot review-dot-desktop" aria-label="reviews slide 3"></button><button data-i="3" class="review-dot review-dot-desktop" aria-label="reviews slide 4"></button><button data-i="4" class="review-dot review-dot-desktop" aria-label="reviews slide 5"></button></div>
+        <div class="review-dots review-dots-mobile"><button data-i="0" class="review-dot review-dot-mobile is-active" aria-label="reviews mobile slide 1"></button><button data-i="1" class="review-dot review-dot-mobile" aria-label="reviews mobile slide 2"></button><button data-i="2" class="review-dot review-dot-mobile" aria-label="reviews mobile slide 3"></button><button data-i="3" class="review-dot review-dot-mobile" aria-label="reviews mobile slide 4"></button><button data-i="4" class="review-dot review-dot-mobile" aria-label="reviews mobile slide 5"></button><button data-i="5" class="review-dot review-dot-mobile" aria-label="reviews mobile slide 6"></button><button data-i="6" class="review-dot review-dot-mobile" aria-label="reviews mobile slide 7"></button><button data-i="7" class="review-dot review-dot-mobile" aria-label="reviews mobile slide 8"></button><button data-i="8" class="review-dot review-dot-mobile" aria-label="reviews mobile slide 9"></button><button data-i="9" class="review-dot review-dot-mobile" aria-label="reviews mobile slide 10"></button></div>
       </div>
     </section>
     
@@ -368,48 +396,76 @@ button{font-family:inherit;cursor:pointer}
   const root=document.querySelector('[data-cats]');
   if(!root)return;
   const track=root.querySelector('.cats-track');
-  const pages=track.querySelectorAll('.cats-page');
-  const dots=root.querySelectorAll('.cats-dot');
   const prevBtn=document.querySelector('[data-cats-prev]');
   const nextBtn=document.querySelector('[data-cats-next]');
   let i=0;
-  function go(n){i=(n+pages.length)%pages.length;track.style.transform='translateX(-'+(i*100)+'%)';dots.forEach((d,idx)=>d.classList.toggle('is-active',idx===i))}
+  const isMobile=()=>window.innerWidth<=760;
+  const getPages=()=>Array.from(track.querySelectorAll(isMobile()?'.cats-page-mobile':'.cats-page-desktop'));
+  const getDots=()=>Array.from(root.querySelectorAll(isMobile()?'.cats-dot-mobile':'.cats-dot-desktop'));
+  function go(n){
+    const pages=getPages();
+    if(!pages.length)return;
+    i=(n+pages.length)%pages.length;
+    track.style.transform='translateX(-'+(i*100)+'%)';
+    getDots().forEach((d,idx)=>d.classList.toggle('is-active',idx===i));
+  }
   if(nextBtn)nextBtn.addEventListener('click',()=>go(i+1));
   if(prevBtn)prevBtn.addEventListener('click',()=>go(i-1));
-  dots.forEach((d,idx)=>d.addEventListener('click',()=>go(idx)));
+  root.querySelectorAll('.cats-dot').forEach((d)=>d.addEventListener('click',()=>go(parseInt(d.dataset.i||'0',10))));
+  window.addEventListener('resize',()=>{i=0;go(0)});
+  go(0);
 })();
 
 (function(){
   const root=document.querySelector('[data-buyers]');
   if(!root)return;
   const track=root.querySelector('.buyers-track');
-  const pages=track.querySelectorAll('.buyers-page');
-  const dots=root.querySelectorAll('.buyers-dot');
   const section=root.closest('.section');
   const prevBtn=section?section.querySelector('.buyers-arrow.prev'):null;
   const nextBtn=section?section.querySelector('.buyers-arrow.next'):null;
   let i=0;
-  function go(n){i=(n+pages.length)%pages.length;track.style.transform='translateX(-'+(i*100)+'%)';dots.forEach((d,idx)=>d.classList.toggle('is-active',idx===i))}
+  const isMobile=()=>window.innerWidth<=760;
+  const getPages=()=>Array.from(track.querySelectorAll(isMobile()?'.buyers-page-mobile':'.buyers-page-desktop'));
+  const getDots=()=>Array.from(root.querySelectorAll(isMobile()?'.buyers-dot-mobile':'.buyers-dot-desktop'));
+  function go(n){
+    const pages=getPages();
+    if(!pages.length)return;
+    i=(n+pages.length)%pages.length;
+    track.style.transform='translateX(-'+(i*100)+'%)';
+    getDots().forEach((d,idx)=>d.classList.toggle('is-active',idx===i));
+  }
   if(nextBtn)nextBtn.addEventListener('click',()=>go(i+1));
   if(prevBtn)prevBtn.addEventListener('click',()=>go(i-1));
-  dots.forEach((d,idx)=>d.addEventListener('click',()=>go(idx)));
+  root.querySelectorAll('.buyers-dot').forEach((d)=>d.addEventListener('click',()=>go(parseInt(d.dataset.i||'0',10))));
+  window.addEventListener('resize',()=>{i=0;go(0)});
+  go(0);
 })();
 
 (function(){
   const root=document.querySelector('[data-reviews]');
   if(!root)return;
-  const track=root.querySelector('.review-track');
-  const slides=track.querySelectorAll('.review-slide');
-  const dots=root.querySelectorAll('.review-dot');
+  const isMobile=()=>window.innerWidth<=760;
+  const getTrack=()=>root.querySelector(isMobile()?'.review-track-mobile':'.review-track-desktop');
+  const getSlides=()=>Array.from((getTrack()||root).querySelectorAll('.review-slide'));
+  const getDots=()=>Array.from(root.querySelectorAll(isMobile()?'.review-dot-mobile':'.review-dot-desktop'));
   let i=0,timer;
-  function go(n){i=(n+slides.length)%slides.length;track.style.transform='translateX(-'+(i*100)+'%)';dots.forEach((d,idx)=>d.classList.toggle('is-active',idx===i));}
+  function go(n){
+    const track=getTrack();
+    const slides=getSlides();
+    if(!track || !slides.length)return;
+    i=(n+slides.length)%slides.length;
+    track.style.transform='translateX(-'+(i*100)+'%)';
+    getDots().forEach((d,idx)=>d.classList.toggle('is-active',idx===i));
+  }
   function next(){go(i+1)}
   function prev(){go(i-1)}
   function start(){timer=setInterval(next,5500)}
   function stop(){clearInterval(timer)}
   root.querySelector('.review-arrow.next').addEventListener('click',()=>{stop();next();start()});
   root.querySelector('.review-arrow.prev').addEventListener('click',()=>{stop();prev();start()});
-  dots.forEach((d,idx)=>d.addEventListener('click',()=>{stop();go(idx);start()}));
+  root.querySelectorAll('.review-dot').forEach((d)=>d.addEventListener('click',()=>{stop();go(parseInt(d.dataset.i||'0',10));start()}));
+  window.addEventListener('resize',()=>{i=0;go(0)});
+  go(0);
   start();
 })();
 </script></body></html>

@@ -201,6 +201,7 @@ button{font-family:inherit;cursor:pointer}
 .cats-viewport{overflow:hidden;border-radius:24px}
 .cats-track{display:flex;transition:transform .55s ease;will-change:transform}
 .cats-page{min-width:100%;display:grid;grid-template-columns:repeat(4,1fr);gap:14px;padding:2px}
+.cats-page-mobile{display:none}
 .cat-card{background:var(--panel);border:1px solid #2e2e2e;border-radius:22px;padding:18px;box-shadow:var(--shadow);transition:transform .2s,border-color .2s;display:block}
 .cat-card:hover{transform:translateY(-3px);border-color:var(--accent)}
 .cat-card img{height:130px;width:100%;object-fit:contain;margin-bottom:14px}
@@ -211,18 +212,21 @@ button{font-family:inherit;cursor:pointer}
 .cats-dots{display:flex;gap:8px;justify-content:center;margin-top:14px}
 .cats-dot{width:8px;height:8px;border-radius:50%;background:#3a3a3a;border:none;padding:0}
 .cats-dot.is-active{background:var(--accent);width:22px;border-radius:4px}
+.cats-dots-mobile{display:none}
 
 .grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
 .buyers-carousel{position:relative}
 .buyers-viewport{overflow:hidden;border-radius:24px}
 .buyers-track{display:flex;transition:transform .55s ease;will-change:transform}
 .buyers-page{min-width:100%;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;padding:2px}
+.buyers-page-mobile{display:none}
 .buyers-arrow{width:40px;height:40px;border-radius:50%;border:1px solid #3a3a3a;background:#1a1a1a;color:#fff;font-size:20px;display:flex;align-items:center;justify-content:center;transition:background .2s,border-color .2s}
 .buyers-arrow:hover{background:var(--accent);border-color:var(--accent)}
 .buyers-arrow:disabled{opacity:.35;cursor:default}
 .buyers-dots{display:flex;gap:8px;justify-content:center;margin-top:14px}
 .buyers-dot{width:8px;height:8px;border-radius:50%;background:#3a3a3a;border:none;padding:0}
 .buyers-dot.is-active{background:var(--accent);width:22px;border-radius:4px}
+.buyers-dots-mobile{display:none}
 .product-card{background:var(--panel);border:1px solid #2d2d2d;border-radius:24px;overflow:hidden;box-shadow:var(--shadow);transition:border-color .2s}
 .product-card:hover{border-color:var(--accent)}
 .product-media{height:260px;background:#181818;padding:20px;display:flex;align-items:center;justify-content:center}
@@ -257,11 +261,13 @@ button{font-family:inherit;cursor:pointer}
 .reviews-head img.brand-logo{width:96px;height:auto}
 .rating{font-size:42px;font-weight:800;line-height:1}
 .stars{font-size:22px;letter-spacing:3px;color:#fff}
-.reviews-head .to-2gis{margin-left:auto;background:var(--accent);color:#fff;padding:10px 18px;border-radius:999px;font-weight:700;font-size:14px}
+.review-controls{display:flex;align-items:center;gap:8px;margin-left:auto}
+.reviews-head .to-2gis{background:var(--accent);color:#fff;padding:10px 18px;border-radius:999px;font-weight:700;font-size:14px}
 .reviews-head .to-2gis:hover{background:var(--accent-2)}
-.review-slider{display:flex;align-items:stretch;gap:12px}
+.review-slider{display:block}
 .review-viewport{flex:1;overflow:hidden;border-radius:20px}
 .review-track{display:flex;transition:transform .6s ease;will-change:transform}
+.review-track-mobile{display:none}
 .review-slide{min-width:100%;display:grid;grid-template-columns:repeat(2,1fr);gap:14px;padding:2px}
 .review-card{background:#191919;border:1px solid #2d2d2d;border-radius:18px;padding:26px;min-height:260px;display:flex;flex-direction:column}
 .review-author{font-weight:700;margin-bottom:6px;font-size:17px}
@@ -272,6 +278,7 @@ button{font-family:inherit;cursor:pointer}
 .review-dots{display:flex;gap:8px;justify-content:center;margin-top:18px}
 .review-dot{width:8px;height:8px;border-radius:50%;background:#3a3a3a;border:none;padding:0}
 .review-dot.is-active{background:var(--accent);width:22px;border-radius:4px}
+.review-dots-mobile{display:none}
 
 .contacts{display:grid;grid-template-columns:1fr 1.2fr;gap:24px;background:var(--panel);border:1px solid #2d2d2d;border-radius:30px;padding:26px;box-shadow:var(--shadow)}
 .contacts h2{margin:0 0 18px;font-size:32px;font-weight:800;letter-spacing:-.5px}
@@ -306,13 +313,23 @@ button{font-family:inherit;cursor:pointer}
   .search{grid-column:1/-1;width:100%}
   .nav{margin-left:0}
   .grid{grid-template-columns:1fr}
-  .buyers-page{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .buyers-page-desktop{display:none}
+  .buyers-page-mobile{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+  .buyers-dots-desktop{display:none}
+  .buyers-dots-mobile{display:flex}
   .catalog-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .section-title{font-size:26px}
   .section-controls{gap:8px}
   .section-link{font-size:13px}
-  .cats-page{grid-template-columns:repeat(2,1fr)}
+  .cats-page-desktop{display:none}
+  .cats-page-mobile{display:grid;grid-template-columns:repeat(2,1fr)}
+  .cats-dots-desktop{display:none}
+  .cats-dots-mobile{display:flex}
+  .review-track-desktop{display:none}
+  .review-track-mobile{display:flex}
   .review-slide{grid-template-columns:1fr}
+  .review-dots-desktop{display:none}
+  .review-dots-mobile{display:flex}
   .promo-card{grid-template-columns:1fr}
   .promo-title{font-size:28px}
   .promo-text{font-size:15px}
@@ -321,6 +338,9 @@ button{font-family:inherit;cursor:pointer}
   .hero-slide h2{font-size:32px}
   .hero-arrow{display:none}
   .cats-arrow,.review-arrow{width:36px;height:36px;font-size:18px}
+  .reviews-head{align-items:flex-start}
+  .review-controls{order:2;margin-left:0}
+  .reviews-head .to-2gis{order:3}
 }
 """
 
@@ -350,15 +370,24 @@ CATS_JS = """
   const root=document.querySelector('[data-cats]');
   if(!root)return;
   const track=root.querySelector('.cats-track');
-  const pages=track.querySelectorAll('.cats-page');
-  const dots=root.querySelectorAll('.cats-dot');
   const prevBtn=document.querySelector('[data-cats-prev]');
   const nextBtn=document.querySelector('[data-cats-next]');
   let i=0;
-  function go(n){i=(n+pages.length)%pages.length;track.style.transform='translateX(-'+(i*100)+'%)';dots.forEach((d,idx)=>d.classList.toggle('is-active',idx===i))}
+  const isMobile=()=>window.innerWidth<=760;
+  const getPages=()=>Array.from(track.querySelectorAll(isMobile()?'.cats-page-mobile':'.cats-page-desktop'));
+  const getDots=()=>Array.from(root.querySelectorAll(isMobile()?'.cats-dot-mobile':'.cats-dot-desktop'));
+  function go(n){
+    const pages=getPages();
+    if(!pages.length)return;
+    i=(n+pages.length)%pages.length;
+    track.style.transform='translateX(-'+(i*100)+'%)';
+    getDots().forEach((d,idx)=>d.classList.toggle('is-active',idx===i));
+  }
   if(nextBtn)nextBtn.addEventListener('click',()=>go(i+1));
   if(prevBtn)prevBtn.addEventListener('click',()=>go(i-1));
-  dots.forEach((d,idx)=>d.addEventListener('click',()=>go(idx)));
+  root.querySelectorAll('.cats-dot').forEach((d)=>d.addEventListener('click',()=>go(parseInt(d.dataset.i||'0',10))));
+  window.addEventListener('resize',()=>{i=0;go(0)});
+  go(0);
 })();
 """
 
@@ -367,16 +396,25 @@ BUYERS_JS = """
   const root=document.querySelector('[data-buyers]');
   if(!root)return;
   const track=root.querySelector('.buyers-track');
-  const pages=track.querySelectorAll('.buyers-page');
-  const dots=root.querySelectorAll('.buyers-dot');
   const section=root.closest('.section');
   const prevBtn=section?section.querySelector('.buyers-arrow.prev'):null;
   const nextBtn=section?section.querySelector('.buyers-arrow.next'):null;
   let i=0;
-  function go(n){i=(n+pages.length)%pages.length;track.style.transform='translateX(-'+(i*100)+'%)';dots.forEach((d,idx)=>d.classList.toggle('is-active',idx===i))}
+  const isMobile=()=>window.innerWidth<=760;
+  const getPages=()=>Array.from(track.querySelectorAll(isMobile()?'.buyers-page-mobile':'.buyers-page-desktop'));
+  const getDots=()=>Array.from(root.querySelectorAll(isMobile()?'.buyers-dot-mobile':'.buyers-dot-desktop'));
+  function go(n){
+    const pages=getPages();
+    if(!pages.length)return;
+    i=(n+pages.length)%pages.length;
+    track.style.transform='translateX(-'+(i*100)+'%)';
+    getDots().forEach((d,idx)=>d.classList.toggle('is-active',idx===i));
+  }
   if(nextBtn)nextBtn.addEventListener('click',()=>go(i+1));
   if(prevBtn)prevBtn.addEventListener('click',()=>go(i-1));
-  dots.forEach((d,idx)=>d.addEventListener('click',()=>go(idx)));
+  root.querySelectorAll('.buyers-dot').forEach((d)=>d.addEventListener('click',()=>go(parseInt(d.dataset.i||'0',10))));
+  window.addEventListener('resize',()=>{i=0;go(0)});
+  go(0);
 })();
 """
 
@@ -384,18 +422,28 @@ REVIEWS_JS = """
 (function(){
   const root=document.querySelector('[data-reviews]');
   if(!root)return;
-  const track=root.querySelector('.review-track');
-  const slides=track.querySelectorAll('.review-slide');
-  const dots=root.querySelectorAll('.review-dot');
+  const isMobile=()=>window.innerWidth<=760;
+  const getTrack=()=>root.querySelector(isMobile()?'.review-track-mobile':'.review-track-desktop');
+  const getSlides=()=>Array.from((getTrack()||root).querySelectorAll('.review-slide'));
+  const getDots=()=>Array.from(root.querySelectorAll(isMobile()?'.review-dot-mobile':'.review-dot-desktop'));
   let i=0,timer;
-  function go(n){i=(n+slides.length)%slides.length;track.style.transform='translateX(-'+(i*100)+'%)';dots.forEach((d,idx)=>d.classList.toggle('is-active',idx===i));}
+  function go(n){
+    const track=getTrack();
+    const slides=getSlides();
+    if(!track || !slides.length)return;
+    i=(n+slides.length)%slides.length;
+    track.style.transform='translateX(-'+(i*100)+'%)';
+    getDots().forEach((d,idx)=>d.classList.toggle('is-active',idx===i));
+  }
   function next(){go(i+1)}
   function prev(){go(i-1)}
   function start(){timer=setInterval(next,5500)}
   function stop(){clearInterval(timer)}
   root.querySelector('.review-arrow.next').addEventListener('click',()=>{stop();next();start()});
   root.querySelector('.review-arrow.prev').addEventListener('click',()=>{stop();prev();start()});
-  dots.forEach((d,idx)=>d.addEventListener('click',()=>{stop();go(idx);start()}));
+  root.querySelectorAll('.review-dot').forEach((d)=>d.addEventListener('click',()=>{stop();go(parseInt(d.dataset.i||'0',10));start()}));
+  window.addEventListener('resize',()=>{i=0;go(0)});
+  go(0);
   start();
 })();
 """
@@ -485,9 +533,10 @@ def build_hero():
 
 
 def build_home_categories(categories):
-    pages = [categories[i:i + CATS_PER_PAGE] for i in range(0, len(categories), CATS_PER_PAGE)]
+    pages_desktop = [categories[i:i + 4] for i in range(0, len(categories), 4)]
+    pages_mobile = [categories[i:i + 2] for i in range(0, len(categories), 2)]
     pages_html = ""
-    for page_cats in pages:
+    for page_cats in pages_desktop:
         cards = "".join(
             f'<a class="cat-card" href="/catalog/{html.escape(c.get("slug") or "")}/">'
             f'<img src="/assets/{c.get("image") or PLACEHOLDER_IMG}" alt="{html.escape(c.get("title") or "")}" loading="lazy">'
@@ -495,10 +544,23 @@ def build_home_categories(categories):
             f'</a>'
             for c in page_cats
         )
-        pages_html += f'<div class="cats-page">{cards}</div>'
-    dots = "".join(
-        f'<button class="cats-dot{" is-active" if i==0 else ""}" aria-label="cats page {i+1}"></button>'
-        for i in range(len(pages))
+        pages_html += f'<div class="cats-page cats-page-desktop">{cards}</div>'
+    for page_cats in pages_mobile:
+        cards = "".join(
+            f'<a class="cat-card" href="/catalog/{html.escape(c.get("slug") or "")}/">'
+            f'<img src="/assets/{c.get("image") or PLACEHOLDER_IMG}" alt="{html.escape(c.get("title") or "")}" loading="lazy">'
+            f'<div class="cat-card-name">{html.escape(c.get("title") or "")}</div>'
+            f'</a>'
+            for c in page_cats
+        )
+        pages_html += f'<div class="cats-page cats-page-mobile">{cards}</div>'
+    dots_desktop = "".join(
+        f'<button data-i="{i}" class="cats-dot cats-dot-desktop{" is-active" if i==0 else ""}" aria-label="cats page {i+1}"></button>'
+        for i in range(len(pages_desktop))
+    )
+    dots_mobile = "".join(
+        f'<button data-i="{i}" class="cats-dot cats-dot-mobile{" is-active" if i==0 else ""}" aria-label="cats mobile page {i+1}"></button>'
+        for i in range(len(pages_mobile))
     )
     return f"""
     <section class="section">
@@ -513,7 +575,8 @@ def build_home_categories(categories):
       <div class="cats-carousel" data-cats>
         <div class="cats-viewport"><div class="cats-track">{pages_html}</div></div>
       </div>
-      <div class="cats-dots">{dots}</div>
+      <div class="cats-dots cats-dots-desktop">{dots_desktop}</div>
+      <div class="cats-dots cats-dots-mobile">{dots_mobile}</div>
     </section>
     """
 
@@ -545,11 +608,17 @@ def render_product_card(p):
 
 def build_product_grid():
     cards = [render_product_card(p) for p in products]
-    pages = [cards[i:i + 4] for i in range(0, len(cards), 4)]
-    pages_html = "".join(f'<div class="buyers-page">{"".join(page_cards)}</div>' for page_cards in pages)
-    dots = "".join(
-        f'<button class="buyers-dot{" is-active" if i==0 else ""}" aria-label="buyers page {i+1}"></button>'
-        for i in range(len(pages))
+    pages_desktop = [cards[i:i + 4] for i in range(0, len(cards), 4)]
+    pages_mobile = [cards[i:i + 2] for i in range(0, len(cards), 2)]
+    pages_html = "".join(f'<div class="buyers-page buyers-page-desktop">{"".join(page_cards)}</div>' for page_cards in pages_desktop)
+    pages_html += "".join(f'<div class="buyers-page buyers-page-mobile">{"".join(page_cards)}</div>' for page_cards in pages_mobile)
+    dots_desktop = "".join(
+        f'<button data-i="{i}" class="buyers-dot buyers-dot-desktop{" is-active" if i==0 else ""}" aria-label="buyers page {i+1}"></button>'
+        for i in range(len(pages_desktop))
+    )
+    dots_mobile = "".join(
+        f'<button data-i="{i}" class="buyers-dot buyers-dot-mobile{" is-active" if i==0 else ""}" aria-label="buyers mobile page {i+1}"></button>'
+        for i in range(len(pages_mobile))
     )
     return f"""
     <section class="section">
@@ -564,7 +633,8 @@ def build_product_grid():
       <div class="buyers-carousel" data-buyers>
         <div class="buyers-viewport"><div class="buyers-track">{pages_html}</div></div>
       </div>
-      <div class="buyers-dots">{dots}</div>
+      <div class="buyers-dots buyers-dots-desktop">{dots_desktop}</div>
+      <div class="buyers-dots buyers-dots-mobile">{dots_mobile}</div>
     </section>
     """
 
@@ -617,7 +687,7 @@ def build_gift_block():
 def build_reviews_slider():
     pair_size = 2
     pairs = [reviews[i:i + pair_size] for i in range(0, len(reviews), pair_size)]
-    slides_html = ""
+    slides_html_desktop = ""
     for pair in pairs:
         cards = "".join(
             f'<article class="review-card">'
@@ -627,10 +697,22 @@ def build_reviews_slider():
             f'</article>'
             for author, text in pair
         )
-        slides_html += f'<div class="review-slide">{cards}</div>'
-    dots = "".join(
-        f'<button class="review-dot{" is-active" if i==0 else ""}" aria-label="reviews slide {i+1}"></button>'
+        slides_html_desktop += f'<div class="review-slide">{cards}</div>'
+    slides_html_mobile = "".join(
+        f'<div class="review-slide"><article class="review-card">'
+        f'<div class="review-author">{html.escape(author)}</div>'
+        f'<div class="review-date">Отзыв с 2GIS</div>'
+        f'<p>{html.escape(text)}</p>'
+        f'</article></div>'
+        for author, text in reviews
+    )
+    dots_desktop = "".join(
+        f'<button data-i="{i}" class="review-dot review-dot-desktop{" is-active" if i==0 else ""}" aria-label="reviews slide {i+1}"></button>'
         for i in range(len(pairs))
+    )
+    dots_mobile = "".join(
+        f'<button data-i="{i}" class="review-dot review-dot-mobile{" is-active" if i==0 else ""}" aria-label="reviews mobile slide {i+1}"></button>'
+        for i in range(len(reviews))
     )
     return f"""
     <section class="section">
@@ -642,14 +724,20 @@ def build_reviews_slider():
             <div class="rating">4.9</div>
             <div class="stars">★★★★★</div>
           </a>
+          <div class="review-controls">
+            <button class="review-arrow prev" aria-label="prev">‹</button>
+            <button class="review-arrow next" aria-label="next">›</button>
+          </div>
           <a class="to-2gis" href="{DONOR['reviews_url']}" target="_blank" rel="noopener">Читать все на 2GIS</a>
         </div>
         <div class="review-slider">
-          <button class="review-arrow prev" aria-label="prev">‹</button>
-          <div class="review-viewport"><div class="review-track">{slides_html}</div></div>
-          <button class="review-arrow next" aria-label="next">›</button>
+          <div class="review-viewport">
+            <div class="review-track review-track-desktop">{slides_html_desktop}</div>
+            <div class="review-track review-track-mobile">{slides_html_mobile}</div>
+          </div>
         </div>
-        <div class="review-dots">{dots}</div>
+        <div class="review-dots review-dots-desktop">{dots_desktop}</div>
+        <div class="review-dots review-dots-mobile">{dots_mobile}</div>
       </div>
     </section>
     """
