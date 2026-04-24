@@ -410,7 +410,7 @@ def page(title, body, desc="Магазин техники Apple и аксесс�
         "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">"
         f"<title>{html.escape(title)}</title>"
         f"<meta name=\"description\" content=\"{html.escape(desc)}\">"
-        "<link rel=\"icon\" href=\"/favicon.ico\">"
+        "<link rel=\"icon\" type=\"image/png\" href=\"/assets/header-logo.png\">"
         "<style>" + STYLE + "</style>"
         "</head>"
         "<body><div class=\"page\">"
