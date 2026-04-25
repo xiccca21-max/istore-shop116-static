@@ -1,0 +1,336 @@
+<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Смартфоны — iStore Набережные Челны</title><meta name="description" content="Магазин техники Apple и аксессуаров в Набережных Челнах."><link rel="icon" type="image/png" href="/assets/header-logo.png"><style>
+:root{--bg:#1a1a1a;--panel:#222;--panel-2:#2a2a2a;--line:#323232;--text:#f2f2f2;--muted:#a8a8a8;--accent:#ff6600;--accent-2:#ff8533;--radius:24px;--shadow:0 12px 36px rgba(0,0,0,.35)}
+*{box-sizing:border-box}html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}img{max-width:100%;display:block}
+button{font-family:inherit;cursor:pointer}
+.page{max-width:1440px;margin:0 auto;padding:0 16px 40px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:12px 8px 10px;color:#cfcfcf;font-size:13px}
+.topbar-left,.topbar-right{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+.topbar a:hover{color:var(--accent)}
+.header{position:sticky;top:8px;z-index:30;background:rgba(30,30,30,.92);backdrop-filter:blur(16px);border:1px solid var(--line);border-radius:28px;padding:10px 14px;box-shadow:var(--shadow)}
+.header-row{display:flex;align-items:center;gap:14px;padding-left:170px}
+.logo-slot{position:absolute;left:14px;top:10px;bottom:10px;width:150px;border:none;background:transparent;display:flex;align-items:center;justify-content:center;overflow:visible}
+.logo-slot img{height:100%;width:auto;object-fit:contain;display:block}
+.search{height:48px;width:clamp(260px,38vw,460px);border-radius:999px;border:1px solid #333;background:#161616;display:flex;align-items:center;gap:10px;padding:0 18px;color:#7a7a7a}
+.search::before{content:"";width:16px;height:16px;border:2px solid #666;border-radius:50%;display:inline-block}
+.nav{display:flex;gap:8px;overflow:auto;padding-top:10px;scrollbar-width:none}
+.nav{margin-left:170px}
+.nav::-webkit-scrollbar{display:none}
+.nav a{padding:10px 18px;border-radius:999px;background:#1b1b1b;border:1px solid #2d2d2d;white-space:nowrap;font-size:14px;color:#d9d9d9}
+.nav a:hover{background:#252525;border-color:#3a3a3a}
+.nav a.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.nav a.catalog-link{background:var(--accent);border-color:var(--accent);color:#fff}
+.section{margin-top:28px}
+.section-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:16px}
+.section-title{margin:0;font-size:32px;line-height:1.1;font-weight:800;letter-spacing:-.5px}
+.section-link{color:var(--accent);font-weight:600}
+.section-controls{display:flex;align-items:center;gap:12px}
+.muted{color:var(--muted)}
+.breadcrumbs{margin:18px 4px 8px;color:var(--muted);font-size:13px}
+.breadcrumbs a{color:var(--muted)}.breadcrumbs a:hover{color:var(--accent)}
+.breadcrumbs span.sep{margin:0 6px;color:#444}
+.promo-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.promo-card{display:grid;grid-template-columns:1.2fr 1fr;background:var(--panel);border-radius:24px;overflow:hidden;min-height:240px;border:1px solid #2d2d2d;box-shadow:var(--shadow)}
+.promo-content{padding:24px 24px 18px;color:var(--text);display:flex;flex-direction:column}
+.promo-title{font-size:34px;line-height:1.02;font-weight:800;margin:0 0 12px}
+.promo-text{font-size:17px;line-height:1.35;color:var(--muted);margin:0 0 20px}
+.promo-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:999px;background:var(--accent);color:#fff;font-weight:700;font-size:14px;border:none}
+.promo-btn:hover{background:var(--accent-2)}
+.promo-image{display:flex;align-items:end;justify-content:end;background:#1b1b1b}
+.promo-image img{width:100%;height:100%;object-fit:cover}
+
+.hero{position:relative;background:linear-gradient(145deg,#1f1f1f,#262626);border:1px solid #2c2c2c;border-radius:30px;overflow:hidden;box-shadow:var(--shadow);height:240px}
+.hero-slides{position:relative;height:100%}
+.hero-slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;opacity:0;transition:opacity .7s ease;padding:0 80px}
+.hero-slide.is-active{opacity:1}
+.hero-slide h2{margin:0;font-size:64px;font-weight:800;letter-spacing:-1.5px;background:linear-gradient(120deg,#fff,#ffb980);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-arrow{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:1px solid #3a3a3a;background:rgba(0,0,0,.5);color:#fff;font-size:20px;display:flex;align-items:center;justify-content:center}
+.hero-arrow:hover{background:var(--accent);border-color:var(--accent)}
+.hero-arrow.prev{left:18px}.hero-arrow.next{right:18px}
+.hero-dots{position:absolute;bottom:16px;left:0;right:0;display:flex;gap:8px;justify-content:center}
+.hero-dot{width:8px;height:8px;border-radius:50%;background:#555;border:none;padding:0}
+.hero-dot.is-active{background:var(--accent)}
+
+.cats-carousel{position:relative}
+.cats-viewport{overflow:hidden;border-radius:24px}
+.cats-track{display:flex;transition:transform .55s ease;will-change:transform}
+.cats-page{min-width:100%;display:grid;grid-template-columns:repeat(4,1fr);gap:14px;padding:2px}
+.cats-page-mobile{display:none}
+.cat-card{background:var(--panel);border:1px solid #2e2e2e;border-radius:22px;padding:18px;box-shadow:var(--shadow);transition:transform .2s,border-color .2s;display:block}
+.cat-card:hover{transform:translateY(-3px);border-color:var(--accent)}
+.cat-card img{height:130px;width:100%;object-fit:contain;margin-bottom:14px}
+.cat-card-name{font-size:20px;font-weight:700;line-height:1.2;text-align:center}
+.cats-arrow{width:40px;height:40px;border-radius:50%;border:1px solid #3a3a3a;background:#1a1a1a;color:#fff;font-size:20px;display:flex;align-items:center;justify-content:center;transition:background .2s,border-color .2s}
+.cats-arrow:hover{background:var(--accent);border-color:var(--accent)}
+.cats-arrow:disabled{opacity:.35;cursor:default}
+.cats-dots{display:flex;gap:8px;justify-content:center;margin-top:14px}
+.cats-dot{width:8px;height:8px;border-radius:50%;background:#3a3a3a;border:none;padding:0}
+.cats-dot.is-active{background:var(--accent)}
+.cats-dots-mobile{display:none}
+
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.buyers-carousel{position:relative}
+.buyers-viewport{overflow:hidden;border-radius:24px}
+.buyers-track{display:flex;transition:transform .55s ease;will-change:transform}
+.buyers-page{min-width:100%;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;padding:2px}
+.buyers-page-mobile{display:none}
+.buyers-arrow{width:40px;height:40px;border-radius:50%;border:1px solid #3a3a3a;background:#1a1a1a;color:#fff;font-size:20px;display:flex;align-items:center;justify-content:center;transition:background .2s,border-color .2s}
+.buyers-arrow:hover{background:var(--accent);border-color:var(--accent)}
+.buyers-arrow:disabled{opacity:.35;cursor:default}
+.buyers-dots{display:flex;gap:8px;justify-content:center;margin-top:14px}
+.buyers-dot{width:8px;height:8px;border-radius:50%;background:#3a3a3a;border:none;padding:0}
+.buyers-dot.is-active{background:var(--accent)}
+.buyers-dots-mobile{display:none}
+.product-card{background:var(--panel);border:1px solid #2d2d2d;border-radius:24px;overflow:hidden;box-shadow:var(--shadow);transition:border-color .2s}
+.product-card:hover{border-color:var(--accent)}
+.product-media{height:260px;background:#181818;padding:20px;display:flex;align-items:center;justify-content:center}
+.product-media img{height:100%;width:100%;object-fit:contain}
+.product-body{padding:16px 18px 20px}
+.product-title{font-size:20px;font-weight:700;margin-bottom:6px;line-height:1.2}
+.product-sub{font-size:13px;color:var(--muted);margin-bottom:14px}
+.product-meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.meta-chip{display:inline-flex;align-items:center;padding:4px 10px;border-radius:999px;background:#efefef;border:1px solid #dfdfdf;color:#7d7d7d;font-size:11px;font-weight:700;letter-spacing:.2px}
+.color-dots{display:flex;gap:6px;align-items:center;margin-bottom:10px}
+.color-dot{width:10px;height:10px;border-radius:50%;border:1px solid rgba(255,255,255,.18)}
+.price{font-size:26px;font-weight:800;color:var(--accent);letter-spacing:-.3px;margin-top:2px}
+
+.catalog-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.catalog-tile{background:var(--panel);border:1px solid #2d2d2d;border-radius:26px;padding:28px 20px;display:flex;flex-direction:column;align-items:center;gap:18px;box-shadow:var(--shadow);transition:transform .2s,border-color .2s;min-height:260px}
+.catalog-tile:hover{transform:translateY(-4px);border-color:var(--accent)}
+.catalog-tile-img{height:160px;width:100%;display:flex;align-items:center;justify-content:center}
+.catalog-tile-img img{max-height:100%;max-width:100%;object-fit:contain}
+.catalog-tile-name{font-size:22px;font-weight:700;text-align:center}
+.empty-state{background:var(--panel);border:1px dashed #3a3a3a;border-radius:24px;padding:60px 24px;text-align:center;color:var(--muted);font-size:18px}
+
+.gift{display:grid;grid-template-columns:1.1fr 1fr;gap:24px;align-items:center;background:var(--panel);border:1px solid #2d2d2d;border-radius:30px;padding:30px;box-shadow:var(--shadow)}
+.gift h2{margin:0 0 14px;font-size:36px;font-weight:800;letter-spacing:-.5px}
+.gift p{margin:0 0 10px;color:#d8d8d8;line-height:1.6;font-size:16px}
+.gift-img{border-radius:20px;overflow:hidden;background:#0f0f0f}
+.gift-img img{width:100%;height:100%;object-fit:cover;max-height:340px}
+.gift .promo-btn{margin-top:12px}
+
+.reviews{background:var(--panel);border:1px solid #2d2d2d;border-radius:30px;padding:28px;box-shadow:var(--shadow)}
+.reviews-head{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-bottom:24px}
+.reviews-head .brand{display:flex;align-items:center;gap:12px}
+.reviews-head img.brand-logo{width:96px;height:auto}
+.rating{font-size:42px;font-weight:800;line-height:1}
+.stars{font-size:22px;letter-spacing:3px;color:#fff}
+.review-controls{display:flex;align-items:center;gap:8px;margin-left:auto}
+.reviews-head .to-2gis{background:var(--accent);color:#fff;padding:10px 18px;border-radius:999px;font-weight:700;font-size:14px}
+.reviews-head .to-2gis:hover{background:var(--accent-2)}
+.review-slider{display:block}
+.review-viewport{flex:1;overflow:hidden;border-radius:20px}
+.review-track{display:flex;transition:transform .6s ease;will-change:transform}
+.review-track-mobile{display:none}
+.review-slide{min-width:100%;display:grid;grid-template-columns:repeat(2,1fr);gap:14px;padding:2px}
+.review-card{background:#191919;border:1px solid #2d2d2d;border-radius:18px;padding:26px;min-height:260px;display:flex;flex-direction:column}
+.review-author{font-weight:700;margin-bottom:6px;font-size:17px}
+.review-date{color:var(--muted);font-size:12px;margin-bottom:14px}
+.review-card p{margin:0;color:#d6d6d6;line-height:1.6;font-size:15px;flex:1}
+.review-arrow{flex:0 0 auto;width:44px;height:44px;border-radius:50%;border:1px solid #3a3a3a;background:#1a1a1a;color:#fff;font-size:22px;display:flex;align-items:center;justify-content:center;align-self:center;transition:background .2s,border-color .2s}
+.review-arrow:hover{background:var(--accent);border-color:var(--accent)}
+.review-dots{display:flex;gap:8px;justify-content:center;margin-top:18px}
+.review-dot{width:8px;height:8px;border-radius:50%;background:#3a3a3a;border:none;padding:0}
+.review-dot.is-active{background:var(--accent)}
+.review-dots-mobile{display:none}
+
+.contacts{display:grid;grid-template-columns:1fr 1.2fr;gap:24px;background:var(--panel);border:1px solid #2d2d2d;border-radius:30px;padding:26px;box-shadow:var(--shadow)}
+.contacts h2{margin:0 0 18px;font-size:32px;font-weight:800;letter-spacing:-.5px}
+.contacts-info p{margin:0 0 10px;color:#d8d8d8;line-height:1.5}
+.contacts-info .label{color:var(--muted);font-size:13px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.contacts-info a{color:var(--accent)}
+.contacts-info .row{margin-bottom:16px}
+.contacts-map{border-radius:20px;overflow:hidden;min-height:340px;background:#0e0e0e}
+.contacts-map iframe{width:100%;height:100%;min-height:340px;border:0;display:block;filter:grayscale(.2) contrast(1.05)}
+
+.footer{margin-top:40px;background:#141414;border:1px solid #222;border-radius:30px;padding:30px 32px}
+.footer-grid{display:grid;grid-template-columns:1.3fr .9fr .9fr;gap:28px}
+.footer h3{margin:0 0 14px;font-size:18px;font-weight:700;color:#fff}
+.footer p,.footer a{color:#bfbfbf;line-height:1.7;font-size:14px}
+.footer a:hover{color:var(--accent)}
+.footer-copy{margin-top:24px;padding-top:18px;border-top:1px solid #242424;color:#7b7b7b;font-size:12px}
+
+@media (max-width:1150px){
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .catalog-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .promo-grid{grid-template-columns:1fr}
+  .gift,.contacts{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr 1fr}
+  .cats-page{grid-template-columns:repeat(2,1fr)}
+  .review-card{min-height:220px}
+  .hero-slide h2{font-size:46px}
+}
+@media (max-width:760px){
+  .topbar{display:none}
+  .header-row{display:grid;grid-template-columns:1fr auto}
+  .logo-slot{display:none}
+  .search{grid-column:1/-1;width:100%}
+  .nav{margin-left:0}
+  .grid{grid-template-columns:1fr}
+  .buyers-page-desktop{display:none}
+  .buyers-page-mobile{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+  .buyers-dots-desktop{display:none}
+  .buyers-dots-mobile{display:flex}
+  .catalog-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .section-title{font-size:26px}
+  .section-controls{gap:8px}
+  .section-link{font-size:13px}
+  .cats-page-desktop{display:none}
+  .cats-page-mobile{display:grid;grid-template-columns:repeat(2,1fr)}
+  .cats-dots-desktop{display:none}
+  .cats-dots-mobile{display:flex}
+  .review-track-desktop{display:none}
+  .review-track-mobile{display:flex}
+  .review-slide{grid-template-columns:1fr}
+  .review-dots-desktop{display:none}
+  .review-dots-mobile{display:flex}
+  .promo-card{grid-template-columns:1fr}
+  .promo-title{font-size:28px}
+  .promo-text{font-size:15px}
+  .footer-grid{grid-template-columns:1fr}
+  .hero{height:190px}
+  .hero-slide h2{font-size:32px}
+  .hero-arrow{display:none}
+  .cats-arrow,.review-arrow{width:36px;height:36px;font-size:18px}
+  .reviews-head{align-items:flex-start}
+  .review-controls{order:2;margin-left:0}
+  .reviews-head .to-2gis{order:3}
+}
+</style></head><body><div class="page">
+    <div class="topbar">
+      <div class="topbar-left">
+        <a href="/#gift">Подарочный сертификат</a>
+        <a href="/#contacts">Сервис</a>
+        <a href="/#contacts">Контакты</a>
+      </div>
+      <div class="topbar-right">
+        <span>Набережные Челны, Сююмбике 21/33</span>
+        <span>10:00–20:00 ежедневно</span>
+        <a href="tel:+79870059039">+7 (987) 005-90-39</a>
+      </div>
+    </div>
+    <header class="header">
+      <div class="header-row">
+        <div class="logo-slot" aria-label="logo"><img src="/assets/header-logo.png" alt="iStore logo"></div>
+        <div class="search">Поиск по каталогу</div>
+      </div>
+      <nav class="nav"><a class="catalog-link " href="/catalog/">Каталог</a><a class="" href="/catalog/iphone/">iPhone</a><a class="" href="/catalog/air-pods/">AirPods</a><a class="" href="/catalog/mac/">Mac</a><a class="" href="/catalog/apple-watch/">Apple Watch</a><a class="" href="/catalog/ipad/">iPad</a><a class="" href="/catalog/samsung/">Samsung</a><a class="" href="/catalog/dyson/">Dyson</a><a class="" href="/catalog/aksessuary/">Аксессуары</a></nav>
+    </header>
+    <nav class="breadcrumbs"><a href="/">Главная</a><span class="sep">/</span><a href="/catalog/">Каталог</a><span class="sep">/</span><span>Смартфоны</span></nav><section class="section"><div class="section-head"><h1 class="section-title">Смартфоны</h1></div><div class="empty-state">Скоро в наличии</div></section>
+    <footer class="footer">
+      <div class="footer-grid">
+        <div>
+          <h3>iStore Набережные Челны</h3>
+          <p>Набережные Челны, ул. Сююмбике 21/33 (41/04 по комплексу), вход со стороны пр. Беляева</p>
+          <p>10:00–20:00 ежедневно</p>
+        </div>
+        <div>
+          <h3>Связь</h3>
+          <p><a href="tel:+79870059039">+7 (987) 005-90-39</a></p>
+          <p><a href="tel:+79172757445">+7 (917) 275-74-45</a> — сервис</p>
+          <p><a href="mailto:istore116shop@gmail.com">istore116shop@gmail.com</a></p>
+        </div>
+        <div>
+          <h3>Разделы</h3>
+          <p><a href="/">Главная</a></p>
+          <p><a href="/catalog/">Каталог</a></p>
+          <p><a href="https://2gis.ru/nabchelny/firm/70000001065465431/tab/reviews?m=52.394279%2C55.739588%2F16.38" target="_blank" rel="noopener">Отзывы в 2GIS</a></p>
+        </div>
+      </div>
+      <div class="footer-copy">© iStore Набережные Челны. Все товарные знаки принадлежат их правообладателям.</div>
+    </footer>
+    </div><script>
+(function(){
+  const root=document.querySelector('[data-hero]');
+  if(!root)return;
+  const slides=root.querySelectorAll('.hero-slide');
+  const dots=root.querySelectorAll('.hero-dot');
+  let i=0,timer;
+  function go(n){i=(n+slides.length)%slides.length;slides.forEach((s,idx)=>s.classList.toggle('is-active',idx===i));dots.forEach((d,idx)=>d.classList.toggle('is-active',idx===i));}
+  function next(){go(i+1)}
+  function prev(){go(i-1)}
+  function start(){timer=setInterval(next,4500)}
+  function stop(){clearInterval(timer)}
+  root.querySelector('.hero-arrow.next').addEventListener('click',()=>{stop();next();start()});
+  root.querySelector('.hero-arrow.prev').addEventListener('click',()=>{stop();prev();start()});
+  dots.forEach((d,idx)=>d.addEventListener('click',()=>{stop();go(idx);start()}));
+  start();
+})();
+
+(function(){
+  const root=document.querySelector('[data-cats]');
+  if(!root)return;
+  const track=root.querySelector('.cats-track');
+  const prevBtn=document.querySelector('[data-cats-prev]');
+  const nextBtn=document.querySelector('[data-cats-next]');
+  let i=0;
+  const isMobile=()=>window.innerWidth<=760;
+  const getPages=()=>Array.from(track.querySelectorAll(isMobile()?'.cats-page-mobile':'.cats-page-desktop'));
+  const getDots=()=>Array.from(root.querySelectorAll(isMobile()?'.cats-dot-mobile':'.cats-dot-desktop'));
+  function go(n){
+    const pages=getPages();
+    if(!pages.length)return;
+    i=(n+pages.length)%pages.length;
+    track.style.transform='translateX(-'+(i*100)+'%)';
+    getDots().forEach((d,idx)=>d.classList.toggle('is-active',idx===i));
+  }
+  if(nextBtn)nextBtn.addEventListener('click',()=>go(i+1));
+  if(prevBtn)prevBtn.addEventListener('click',()=>go(i-1));
+  root.querySelectorAll('.cats-dot').forEach((d)=>d.addEventListener('click',()=>go(parseInt(d.dataset.i||'0',10))));
+  window.addEventListener('resize',()=>{i=0;go(0)});
+  go(0);
+})();
+
+(function(){
+  const root=document.querySelector('[data-buyers]');
+  if(!root)return;
+  const track=root.querySelector('.buyers-track');
+  const section=root.closest('.section');
+  const prevBtn=section?section.querySelector('.buyers-arrow.prev'):null;
+  const nextBtn=section?section.querySelector('.buyers-arrow.next'):null;
+  let i=0;
+  const isMobile=()=>window.innerWidth<=760;
+  const getPages=()=>Array.from(track.querySelectorAll(isMobile()?'.buyers-page-mobile':'.buyers-page-desktop'));
+  const getDots=()=>Array.from(root.querySelectorAll(isMobile()?'.buyers-dot-mobile':'.buyers-dot-desktop'));
+  function go(n){
+    const pages=getPages();
+    if(!pages.length)return;
+    i=(n+pages.length)%pages.length;
+    track.style.transform='translateX(-'+(i*100)+'%)';
+    getDots().forEach((d,idx)=>d.classList.toggle('is-active',idx===i));
+  }
+  if(nextBtn)nextBtn.addEventListener('click',()=>go(i+1));
+  if(prevBtn)prevBtn.addEventListener('click',()=>go(i-1));
+  root.querySelectorAll('.buyers-dot').forEach((d)=>d.addEventListener('click',()=>go(parseInt(d.dataset.i||'0',10))));
+  window.addEventListener('resize',()=>{i=0;go(0)});
+  go(0);
+})();
+
+(function(){
+  const root=document.querySelector('[data-reviews]');
+  if(!root)return;
+  const isMobile=()=>window.innerWidth<=760;
+  const getTrack=()=>root.querySelector(isMobile()?'.review-track-mobile':'.review-track-desktop');
+  const getSlides=()=>Array.from((getTrack()||root).querySelectorAll('.review-slide'));
+  const getDots=()=>Array.from(root.querySelectorAll(isMobile()?'.review-dot-mobile':'.review-dot-desktop'));
+  let i=0,timer;
+  function go(n){
+    const track=getTrack();
+    const slides=getSlides();
+    if(!track || !slides.length)return;
+    i=(n+slides.length)%slides.length;
+    track.style.transform='translateX(-'+(i*100)+'%)';
+    getDots().forEach((d,idx)=>d.classList.toggle('is-active',idx===i));
+  }
+  function next(){go(i+1)}
+  function prev(){go(i-1)}
+  function start(){timer=setInterval(next,5500)}
+  function stop(){clearInterval(timer)}
+  root.querySelector('.review-arrow.next').addEventListener('click',()=>{stop();next();start()});
+  root.querySelector('.review-arrow.prev').addEventListener('click',()=>{stop();prev();start()});
+  root.querySelectorAll('.review-dot').forEach((d)=>d.addEventListener('click',()=>{stop();go(parseInt(d.dataset.i||'0',10));start()}));
+  window.addEventListener('resize',()=>{i=0;go(0)});
+  go(0);
+  start();
+})();
+</script></body></html>

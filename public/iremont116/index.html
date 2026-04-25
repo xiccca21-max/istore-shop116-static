@@ -1,0 +1,225 @@
+<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Сервис iRemont-116 — iStore Набережные Челны</title><meta name="description" content="iRemont-116 — сервисный центр Apple в Набережных Челнах: ремонт iPhone/iPad/MacBook/Apple Watch."><link rel="icon" type="image/png" href="/assets/header-logo.png"><script defer src="/assets/storefront.js?v=20260425-1"></script><style>
+:root{--bg:#1a1a1a;--panel:#222;--panel-2:#2a2a2a;--line:#323232;--text:#f2f2f2;--muted:#a8a8a8;--accent:#ff6600;--accent-2:#ff8533;--radius:24px;--shadow:0 12px 36px rgba(0,0,0,.35)}
+*{box-sizing:border-box}html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}img{max-width:100%;display:block}
+button,input{font-family:inherit}
+.page{max-width:1440px;margin:0 auto;padding:0 16px 40px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:12px 8px 10px;color:#cfcfcf;font-size:13px}
+.topbar-left,.topbar-right{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+.topbar a:hover{color:var(--accent)}
+.header{position:sticky;top:8px;z-index:30;background:rgba(30,30,30,.92);backdrop-filter:blur(16px);border:1px solid var(--line);border-radius:28px;padding:10px 14px;box-shadow:var(--shadow)}
+.header-row{display:flex;align-items:center;gap:14px;padding-left:170px}
+.logo-slot{position:absolute;left:14px;top:10px;bottom:10px;width:150px;border:none;background:transparent;display:flex;align-items:center;justify-content:center;overflow:visible}
+.logo-slot img{height:100%;width:auto;object-fit:contain;display:block}
+.search{height:48px;width:clamp(260px,38vw,460px);border-radius:999px;border:1px solid #333;background:#161616;display:flex;align-items:center;gap:10px;padding:0 18px;color:#7a7a7a}
+.search-icon{position:relative;flex:0 0 auto;width:16px;height:16px;display:inline-block}
+.search-icon::before{content:"";position:absolute;inset:0;border:2px solid #666;border-radius:50%}
+.search-icon::after{content:"";position:absolute;width:9px;height:2px;background:#666;right:-6px;bottom:-1px;transform:rotate(45deg);transform-origin:left center;border-radius:2px}
+.search-input{flex:1 1 auto;min-width:0;height:100%;border:0;outline:0;background:transparent;color:#ddd;font-size:14px}
+.search-input::placeholder{color:#7a7a7a}
+.search-btn{flex:0 0 auto;border:0;background:transparent;color:#9a9a9a;font-weight:700;font-size:12px;letter-spacing:.2px;padding:0 2px;cursor:pointer}
+.search-btn:hover{color:#fff}
+.nav{display:flex;gap:8px;overflow:auto;padding-top:10px;scrollbar-width:none}
+.nav{margin-left:170px}
+.nav::-webkit-scrollbar{display:none}
+.nav a{padding:10px 18px;border-radius:999px;background:#1b1b1b;border:1px solid #2d2d2d;white-space:nowrap;font-size:14px;color:#d9d9d9}
+.nav a:hover{background:#252525;border-color:#3a3a3a}
+.nav a.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.nav a.catalog-link{background:var(--accent);border-color:var(--accent);color:#fff}
+.section{margin-top:28px}
+.section-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:16px}
+.section-title{margin:0;font-size:32px;line-height:1.1;font-weight:800;letter-spacing:-.5px}
+.muted{color:var(--muted)}
+.breadcrumbs{margin:18px 4px 8px;color:var(--muted);font-size:13px}
+.breadcrumbs a{color:var(--muted)}.breadcrumbs a:hover{color:var(--accent)}
+.breadcrumbs span.sep{margin:0 6px;color:#444}
+.hero{background:var(--panel);border:1px solid #2d2d2d;border-radius:30px;box-shadow:var(--shadow);padding:28px;display:grid;grid-template-columns:1.2fr .8fr;gap:18px;align-items:center;overflow:hidden}
+.hero h1{margin:0;font-size:44px;line-height:1.02;font-weight:900;letter-spacing:-.6px}
+.hero p{margin:10px 0 0;color:var(--muted);font-size:16px;line-height:1.5}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:rgba(255,102,0,.12);border:1px solid rgba(255,102,0,.35);color:#ffd7b8;font-weight:800;font-size:12px}
+.cta-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 16px;border-radius:999px;font-weight:800;font-size:14px;border:1px solid #2d2d2d;background:#1b1b1b;color:#fff;cursor:pointer}
+.btn:hover{border-color:#3a3a3a;background:#252525}
+.btn.primary{background:var(--accent);border-color:var(--accent)}
+.btn.primary:hover{background:var(--accent-2);border-color:var(--accent-2)}
+.card{background:var(--panel);border:1px solid #2d2d2d;border-radius:30px;box-shadow:var(--shadow);padding:26px}
+.card h2{margin:0 0 10px;font-size:28px;font-weight:900;letter-spacing:-.3px}
+.card p{margin:0 0 10px;color:#d8d8d8;line-height:1.6;font-size:15px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.reason{background:#191919;border:1px solid #2d2d2d;border-radius:22px;padding:18px 18px 16px}
+.reason .n{color:var(--accent);font-weight:900}
+.reason p{margin:8px 0 0;color:#d8d8d8;line-height:1.55;font-size:14px}
+.split{display:grid;grid-template-columns:1.05fr .95fr;gap:16px;align-items:start}
+.kv{display:grid;grid-template-columns:110px 1fr;gap:8px 14px}
+.kv .k{color:var(--muted);font-size:13px;text-transform:uppercase;letter-spacing:1px}
+.kv .v a{color:var(--accent)}
+.form{display:grid;gap:10px}
+.inp{width:100%;padding:12px 14px;border-radius:14px;border:1px solid #333;background:#161616;color:#fff;outline:none}
+.inp::placeholder{color:#7a7a7a}
+.footer{margin-top:40px;background:#141414;border:1px solid #222;border-radius:30px;padding:30px 32px}
+.footer-grid{display:grid;grid-template-columns:1.3fr .9fr .9fr;gap:28px}
+.footer h3{margin:0 0 14px;font-size:18px;font-weight:700;color:#fff}
+.footer p,.footer a{color:#bfbfbf;line-height:1.7;font-size:14px}
+.footer a:hover{color:var(--accent)}
+.footer-copy{margin-top:24px;padding-top:18px;border-top:1px solid #242424;color:#7b7b7b;font-size:12px}
+@media (max-width:1150px){
+  .hero{grid-template-columns:1fr}
+  .split{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr 1fr}
+}
+@media (max-width:760px){
+  .topbar{display:none}
+  .header-row{display:grid;grid-template-columns:1fr auto}
+  .logo-slot{display:none}
+  .search{grid-column:1/-1;width:100%}
+  .nav{margin-left:0}
+  .hero h1{font-size:34px}
+  .grid{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr}
+}
+</style></head><body><div class="page">
+  <div class="topbar">
+    <div class="topbar-left">
+      <a href="/#gift">Подарочный сертификат</a>
+      <a href="/iremont116/">Сервис</a>
+      <a href="/#contacts">Контакты</a>
+    </div>
+    <div class="topbar-right">
+      <span>Набережные Челны, Сююмбике 21/33</span>
+      <span>10:00–20:00 ежедневно</span>
+      <a href="tel:+79870059039">+7 (987) 005-90-39</a>
+    </div>
+  </div>
+
+  <header class="header">
+    <div class="header-row">
+      <div class="logo-slot" aria-label="logo"><img src="/assets/header-logo.png" alt="iStore logo"></div>
+      <form class="search" role="search" action="/catalog/" method="get" data-search>
+        <span class="search-icon" aria-hidden="true"></span>
+        <input class="search-input" name="q" placeholder="Поиск по каталогу" autocomplete="off">
+        <button class="search-btn" type="submit">Найти</button>
+      </form>
+    </div>
+    <nav class="nav">
+      <a class="catalog-link" href="/catalog/">Каталог</a>
+      <a class="" href="/catalog/iphone/">iPhone</a>
+      <a class="" href="/catalog/air-pods/">AirPods</a>
+      <a class="" href="/catalog/mac/">Mac</a>
+      <a class="" href="/catalog/apple-watch/">Apple Watch</a>
+      <a class="" href="/catalog/ipad/">iPad</a>
+      <a class="" href="/catalog/samsung/">Samsung</a>
+      <a class="" href="/catalog/dyson/">Dyson</a>
+      <a class="" href="/catalog/aksessuary/">Аксессуары</a>
+    </nav>
+  </header>
+
+  <nav class="breadcrumbs"><a href="/">Главная</a><span class="sep">/</span><span>Сервис iRemont-116</span></nav>
+
+  <section class="section">
+    <div class="hero">
+      <div>
+        <div class="badge">Сервис iRemont-116</div>
+        <h1 style="margin-top:10px">Ремонт техники Apple</h1>
+        <p>Делаем гравировку клавиатур и не только, также делаем полировку Apple Watch и iPhone (все модели от 11 и выше).</p>
+        <div class="cta-row">
+          <a class="btn primary" href="tel:+79172757445">Позвонить мастеру</a>
+          <a class="btn" href="mailto:istore116shop@gmail.com">Написать на почту</a>
+        </div>
+      </div>
+      <div style="display:grid;gap:10px">
+        <div class="reason">
+          <div class="n">Скидка для наших покупателей</div>
+          <p>Если ваш iPhone был куплен у нас — скидка на ремонт 20%, на запчасти 10%.</p>
+        </div>
+        <div class="reason">
+          <div class="n">Быстрая консультация</div>
+          <p>Стоимость ремонта и сроки можете уточнить у нашего мастера.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="card">
+      <div class="section-head" style="margin-bottom:10px">
+        <h2 style="margin:0;font-size:28px;font-weight:900;letter-spacing:-.3px">О нас</h2>
+      </div>
+      <p><b>iRemont-116</b> — это профессиональная сервисная компания, специализирующаяся на ремонте техники Apple. Мы предлагаем качественный и быстрый ремонт iPhone, iPad, MacBook, iMac, Apple Watch и других устройств Apple по доступным ценам.</p>
+      <p>Наши опытные мастера используют только оригинальные запчасти и оборудование, а также гарантируют сохранение ваших данных. Мы работаем с любыми неисправностями: разбитый экран, аккумулятор, проблемы с зарядкой, попадание влаги и другие.</p>
+      <p>Мы знаем, как важна для вас ваша техника, поэтому делаем всё возможное, чтобы вернуть её в исправном состоянии в кратчайшие сроки.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2 class="section-title">Почему стоит обратиться к нам</h2>
+    </div>
+    <div class="grid">
+      <div class="reason"><div class="n">01</div><p>Замена стекла дисплея: если разбилось стекло, но дисплей цел. Если дисплей повреждён — заменим модуль в сборе.</p></div>
+      <div class="reason"><div class="n">02</div><p>Глубокий ремонт любой сложности: от замены компонентов на плате до перепайки процессора.</p></div>
+      <div class="reason"><div class="n">03</div><p>Оригинальные запчасти для iPhone в наличии: модели от iPhone 7 и до последней.</p></div>
+      <div class="reason"><div class="n">04</div><p>Замена аккумулятора за пару часов — качественно и надолго.</p></div>
+      <div class="reason"><div class="n">05</div><p>Доступные и адекватные цены.</p></div>
+      <div class="reason"><div class="n">06</div><p>Чистка динамиков, восстановление Face ID, ремонт после контакта с водой, замена корпуса (часто всё есть в наличии).</p></div>
+      <div class="reason"><div class="n">07</div><p>Гарантия на ремонтные работы.</p></div>
+      <div class="reason"><div class="n">08</div><p>Диагностика бесплатная — можно отказаться от ремонта, если не устроит цена.</p></div>
+      <div class="reason"><div class="n">09</div><p>После вскрытия ставим новую пыле‑влагозащитную проклейку (лучше, чем без неё).</p></div>
+      <div class="reason"><div class="n">10</div><p>Современное оборудование, которое повышает качество ремонта.</p></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="split">
+      <div class="card">
+        <h2>Контакты сервиса</h2>
+        <div class="kv" style="margin-top:14px">
+          <div class="k">Телефон</div><div class="v"><a href="tel:+79172757445">+7 (917) 275-74-45</a></div>
+          <div class="k">Email</div><div class="v"><a href="mailto:istore116shop@gmail.com">istore116shop@gmail.com</a></div>
+        </div>
+        <p class="muted" style="margin-top:14px">По любым вопросам и для заказа свяжитесь с нами по телефону, почте и в соцсетях.</p>
+        <div class="cta-row">
+          <a class="btn primary" href="tel:+79172757445">Позвонить</a>
+          <a class="btn" href="https://t.me/iStore116" target="_blank" rel="noopener">Telegram</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Оставить заявку</h2>
+        <p class="muted">Мы перезвоним и подскажем стоимость и сроки ремонта.</p>
+        <form class="form" onsubmit="event.preventDefault(); var n=this.querySelector('[name=name]').value||''; var p=this.querySelector('[name=phone]').value||''; var text='Заявка iRemont-116%0AИмя: '+encodeURIComponent(n)+'%0AТелефон: '+encodeURIComponent(p); window.open('https://t.me/iStore116Bot?start=iremont116','_blank');">
+          <input class="inp" name="name" placeholder="Ваше имя" required>
+          <input class="inp" name="phone" placeholder="Ваш номер телефона" required>
+          <button class="btn primary" type="submit">Оформить заказ</button>
+        </form>
+        <div class="reason" style="margin-top:14px">
+          <div class="n">Поставляем запчасти для сервисов</div>
+          <p>Подробности у менеджеров.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-grid">
+      <div>
+        <h3>iStore Набережные Челны</h3>
+        <p>Набережные Челны, ул. Сююмбике 21/33 (41/04 по комплексу), вход со стороны пр. Беляева</p>
+        <p>10:00–20:00 ежедневно</p>
+      </div>
+      <div>
+        <h3>Связь</h3>
+        <p><a href="tel:+79870059039">+7 (987) 005-90-39</a></p>
+        <p><a href="tel:+79172757445">+7 (917) 275-74-45</a> — сервис</p>
+        <p><a href="mailto:istore116shop@gmail.com">istore116shop@gmail.com</a></p>
+      </div>
+      <div>
+        <h3>Разделы</h3>
+        <p><a href="/">Главная</a></p>
+        <p><a href="/catalog/">Каталог</a></p>
+        <p><a href="/iremont116/">Сервис iRemont-116</a></p>
+      </div>
+    </div>
+    <div class="footer-copy">© iStore Набережные Челны. Все товарные знаки принадлежат их правообладателям.</div>
+  </footer>
+</div></body></html>
+
