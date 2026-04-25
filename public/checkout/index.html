@@ -1,0 +1,326 @@
+<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Оформление — iStore Набережные Челны</title><meta name="description" content="Оформление заявки: самовывоз, оплата на месте."><link rel="icon" type="image/png" href="/assets/header-logo.png"><script defer src="/assets/storefront.js?v=20260425-1"></script><style>
+:root{--bg:#1a1a1a;--panel:#222;--panel-2:#2a2a2a;--line:#323232;--text:#f2f2f2;--muted:#a8a8a8;--accent:#ff6600;--accent-2:#ff8533;--shadow:0 12px 36px rgba(0,0,0,.35)}
+*{box-sizing:border-box}html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}img{max-width:100%;display:block}button,input,textarea{font-family:inherit}
+.page{max-width:1440px;margin:0 auto;padding:0 16px 40px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:12px 8px 10px;color:#cfcfcf;font-size:13px}
+.topbar-left,.topbar-right{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+.topbar a:hover{color:var(--accent)}
+.header{position:sticky;top:8px;z-index:30;background:rgba(30,30,30,.92);backdrop-filter:blur(16px);border:1px solid var(--line);border-radius:28px;padding:10px 14px;box-shadow:var(--shadow)}
+.header-row{display:flex;align-items:center;gap:14px;padding-left:170px}
+.logo-slot{position:absolute;left:14px;top:10px;bottom:10px;width:150px;border:none;background:transparent;display:flex;align-items:center;justify-content:center;overflow:visible}
+.logo-slot img{height:100%;width:auto;object-fit:contain;display:block}
+.search{height:48px;width:clamp(260px,38vw,460px);border-radius:999px;border:1px solid #333;background:#161616;display:flex;align-items:center;gap:10px;padding:0 18px;color:#7a7a7a}
+.search-icon{position:relative;flex:0 0 auto;width:16px;height:16px;display:inline-block}
+.search-icon::before{content:"";position:absolute;inset:0;border:2px solid #666;border-radius:50%}
+.search-icon::after{content:"";position:absolute;width:9px;height:2px;background:#666;right:-6px;bottom:-1px;transform:rotate(45deg);transform-origin:left center;border-radius:2px}
+.search-input{flex:1 1 auto;min-width:0;height:100%;border:0;outline:0;background:transparent;color:#ddd;font-size:14px}
+.search-input::placeholder{color:#7a7a7a}
+.search-btn{flex:0 0 auto;border:0;background:transparent;color:#9a9a9a;font-weight:700;font-size:12px;letter-spacing:.2px;padding:0 2px;cursor:pointer}
+.search-btn:hover{color:#fff}
+.nav{display:flex;gap:8px;overflow:auto;padding-top:10px;scrollbar-width:none;margin-left:170px}
+.nav::-webkit-scrollbar{display:none}
+.nav a{padding:10px 18px;border-radius:999px;background:#1b1b1b;border:1px solid #2d2d2d;white-space:nowrap;font-size:14px;color:#d9d9d9}
+.nav a:hover{background:#252525;border-color:#3a3a3a}
+.nav a.catalog-link{background:var(--accent);border-color:var(--accent);color:#fff}
+.breadcrumbs{margin:18px 4px 8px;color:var(--muted);font-size:13px}
+.breadcrumbs a{color:var(--muted)}.breadcrumbs a:hover{color:var(--accent)}
+.breadcrumbs span.sep{margin:0 6px;color:#444}
+.section{margin-top:20px}
+.section-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:14px}
+.section-title{margin:0;font-size:32px;line-height:1.1;font-weight:800;letter-spacing:-.5px}
+.muted{color:var(--muted)}
+
+.layout{display:grid;grid-template-columns:1fr 440px;gap:18px;align-items:start}
+.card{background:var(--panel);border:1px solid #2d2d2d;border-radius:26px;box-shadow:var(--shadow);padding:18px}
+.block{border:1px solid #2d2d2d;background:#191919;border-radius:22px;padding:16px}
+.block h2{margin:0;font-size:16px;font-weight:1000}
+.block p{margin:8px 0 0;color:#d8d8d8;line-height:1.55;font-size:14px}
+.form{display:grid;gap:10px;margin-top:12px}
+.inp,.ta{width:100%;padding:12px 14px;border-radius:14px;border:1px solid #333;background:#161616;color:#fff;outline:none}
+.ta{min-height:92px;resize:vertical}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 14px;border-radius:999px;font-weight:900;font-size:13px;border:1px solid #333;background:#1b1b1b;color:#fff;cursor:pointer}
+.btn:hover{background:#252525;border-color:#3a3a3a}
+.btn.primary{background:var(--accent);border-color:var(--accent)}
+.btn.primary:hover{background:var(--accent-2);border-color:var(--accent-2)}
+.btn.danger{background:transparent;color:#ff8533}
+.status{margin-top:10px;font-size:13px}
+.status.ok{color:#9be28f}
+.status.err{color:#ffb37a}
+
+.summary{display:grid;gap:12px}
+.sum-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.sum-title{font-weight:1000}
+.items{display:grid;gap:10px}
+.item{display:grid;grid-template-columns:64px 1fr;gap:10px;align-items:center;border:1px solid #2d2d2d;background:#191919;border-radius:18px;padding:10px}
+.thumb{width:64px;height:56px;border-radius:14px;border:1px solid #2d2d2d;background:#111;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.thumb img{width:100%;height:100%;object-fit:cover}
+.name{font-weight:900;line-height:1.2;font-size:13px}
+.sub{margin-top:3px;font-size:12px;color:var(--muted)}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px}
+.qty{display:inline-flex;align-items:center;border:1px solid #333;border-radius:999px;overflow:hidden;background:#161616}
+.qty button{width:30px;height:30px;border:0;background:transparent;color:#fff;font-weight:900;cursor:pointer}
+.qty input{width:40px;height:30px;border:0;outline:0;background:transparent;color:#fff;text-align:center;font-weight:900}
+.price{font-weight:1000;color:var(--accent);font-size:14px;white-space:nowrap}
+.sum-line{display:flex;justify-content:space-between;gap:12px;font-size:14px}
+.total{display:flex;justify-content:space-between;gap:12px;margin-top:4px;font-size:18px;font-weight:1000}
+.empty{padding:22px;text-align:center;color:var(--muted)}
+
+@media (max-width:1100px){.layout{grid-template-columns:1fr}}
+@media (max-width:760px){.topbar{display:none}.header-row{display:grid;grid-template-columns:1fr auto}.logo-slot{display:none}.search{grid-column:1/-1;width:100%}.nav{margin-left:0}.section-title{font-size:26px}}
+</style></head><body><div class="page">
+  <div class="topbar">
+    <div class="topbar-left">
+      <a href="/installment/">Рассрочка</a>
+      <a href="/trade-in/">Trade-In</a>
+      <a href="/gifts/">Подарки</a>
+      <a href="/raffle/">Розыгрыш</a>
+      <a href="/#gift">Сертификат</a>
+      <a href="/iremont116/">Сервис</a>
+      <a href="/#contacts">Контакты</a>
+    </div>
+    <div class="topbar-right">
+      <span>Набережные Челны, Сююмбике 21/33</span>
+      <span>10:00–20:00 ежедневно</span>
+      <a href="tel:+79870059039">+7 (987) 005-90-39</a>
+    </div>
+  </div>
+
+  <header class="header">
+    <div class="header-row">
+      <div class="logo-slot" aria-label="logo"><img src="/assets/header-logo.png" alt="iStore logo"></div>
+      <form class="search" role="search" action="/catalog/" method="get" data-search>
+        <span class="search-icon" aria-hidden="true"></span>
+        <input class="search-input" name="q" placeholder="Поиск по каталогу" autocomplete="off">
+        <button class="search-btn" type="submit">Найти</button>
+      </form>
+    </div>
+    <nav class="nav">
+      <a class="catalog-link" href="/catalog/">Каталог</a>
+      <a href="/catalog/iphone/">iPhone</a>
+      <a href="/catalog/air-pods/">AirPods</a>
+      <a href="/catalog/mac/">Mac</a>
+      <a href="/catalog/apple-watch/">Apple Watch</a>
+      <a href="/catalog/ipad/">iPad</a>
+      <a href="/catalog/samsung/">Samsung</a>
+      <a href="/catalog/dyson/">Dyson</a>
+      <a href="/catalog/aksessuary/">Аксессуары</a>
+    </nav>
+  </header>
+
+  <nav class="breadcrumbs"><a href="/">Главная</a><span class="sep">/</span><span>Оформление</span></nav>
+
+  <section class="section">
+    <div class="section-head">
+      <h1 class="section-title">Оформление</h1>
+      <a class="btn" href="/catalog/">Продолжить покупки</a>
+    </div>
+
+    <div class="layout">
+      <div class="card" style="display:grid;gap:12px">
+        <div class="block">
+          <h2>Контактные данные</h2>
+          <form class="form" id="orderForm">
+            <input class="inp" name="name" placeholder="Ваше имя" required>
+            <input class="inp" name="phone" placeholder="Ваш телефон" required>
+            <textarea class="ta" name="comment" placeholder="Комментарий (необязательно)"></textarea>
+            <button class="btn primary" id="submitBtn" type="submit">Отправить заявку</button>
+            <div class="status" id="status" aria-live="polite"></div>
+          </form>
+        </div>
+
+        <div class="block">
+          <h2>Получение</h2>
+          <p><b>Самовывоз</b> — Набережные Челны, Сююмбике 21/33.</p>
+        </div>
+
+        <div class="block">
+          <h2>Оплата</h2>
+          <p><b>Оплата на месте</b> при получении.</p>
+        </div>
+      </div>
+
+      <aside class="card">
+        <div class="summary">
+          <div class="sum-head">
+            <div class="sum-title">Ваш заказ</div>
+            <button class="btn danger" id="clearBtn" type="button">Очистить</button>
+          </div>
+
+          <div class="items" id="items"></div>
+          <div class="empty" id="empty" style="display:none">Корзина пустая. <a href="/catalog/" style="color:var(--accent)">Перейти в каталог →</a></div>
+
+          <div style="border-top:1px solid #2d2d2d;padding-top:12px;display:grid;gap:8px">
+            <div class="sum-line"><span class="muted">Товаров</span><span id="sumCount">0</span></div>
+            <div class="sum-line"><span class="muted">Сумма</span><span id="sumSubtotal">0 ₽</span></div>
+            <div class="sum-line"><span class="muted">Получение</span><span>Самовывоз</span></div>
+            <div class="total"><span>Итого</span><span id="sumTotal">0 ₽</span></div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+</div>
+
+<script>
+(function(){
+  const KEY="istore_cart_v1";
+  const $items=document.getElementById('items');
+  const $empty=document.getElementById('empty');
+  const $sumCount=document.getElementById('sumCount');
+  const $sumSubtotal=document.getElementById('sumSubtotal');
+  const $sumTotal=document.getElementById('sumTotal');
+  const $clear=document.getElementById('clearBtn');
+  const $form=document.getElementById('orderForm');
+  const $status=document.getElementById('status');
+  const $submit=document.getElementById('submitBtn');
+
+  function esc(s){return String(s||'').replace(/[&<>"']/g,(c)=>({ "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;" }[c]))}
+  function safeJson(raw){try{return JSON.parse(raw)}catch(e){return null}}
+  function load(){const v=safeJson(localStorage.getItem(KEY)||'');return Array.isArray(v)?v:[]}
+  function save(items){localStorage.setItem(KEY, JSON.stringify(items)); window.dispatchEvent(new StorageEvent('storage',{key:KEY})); window.dispatchEvent(new Event('istore-cart-changed'))}
+  function fmt(n){try{return new Intl.NumberFormat('ru-RU').format(n)+' ₽'}catch(e){return String(n)+' ₽'}}
+  function count(items){return items.reduce((s,it)=>s+Math.max(0,parseInt(it&&it.qty||0,10)||0),0)}
+  function total(items){return items.reduce((s,it)=>s+(Math.max(0,parseInt(it&&it.qty||0,10)||0)*(parseInt(it&&it.price||0,10)||0)),0)}
+
+  function setQty(variantId, qty){
+    const items=load().map(it=>{
+      if(!it || it.variantId!==variantId) return it;
+      return Object.assign({}, it, { qty: Math.max(1, Math.floor(qty||1)) });
+    });
+    save(items);
+    render();
+  }
+  function remove(variantId){
+    const items=load().filter(it=>it && it.variantId!==variantId);
+    save(items);
+    render();
+  }
+  function clear(){
+    save([]);
+    render();
+  }
+
+  function render(){
+    const items=load();
+    const n=count(items);
+    const t=total(items);
+    $sumCount.textContent=String(n);
+    $sumSubtotal.textContent=fmt(t);
+    $sumTotal.textContent=fmt(t);
+
+    if(!items.length){
+      $items.innerHTML='';
+      $empty.style.display='block';
+      return;
+    }
+    $empty.style.display='none';
+
+    $items.innerHTML = items.map((it)=>{
+      const title=esc(it.title||'Товар');
+      const sub=esc(it.subtitle||'');
+      const img=it.imageUrl?String(it.imageUrl):'';
+      const qty=Math.max(1, parseInt(it.qty||1,10)||1);
+      const price=parseInt(it.price||0,10)||0;
+      const line=price*qty;
+      return (
+        '<div class="item" data-vid="'+esc(it.variantId||'')+'">'+
+          '<div class="thumb">'+(img?('<img src="'+esc(img)+'" alt="">'):'')+'</div>'+
+          '<div>'+
+            '<div class="name">'+title+'</div>'+
+            (sub?('<div class="sub">'+sub+'</div>'):'')+
+            '<div class="row">'+
+              '<div class="qty">'+
+                '<button type="button" data-dec>−</button>'+
+                '<input inputmode="numeric" pattern="[0-9]*" value="'+qty+'" data-qty />'+
+                '<button type="button" data-inc>+</button>'+
+              '</div>'+
+              '<div class="price">'+fmt(line)+'</div>'+
+            '</div>'+
+            '<div class="row" style="margin-top:8px">'+
+              '<button class="btn danger" type="button" data-remove>Удалить</button>'+
+              '<div style="opacity:.7;font-size:12px">'+fmt(price)+' / шт</div>'+
+            '</div>'+
+          '</div>'+
+        '</div>'
+      );
+    }).join('');
+  }
+
+  $items.addEventListener('click', (e)=>{
+    const t=e.target;
+    if(!(t instanceof Element)) return;
+    const row=t.closest('.item');
+    if(!row) return;
+    const vid=row.getAttribute('data-vid')||'';
+    if(t.hasAttribute('data-remove')) return remove(vid);
+    if(t.hasAttribute('data-dec')) {
+      const inp=row.querySelector('[data-qty]');
+      const v=inp?parseInt(inp.value||'1',10):1;
+      return setQty(vid, Math.max(1, v-1));
+    }
+    if(t.hasAttribute('data-inc')) {
+      const inp=row.querySelector('[data-qty]');
+      const v=inp?parseInt(inp.value||'1',10):1;
+      return setQty(vid, v+1);
+    }
+  });
+  $items.addEventListener('change', (e)=>{
+    const t=e.target;
+    if(!(t instanceof HTMLInputElement)) return;
+    if(!t.hasAttribute('data-qty')) return;
+    const row=t.closest('.item');
+    if(!row) return;
+    const vid=row.getAttribute('data-vid')||'';
+    const v=parseInt(t.value||'1',10)||1;
+    setQty(vid, v);
+  });
+  $clear.addEventListener('click', clear);
+
+  $form.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    $status.className='status';
+    $status.textContent='';
+    const items=load();
+    if(!items.length){
+      $status.className='status err';
+      $status.textContent='Корзина пустая.';
+      return;
+    }
+    const fd=new FormData($form);
+    const name=String(fd.get('name')||'').trim();
+    const phone=String(fd.get('phone')||'').trim();
+    const comment=String(fd.get('comment')||'').trim();
+    if(!name || !phone){
+      $status.className='status err';
+      $status.textContent='Заполни имя и телефон.';
+      return;
+    }
+    $submit.disabled=true;
+    $submit.textContent='Отправляю…';
+    try{
+      const res=await fetch('/api/orders',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({name,phone,comment,items})});
+      const json=await res.json().catch(()=>null);
+      if(!res.ok){
+        $status.className='status err';
+        $status.textContent=(json && (json.error||json.message)) ? String(json.error||json.message) : 'Ошибка отправки заявки.';
+        return;
+      }
+      clear();
+      $form.reset();
+      $status.className='status ok';
+      $status.textContent='Заявка отправлена. Номер: ' + (json && json.data && json.data.id ? json.data.id : 'OK');
+    }catch(err){
+      $status.className='status err';
+      $status.textContent='Сеть/сервер недоступны. Попробуй ещё раз.';
+    }finally{
+      $submit.disabled=false;
+      $submit.textContent='Отправить заявку';
+    }
+  });
+
+  render();
+})();
+</script>
+</body></html>
+

@@ -1,0 +1,688 @@
+<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>iStore Набережные Челны — техника Apple</title><meta name="description" content="Магазин техники Apple и аксессуаров в Набережных Челнах."><link rel="icon" type="image/png" href="/assets/header-logo.png"><script defer src="/assets/storefront.js?v=20260425-1"></script><style>
+:root{--bg:#1a1a1a;--panel:#222;--panel-2:#2a2a2a;--line:#323232;--text:#f2f2f2;--muted:#a8a8a8;--accent:#ff6600;--accent-2:#ff8533;--radius:24px;--shadow:0 12px 36px rgba(0,0,0,.35)}
+*{box-sizing:border-box}html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}img{max-width:100%;display:block}
+button{font-family:inherit;cursor:pointer}
+.page{max-width:1440px;margin:0 auto;padding:0 16px 40px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:12px 8px 10px;color:#cfcfcf;font-size:13px}
+.topbar-left,.topbar-right{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+.topbar a:hover{color:var(--accent)}
+.header{position:sticky;top:8px;z-index:30;background:rgba(30,30,30,.92);backdrop-filter:blur(16px);border:1px solid var(--line);border-radius:28px;padding:10px 14px;box-shadow:var(--shadow)}
+.header-row{display:flex;align-items:center;gap:14px;padding-left:170px}
+.logo-slot{position:absolute;left:14px;top:10px;bottom:10px;width:150px;border:none;background:transparent;display:flex;align-items:center;justify-content:center;overflow:visible}
+.logo-slot img{height:100%;width:auto;object-fit:contain;display:block}
+.search{height:48px;width:clamp(260px,38vw,460px);border-radius:999px;border:1px solid #333;background:#161616;display:flex;align-items:center;gap:10px;padding:0 18px;color:#7a7a7a}
+.search-icon{position:relative;flex:0 0 auto;width:16px;height:16px;display:inline-block}
+.search-icon::before{content:"";position:absolute;inset:0;border:2px solid #666;border-radius:50%}
+.search-icon::after{content:"";position:absolute;width:9px;height:2px;background:#666;right:-6px;bottom:-1px;transform:rotate(45deg);transform-origin:left center;border-radius:2px}
+.search-input{flex:1 1 auto;min-width:0;height:100%;border:0;outline:0;background:transparent;color:#ddd;font-size:14px}
+.search-input::placeholder{color:#7a7a7a}
+.search-btn{flex:0 0 auto;border:0;background:transparent;color:#9a9a9a;font-weight:700;font-size:12px;letter-spacing:.2px;padding:0 2px}
+.search-btn:hover{color:#fff}
+.nav{display:flex;gap:8px;overflow:auto;padding-top:10px;scrollbar-width:none}
+.nav{margin-left:170px}
+.nav::-webkit-scrollbar{display:none}
+.nav a{padding:10px 18px;border-radius:999px;background:#1b1b1b;border:1px solid #2d2d2d;white-space:nowrap;font-size:14px;color:#d9d9d9}
+.nav a:hover{background:#252525;border-color:#3a3a3a}
+.nav a.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.nav a.catalog-link{background:var(--accent);border-color:var(--accent);color:#fff}
+.section{margin-top:28px}
+.section-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:16px}
+.section-title{margin:0;font-size:32px;line-height:1.1;font-weight:800;letter-spacing:-.5px}
+.section-link{color:var(--accent);font-weight:600}
+.section-controls{display:flex;align-items:center;gap:12px}
+.muted{color:var(--muted)}
+.breadcrumbs{margin:18px 4px 8px;color:var(--muted);font-size:13px}
+.breadcrumbs a{color:var(--muted)}.breadcrumbs a:hover{color:var(--accent)}
+.breadcrumbs span.sep{margin:0 6px;color:#444}
+.promo-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.promo-card{display:grid;grid-template-columns:1.2fr 1fr;background:var(--panel);border-radius:24px;overflow:hidden;min-height:240px;border:1px solid #2d2d2d;box-shadow:var(--shadow)}
+.promo-content{padding:24px 24px 18px;color:var(--text);display:flex;flex-direction:column}
+.promo-title{font-size:34px;line-height:1.02;font-weight:800;margin:0 0 12px}
+.promo-text{font-size:17px;line-height:1.35;color:var(--muted);margin:0 0 20px}
+.promo-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:999px;background:var(--accent);color:#fff;font-weight:700;font-size:14px;border:none}
+.promo-btn:hover{background:var(--accent-2)}
+.promo-image{display:flex;align-items:end;justify-content:end;background:#1b1b1b}
+.promo-image img{width:100%;height:100%;object-fit:cover}
+.promo-card.is-tradein .promo-image{background:transparent;align-items:center;justify-content:center}
+.promo-card.is-tradein .promo-image img{object-fit:contain;width:92%;height:92%}
+.promo-card.is-installment .promo-image{background:transparent;align-items:center;justify-content:center}
+.promo-card.is-installment .promo-image img{object-fit:contain;width:88%;height:88%}
+
+.hero{position:relative;background:#fff;border:1px solid #2c2c2c;border-radius:30px;overflow:hidden;box-shadow:var(--shadow);height:384px}
+.hero-slides{position:relative;height:100%}
+.hero-slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .7s ease}
+.hero-slide.is-active{opacity:1}
+.hero-slide img.hero-img{width:min(1024px,100%);height:auto;max-height:100%;object-fit:contain}
+.hero-arrow{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:1px solid #3a3a3a;background:rgba(0,0,0,.5);color:#fff;position:absolute;display:block;line-height:0;padding:0;font-size:0}
+.hero-arrow::before{content:"";position:absolute;left:50%;top:50%;width:9px;height:9px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:translate(-50%,-50%) rotate(-45deg)}
+.hero-arrow.prev::before{transform:translate(-50%,-50%) rotate(135deg)}
+.hero-arrow:hover{background:var(--accent);border-color:var(--accent)}
+.hero-arrow.prev{left:18px}.hero-arrow.next{right:18px}
+.hero-dots{position:absolute;bottom:16px;left:0;right:0;display:flex;gap:8px;justify-content:center}
+.hero-dot{width:8px;height:8px;border-radius:50%;background:#555;border:none;padding:0}
+.hero-dot.is-active{background:var(--accent)}
+.hero-dots:has(.hero-dot:only-child){display:none}
+
+.cats-carousel{position:relative}
+.cats-viewport{overflow:hidden;border-radius:24px}
+.cats-track{display:flex;transition:transform .55s ease;will-change:transform}
+.cats-page{min-width:100%;display:grid;grid-template-columns:repeat(4,1fr);gap:14px;padding:2px}
+.cats-page-mobile{display:none}
+.cat-card{background:var(--panel);border:1px solid #2e2e2e;border-radius:22px;padding:18px;box-shadow:var(--shadow);transition:transform .2s,border-color .2s;display:block}
+.cat-card:hover{transform:none;border-color:var(--accent)}
+.cat-card img{height:130px;width:100%;object-fit:contain;margin-bottom:14px}
+.cat-card-name{font-size:20px;font-weight:700;line-height:1.2;text-align:center}
+.cats-arrow{position:relative;width:40px;height:40px;border-radius:50%;border:1px solid #3a3a3a;background:#1a1a1a;color:#fff;display:block;line-height:0;padding:0;font-size:0;transition:background .2s,border-color .2s}
+.cats-arrow::before{content:"";position:absolute;left:50%;top:50%;width:8px;height:8px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:translate(-50%,-50%) rotate(-45deg)}
+.cats-arrow.prev::before{transform:translate(-50%,-50%) rotate(135deg)}
+.cats-arrow:hover{background:var(--accent);border-color:var(--accent)}
+.cats-arrow:disabled{opacity:.35;cursor:default}
+.cats-dots{display:flex;gap:8px;justify-content:center;margin-top:14px}
+.cats-dot{width:8px;height:8px;border-radius:50%;background:#3a3a3a;border:none;padding:0}
+.cats-dot.is-active{background:var(--accent)}
+.cats-dots-mobile{display:none}
+
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.buyers-carousel{position:relative}
+.buyers-viewport{overflow:hidden;border-radius:24px}
+.buyers-track{display:flex;transition:transform .55s ease;will-change:transform}
+.buyers-page{min-width:100%;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;padding:2px}
+.buyers-page-mobile{display:none}
+.buyers-arrow{position:relative;width:40px;height:40px;border-radius:50%;border:1px solid #3a3a3a;background:#1a1a1a;color:#fff;display:block;line-height:0;padding:0;font-size:0;transition:background .2s,border-color .2s}
+.buyers-arrow::before{content:"";position:absolute;left:50%;top:50%;width:8px;height:8px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:translate(-50%,-50%) rotate(-45deg)}
+.buyers-arrow.prev::before{transform:translate(-50%,-50%) rotate(135deg)}
+.buyers-arrow:hover{background:var(--accent);border-color:var(--accent)}
+.buyers-arrow:disabled{opacity:.35;cursor:default}
+.buyers-dots{display:flex;gap:8px;justify-content:center;margin-top:14px}
+.buyers-dot{width:8px;height:8px;border-radius:50%;background:#3a3a3a;border:none;padding:0}
+.buyers-dot.is-active{background:var(--accent)}
+.buyers-dots-mobile{display:none}
+.product-card{background:var(--panel);border:1px solid #2d2d2d;border-radius:24px;overflow:hidden;box-shadow:var(--shadow);transition:border-color .2s}
+.product-card:hover{border-color:var(--accent)}
+.product-media{height:260px;background:#181818;padding:20px;display:flex;align-items:center;justify-content:center}
+.product-media img{height:100%;width:100%;object-fit:contain}
+.product-body{padding:16px 18px 20px}
+.product-title{font-size:20px;font-weight:700;margin-bottom:6px;line-height:1.2}
+.product-sub{font-size:13px;color:var(--muted);margin-bottom:14px}
+.product-meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.meta-chip{display:inline-flex;align-items:center;padding:4px 10px;border-radius:999px;background:#efefef;border:1px solid #dfdfdf;color:#7d7d7d;font-size:11px;font-weight:700;letter-spacing:.2px}
+.color-dots{display:flex;gap:6px;align-items:center;margin-bottom:10px}
+.color-dot{width:10px;height:10px;border-radius:50%;border:1px solid rgba(255,255,255,.18)}
+.price{font-size:26px;font-weight:800;color:var(--accent);letter-spacing:-.3px;margin-top:2px}
+
+.catalog-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.catalog-tile{background:var(--panel);border:1px solid #2d2d2d;border-radius:26px;padding:28px 20px;display:flex;flex-direction:column;align-items:center;gap:18px;box-shadow:var(--shadow);transition:transform .2s,border-color .2s;min-height:260px}
+.catalog-tile:hover{transform:translateY(-4px);border-color:var(--accent)}
+.catalog-tile-img{height:160px;width:100%;display:flex;align-items:center;justify-content:center}
+.catalog-tile-img img{max-height:100%;max-width:100%;object-fit:contain}
+.catalog-tile-name{font-size:22px;font-weight:700;text-align:center}
+.empty-state{background:var(--panel);border:1px dashed #3a3a3a;border-radius:24px;padding:60px 24px;text-align:center;color:var(--muted);font-size:18px}
+
+.gift{display:grid;grid-template-columns:1.1fr 1fr;gap:24px;align-items:center;background:var(--panel);border:1px solid #2d2d2d;border-radius:30px;padding:30px;box-shadow:var(--shadow)}
+.gift h2{margin:0 0 14px;font-size:36px;font-weight:800;letter-spacing:-.5px}
+.gift p{margin:0 0 10px;color:#d8d8d8;line-height:1.6;font-size:16px}
+.gift-img{border-radius:20px;overflow:hidden;background:#0f0f0f}
+.gift-img img{width:100%;height:100%;object-fit:cover;max-height:340px}
+.gift .promo-btn{margin-top:12px}
+
+.reviews{background:var(--panel);border:1px solid #2d2d2d;border-radius:30px;padding:28px;box-shadow:var(--shadow)}
+.reviews-head{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-bottom:24px}
+.reviews-head .brand{display:flex;align-items:center;gap:12px}
+.reviews-head img.brand-logo{width:96px;height:auto}
+.rating{font-size:42px;font-weight:800;line-height:1}
+.stars{font-size:22px;letter-spacing:3px;color:#fff}
+.review-controls{display:flex;align-items:center;gap:8px;margin-left:auto}
+.reviews-head .to-2gis{background:var(--accent);color:#fff;padding:10px 18px;border-radius:999px;font-weight:700;font-size:14px}
+.reviews-head .to-2gis:hover{background:var(--accent-2)}
+.review-slider{display:block}
+.review-viewport{flex:1;overflow:hidden;border-radius:20px}
+.review-track{display:flex;transition:transform .6s ease;will-change:transform}
+.review-track-mobile{display:none}
+.review-slide{min-width:100%;display:grid;grid-template-columns:repeat(2,1fr);gap:14px;padding:2px}
+.review-card{background:#191919;border:1px solid #2d2d2d;border-radius:18px;padding:26px;min-height:260px;display:flex;flex-direction:column}
+.review-author{font-weight:700;margin-bottom:6px;font-size:17px}
+.review-date{color:var(--muted);font-size:12px;margin-bottom:14px}
+.review-card p{margin:0;color:#d6d6d6;line-height:1.6;font-size:15px;flex:1}
+.review-arrow{position:relative;flex:0 0 auto;width:44px;height:44px;border-radius:50%;border:1px solid #3a3a3a;background:#1a1a1a;color:#fff;display:block;line-height:0;padding:0;font-size:0;align-self:center;transition:background .2s,border-color .2s}
+.review-arrow::before{content:"";position:absolute;left:50%;top:50%;width:9px;height:9px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:translate(-50%,-50%) rotate(-45deg)}
+.review-arrow.prev::before{transform:translate(-50%,-50%) rotate(135deg)}
+.review-arrow:hover{background:var(--accent);border-color:var(--accent)}
+.review-dots{display:flex;gap:8px;justify-content:center;margin-top:18px}
+.review-dot{width:8px;height:8px;border-radius:50%;background:#3a3a3a;border:none;padding:0}
+.review-dot.is-active{background:var(--accent)}
+.review-dots-mobile{display:none}
+
+.contacts{display:grid;grid-template-columns:1fr 1.2fr;gap:24px;background:var(--panel);border:1px solid #2d2d2d;border-radius:30px;padding:26px;box-shadow:var(--shadow)}
+.contacts h2{margin:0 0 18px;font-size:32px;font-weight:800;letter-spacing:-.5px}
+.contacts-info p{margin:0 0 10px;color:#d8d8d8;line-height:1.5}
+.contacts-info .label{color:var(--muted);font-size:13px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.contacts-info a{color:var(--accent)}
+.contacts-info .row{margin-bottom:16px}
+.social-info p{margin:0 0 10px;color:#d8d8d8;line-height:1.45}
+.social-icons{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+.social-icon-btn{width:44px;height:44px;border-radius:999px;display:grid;place-items:center;border:1px solid rgba(255,255,255,.14);background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.06));box-shadow:0 10px 26px rgba(0,0,0,.35);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);transition:transform .15s ease,border-color .15s ease,background .15s ease}
+.social-icon-btn:hover{transform:translateY(-1px);border-color:rgba(255,102,0,.55);background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.07))}
+.social-icon{width:20px;height:20px;display:block;color:#f3f3f3}
+.contacts-map{border-radius:20px;overflow:hidden;min-height:340px;background:#0e0e0e}
+.contacts-map iframe{width:100%;height:100%;min-height:340px;border:0;display:block;filter:grayscale(.2) contrast(1.05)}
+
+.footer{margin-top:40px;background:#141414;border:1px solid #222;border-radius:30px;padding:30px 32px}
+.footer-grid{display:grid;grid-template-columns:1.3fr .9fr .9fr;gap:28px}
+.footer h3{margin:0 0 14px;font-size:18px;font-weight:700;color:#fff}
+.footer p,.footer a{color:#bfbfbf;line-height:1.7;font-size:14px}
+.footer a:hover{color:var(--accent)}
+.footer-copy{margin-top:24px;padding-top:18px;border-top:1px solid #242424;color:#7b7b7b;font-size:12px}
+
+@media (max-width:1150px){
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .catalog-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .promo-grid{grid-template-columns:1fr}
+  .gift,.contacts{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr 1fr}
+  .cats-page{grid-template-columns:repeat(2,1fr)}
+  .review-card{min-height:220px}
+  .hero-slide h2{font-size:46px}
+}
+@media (max-width:760px){
+  .topbar{display:none}
+  .header-row{display:grid;grid-template-columns:1fr auto}
+  .logo-slot{display:none}
+  .search{grid-column:1/-1;width:100%}
+  .nav{margin-left:0}
+  .grid{grid-template-columns:1fr}
+  .buyers-page-desktop{display:none}
+  .buyers-page-mobile{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+  .buyers-dots-desktop{display:none}
+  .buyers-dots-mobile{display:flex}
+  .catalog-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .section-title{font-size:26px}
+  .section-controls{gap:8px}
+  .section-link{font-size:13px}
+  .cats-page-desktop{display:none}
+  .cats-page-mobile{display:grid;grid-template-columns:repeat(2,1fr)}
+  .cats-dots-desktop{display:none}
+  .cats-dots-mobile{display:flex}
+  .review-track-desktop{display:none}
+  .review-track-mobile{display:flex}
+  .review-slide{grid-template-columns:1fr}
+  .review-dots-desktop{display:none}
+  .review-dots-mobile{display:flex}
+  .promo-card{grid-template-columns:1fr}
+  .promo-title{font-size:28px}
+  .promo-text{font-size:15px}
+  .footer-grid{grid-template-columns:1fr}
+  .hero{height:304px}
+  .hero-slide h2{font-size:32px}
+  .hero-arrow{display:none}
+  .cats-arrow,.review-arrow{width:36px;height:36px}
+  .cats-arrow::before,.review-arrow::before{width:7px;height:7px;border-right-width:2px;border-bottom-width:2px}
+  .reviews-head{align-items:flex-start}
+  .review-controls{order:2;margin-left:0}
+  .reviews-head .to-2gis{order:3}
+}
+</style></head><body><div class="page">
+    <div class="topbar">
+      <div class="topbar-left">
+        <a href="/installment/">Рассрочка</a>
+        <a href="/trade-in/">Trade-In</a>
+        <a href="/gifts/">Подарки</a>
+        <a href="/raffle/">Розыгрыш</a>
+        <a href="/#gift">Сертификат</a>
+        <a href="/iremont116/">Сервис</a>
+        <a href="/#contacts">Контакты</a>
+      </div>
+      <div class="topbar-right">
+        <span>Набережные Челны, Сююмбике 21/33</span>
+        <span>10:00–20:00 ежедневно</span>
+        <a href="tel:+79870059039">+7 (987) 005-90-39</a>
+      </div>
+    </div>
+    <header class="header">
+      <div class="header-row">
+        <div class="logo-slot" aria-label="logo"><img src="/assets/header-logo.png" alt="iStore logo"></div>
+        <form class="search" role="search" action="/catalog/" method="get" data-search>
+          <span class="search-icon" aria-hidden="true"></span>
+          <input class="search-input" name="q" placeholder="Поиск по каталогу" autocomplete="off">
+          <button class="search-btn" type="submit">Найти</button>
+        </form>
+      </div>
+      <nav class="nav"><a class="catalog-link " href="/catalog/">Каталог</a><a class="" href="/catalog/iphone/">iPhone</a><a class="" href="/catalog/air-pods/">AirPods</a><a class="" href="/catalog/mac/">Mac</a><a class="" href="/catalog/apple-watch/">Apple Watch</a><a class="" href="/catalog/ipad/">iPad</a><a class="" href="/catalog/samsung/">Samsung</a><a class="" href="/catalog/dyson/">Dyson</a><a class="" href="/catalog/aksessuary/">Аксессуары</a></nav>
+    </header>
+    
+    <section class="section">
+      <div class="hero" data-hero>
+        <div class="hero-slides">
+          <div class="hero-slide is-active" style="--hero-bg:url('/assets/hero-rozigrish.png')">
+            <img class="hero-img" src="/assets/hero-rozigrish.png" alt="Баннер 1" loading="eager">
+          </div>
+          <div class="hero-slide" style="--hero-bg:url('/assets/hero-iphone-gifts.png')">
+            <img class="hero-img" src="/assets/hero-iphone-gifts.png" alt="Баннер 2" loading="lazy">
+          </div>
+        </div>
+        <button class="hero-arrow prev" aria-label="prev">‹</button>
+        <button class="hero-arrow next" aria-label="next">›</button>
+        <div class="hero-dots"><button class="hero-dot is-active" aria-label="slide 1"></button><button class="hero-dot" aria-label="slide 2"></button></div>
+      </div>
+    </section>
+    
+    <section class="section">
+      <div class="section-head">
+        <h2 class="section-title">Категории</h2>
+        <div class="section-controls">
+          <button class="cats-arrow prev" aria-label="prev" data-cats-prev>‹</button>
+          <button class="cats-arrow next" aria-label="next" data-cats-next>›</button>
+          <a class="section-link" href="/catalog/">Весь каталог →</a>
+        </div>
+      </div>
+      <div class="cats-carousel" data-cats>
+        <div class="cats-viewport"><div class="cats-track"><div class="cats-page cats-page-desktop"><a class="cat-card" href="/catalog/iphone/"><img src="/assets/71075e37-9ee6-4009-862e-e0bf9c82514a" alt="iPhone" loading="lazy"><div class="cat-card-name">iPhone</div></a><a class="cat-card" href="/catalog/air-pods/"><img src="/assets/975099b9-5a58-45bf-a38a-37ff983f8fe1" alt="AirPods" loading="lazy"><div class="cat-card-name">AirPods</div></a><a class="cat-card" href="/catalog/mac/"><img src="/assets/f3ec2d64-21df-45ea-be75-1ace880cd186" alt="Mac" loading="lazy"><div class="cat-card-name">Mac</div></a><a class="cat-card" href="/catalog/apple-watch/"><img src="/assets/41d5931d-6cc9-42b6-81f6-b2390a9f6a11" alt="Apple Watch" loading="lazy"><div class="cat-card-name">Apple Watch</div></a></div><div class="cats-page cats-page-desktop"><a class="cat-card" href="/catalog/ipad/"><img src="/assets/d810e2af-3cde-48ee-9c67-f30de1e86a9a" alt="iPad" loading="lazy"><div class="cat-card-name">iPad</div></a><a class="cat-card" href="/catalog/samsung/"><img src="/assets/9d58180e-8bcd-47be-a7a8-7ef2e1ff2355" alt="Samsung" loading="lazy"><div class="cat-card-name">Samsung</div></a><a class="cat-card" href="/catalog/dyson/"><img src="/assets/41dcc123-98c7-498d-bdf4-565418d37405" alt="Dyson" loading="lazy"><div class="cat-card-name">Dyson</div></a><a class="cat-card" href="/catalog/igrovye-pristavki/"><img src="/assets/bbd91f35-88fe-4497-b634-d5c82c378ccb" alt="Игровые приставки" loading="lazy"><div class="cat-card-name">Игровые приставки</div></a></div><div class="cats-page cats-page-desktop"><a class="cat-card" href="/catalog/aksessuary/"><img src="/assets/cc4c8c05-7560-4cfd-a1be-edb5ad056ba1" alt="Аксессуары" loading="lazy"><div class="cat-card-name">Аксессуары</div></a><a class="cat-card" href="/catalog/google/"><img src="/assets/192666e9-6396-4e65-9530-5245012cd0ac" alt="Google Pixel" loading="lazy"><div class="cat-card-name">Google Pixel</div></a><a class="cat-card" href="/catalog/tehnika-dlya-doma/"><img src="/assets/08f6cc15-796a-47f5-a96b-46cfe4ce4548" alt="Техника для дома" loading="lazy"><div class="cat-card-name">Техника для дома</div></a><a class="cat-card" href="/catalog/akustika/"><img src="/assets/6705b852-549c-4f20-a531-06f6e632ead5" alt="Акустика" loading="lazy"><div class="cat-card-name">Акустика</div></a></div><div class="cats-page cats-page-desktop"><a class="cat-card" href="/catalog/fitnes-braslety/"><img src="/assets/64fb5601-ccb8-4115-81e9-3e20d250c508" alt="Фитнес-браслеты" loading="lazy"><div class="cat-card-name">Фитнес-браслеты</div></a><a class="cat-card" href="/catalog/smartfony/"><img src="/assets/185b5c27-19e8-4293-842f-7347919137b3" alt="Смартфоны" loading="lazy"><div class="cat-card-name">Смартфоны</div></a><a class="cat-card" href="/catalog/planshety/"><img src="/assets/fdb2b58c-6fe4-40d6-a13c-c36dbc0d27f2" alt="Планшеты" loading="lazy"><div class="cat-card-name">Планшеты</div></a><a class="cat-card" href="/catalog/smart-chasy/"><img src="/assets/5cb0475d-18d6-4b48-a7e4-cc210a5b58b0" alt="Смарт-часы" loading="lazy"><div class="cat-card-name">Смарт-часы</div></a></div><div class="cats-page cats-page-desktop"><a class="cat-card" href="/catalog/noutbuki/"><img src="/assets/73a0d3ce-5f49-49ea-8fe0-48ef8a88b034" alt="Ноутбуки" loading="lazy"><div class="cat-card-name">Ноутбуки</div></a><a class="cat-card" href="/catalog/fototehnika/"><img src="/assets/d907fca0-57bc-48c9-a05d-ce00c55561ff" alt="Фототехника" loading="lazy"><div class="cat-card-name">Фототехника</div></a><a class="cat-card" href="/catalog/sistemy-virtualnoy-realnosti/"><img src="/assets/b2e3c169-3978-442e-9e07-c39f939453c8" alt="Системы виртуальной реальности" loading="lazy"><div class="cat-card-name">Системы виртуальной реальности</div></a></div><div class="cats-page cats-page-mobile"><a class="cat-card" href="/catalog/iphone/"><img src="/assets/71075e37-9ee6-4009-862e-e0bf9c82514a" alt="iPhone" loading="lazy"><div class="cat-card-name">iPhone</div></a><a class="cat-card" href="/catalog/air-pods/"><img src="/assets/975099b9-5a58-45bf-a38a-37ff983f8fe1" alt="AirPods" loading="lazy"><div class="cat-card-name">AirPods</div></a></div><div class="cats-page cats-page-mobile"><a class="cat-card" href="/catalog/mac/"><img src="/assets/f3ec2d64-21df-45ea-be75-1ace880cd186" alt="Mac" loading="lazy"><div class="cat-card-name">Mac</div></a><a class="cat-card" href="/catalog/apple-watch/"><img src="/assets/41d5931d-6cc9-42b6-81f6-b2390a9f6a11" alt="Apple Watch" loading="lazy"><div class="cat-card-name">Apple Watch</div></a></div><div class="cats-page cats-page-mobile"><a class="cat-card" href="/catalog/ipad/"><img src="/assets/d810e2af-3cde-48ee-9c67-f30de1e86a9a" alt="iPad" loading="lazy"><div class="cat-card-name">iPad</div></a><a class="cat-card" href="/catalog/samsung/"><img src="/assets/9d58180e-8bcd-47be-a7a8-7ef2e1ff2355" alt="Samsung" loading="lazy"><div class="cat-card-name">Samsung</div></a></div><div class="cats-page cats-page-mobile"><a class="cat-card" href="/catalog/dyson/"><img src="/assets/41dcc123-98c7-498d-bdf4-565418d37405" alt="Dyson" loading="lazy"><div class="cat-card-name">Dyson</div></a><a class="cat-card" href="/catalog/igrovye-pristavki/"><img src="/assets/bbd91f35-88fe-4497-b634-d5c82c378ccb" alt="Игровые приставки" loading="lazy"><div class="cat-card-name">Игровые приставки</div></a></div><div class="cats-page cats-page-mobile"><a class="cat-card" href="/catalog/aksessuary/"><img src="/assets/cc4c8c05-7560-4cfd-a1be-edb5ad056ba1" alt="Аксессуары" loading="lazy"><div class="cat-card-name">Аксессуары</div></a><a class="cat-card" href="/catalog/google/"><img src="/assets/192666e9-6396-4e65-9530-5245012cd0ac" alt="Google Pixel" loading="lazy"><div class="cat-card-name">Google Pixel</div></a></div><div class="cats-page cats-page-mobile"><a class="cat-card" href="/catalog/tehnika-dlya-doma/"><img src="/assets/08f6cc15-796a-47f5-a96b-46cfe4ce4548" alt="Техника для дома" loading="lazy"><div class="cat-card-name">Техника для дома</div></a><a class="cat-card" href="/catalog/akustika/"><img src="/assets/6705b852-549c-4f20-a531-06f6e632ead5" alt="Акустика" loading="lazy"><div class="cat-card-name">Акустика</div></a></div><div class="cats-page cats-page-mobile"><a class="cat-card" href="/catalog/fitnes-braslety/"><img src="/assets/64fb5601-ccb8-4115-81e9-3e20d250c508" alt="Фитнес-браслеты" loading="lazy"><div class="cat-card-name">Фитнес-браслеты</div></a><a class="cat-card" href="/catalog/smartfony/"><img src="/assets/185b5c27-19e8-4293-842f-7347919137b3" alt="Смартфоны" loading="lazy"><div class="cat-card-name">Смартфоны</div></a></div><div class="cats-page cats-page-mobile"><a class="cat-card" href="/catalog/planshety/"><img src="/assets/fdb2b58c-6fe4-40d6-a13c-c36dbc0d27f2" alt="Планшеты" loading="lazy"><div class="cat-card-name">Планшеты</div></a><a class="cat-card" href="/catalog/smart-chasy/"><img src="/assets/5cb0475d-18d6-4b48-a7e4-cc210a5b58b0" alt="Смарт-часы" loading="lazy"><div class="cat-card-name">Смарт-часы</div></a></div><div class="cats-page cats-page-mobile"><a class="cat-card" href="/catalog/noutbuki/"><img src="/assets/73a0d3ce-5f49-49ea-8fe0-48ef8a88b034" alt="Ноутбуки" loading="lazy"><div class="cat-card-name">Ноутбуки</div></a><a class="cat-card" href="/catalog/fototehnika/"><img src="/assets/d907fca0-57bc-48c9-a05d-ce00c55561ff" alt="Фототехника" loading="lazy"><div class="cat-card-name">Фототехника</div></a></div><div class="cats-page cats-page-mobile"><a class="cat-card" href="/catalog/sistemy-virtualnoy-realnosti/"><img src="/assets/b2e3c169-3978-442e-9e07-c39f939453c8" alt="Системы виртуальной реальности" loading="lazy"><div class="cat-card-name">Системы виртуальной реальности</div></a></div></div></div>
+      </div>
+      <div class="cats-dots cats-dots-desktop"><button data-i="0" class="cats-dot cats-dot-desktop is-active" aria-label="cats page 1"></button><button data-i="1" class="cats-dot cats-dot-desktop" aria-label="cats page 2"></button><button data-i="2" class="cats-dot cats-dot-desktop" aria-label="cats page 3"></button><button data-i="3" class="cats-dot cats-dot-desktop" aria-label="cats page 4"></button><button data-i="4" class="cats-dot cats-dot-desktop" aria-label="cats page 5"></button></div>
+      <div class="cats-dots cats-dots-mobile"><button data-i="0" class="cats-dot cats-dot-mobile is-active" aria-label="cats mobile page 1"></button><button data-i="1" class="cats-dot cats-dot-mobile" aria-label="cats mobile page 2"></button><button data-i="2" class="cats-dot cats-dot-mobile" aria-label="cats mobile page 3"></button><button data-i="3" class="cats-dot cats-dot-mobile" aria-label="cats mobile page 4"></button><button data-i="4" class="cats-dot cats-dot-mobile" aria-label="cats mobile page 5"></button><button data-i="5" class="cats-dot cats-dot-mobile" aria-label="cats mobile page 6"></button><button data-i="6" class="cats-dot cats-dot-mobile" aria-label="cats mobile page 7"></button><button data-i="7" class="cats-dot cats-dot-mobile" aria-label="cats mobile page 8"></button><button data-i="8" class="cats-dot cats-dot-mobile" aria-label="cats mobile page 9"></button><button data-i="9" class="cats-dot cats-dot-mobile" aria-label="cats mobile page 10"></button></div>
+    </section>
+    
+    <section class="section">
+      <div class="section-head">
+        <h2 class="section-title">Выбор покупателей</h2>
+        <div class="section-controls">
+          <button class="buyers-arrow prev" aria-label="prev">‹</button>
+          <button class="buyers-arrow next" aria-label="next">›</button>
+          <a class="section-link" href="/catalog/iphone/">Смотреть все →</a>
+        </div>
+      </div>
+      <div class="buyers-carousel" data-buyers>
+        <div class="buyers-viewport"><div class="buyers-track"><div class="buyers-page buyers-page-desktop"><article class="product-card"><div class="product-media"><img src="/assets/iphone17-local.png" alt="Apple iPhone 17 256Gb" loading="lazy"></div><div class="product-body"><div class="product-title">Apple iPhone 17 256Gb</div><div class="product-sub">Black, черный</div><div class="product-meta"><span class="meta-chip">256 ГБ</span><span class="meta-chip">NANO SIM+ESIM</span></div><div class="color-dots"><span class="color-dot" style="background:#2f3444"></span><span class="color-dot" style="background:#f6f7f9"></span></div><div class="price">89 990 ₽</div></div></article><article class="product-card"><div class="product-media"><img src="/assets/iphone17air-local.png" alt="Apple iPhone 17 Air 256Gb" loading="lazy"></div><div class="product-body"><div class="product-title">Apple iPhone 17 Air 256Gb</div><div class="product-sub">Silver, серебристый</div><div class="product-meta"><span class="meta-chip">256 ГБ</span><span class="meta-chip">NANO SIM+ESIM</span></div><div class="color-dots"><span class="color-dot" style="background:#f6f7f9"></span><span class="color-dot" style="background:#2f3444"></span></div><div class="price">99 990 ₽</div></div></article><article class="product-card"><div class="product-media"><img src="/assets/iphone17pro-local.png" alt="Apple iPhone 17 Pro 256Gb" loading="lazy"></div><div class="product-body"><div class="product-title">Apple iPhone 17 Pro 256Gb</div><div class="product-sub">Cosmic Orange, оранжевый</div><div class="product-meta"><span class="meta-chip">256 ГБ</span><span class="meta-chip">NANO SIM+ESIM</span></div><div class="color-dots"><span class="color-dot" style="background:#ff7a1a"></span><span class="color-dot" style="background:#2f3444"></span><span class="color-dot" style="background:#f6f7f9"></span></div><div class="price">99 490 ₽</div></div></article><article class="product-card"><div class="product-media"><img src="/assets/iphone17promax-local.png" alt="Apple iPhone 17 Pro Max 256Gb" loading="lazy"></div><div class="product-body"><div class="product-title">Apple iPhone 17 Pro Max 256Gb</div><div class="product-sub">Deep Blue, тёмно-синий</div><div class="product-meta"><span class="meta-chip">256 ГБ</span><span class="meta-chip">NANO SIM+ESIM</span></div><div class="color-dots"><span class="color-dot" style="background:#2f3444"></span><span class="color-dot" style="background:#ff7a1a"></span></div><div class="price">110 490 ₽</div></div></article></div><div class="buyers-page buyers-page-mobile"><article class="product-card"><div class="product-media"><img src="/assets/iphone17-local.png" alt="Apple iPhone 17 256Gb" loading="lazy"></div><div class="product-body"><div class="product-title">Apple iPhone 17 256Gb</div><div class="product-sub">Black, черный</div><div class="product-meta"><span class="meta-chip">256 ГБ</span><span class="meta-chip">NANO SIM+ESIM</span></div><div class="color-dots"><span class="color-dot" style="background:#2f3444"></span><span class="color-dot" style="background:#f6f7f9"></span></div><div class="price">89 990 ₽</div></div></article><article class="product-card"><div class="product-media"><img src="/assets/iphone17air-local.png" alt="Apple iPhone 17 Air 256Gb" loading="lazy"></div><div class="product-body"><div class="product-title">Apple iPhone 17 Air 256Gb</div><div class="product-sub">Silver, серебристый</div><div class="product-meta"><span class="meta-chip">256 ГБ</span><span class="meta-chip">NANO SIM+ESIM</span></div><div class="color-dots"><span class="color-dot" style="background:#f6f7f9"></span><span class="color-dot" style="background:#2f3444"></span></div><div class="price">99 990 ₽</div></div></article></div><div class="buyers-page buyers-page-mobile"><article class="product-card"><div class="product-media"><img src="/assets/iphone17pro-local.png" alt="Apple iPhone 17 Pro 256Gb" loading="lazy"></div><div class="product-body"><div class="product-title">Apple iPhone 17 Pro 256Gb</div><div class="product-sub">Cosmic Orange, оранжевый</div><div class="product-meta"><span class="meta-chip">256 ГБ</span><span class="meta-chip">NANO SIM+ESIM</span></div><div class="color-dots"><span class="color-dot" style="background:#ff7a1a"></span><span class="color-dot" style="background:#2f3444"></span><span class="color-dot" style="background:#f6f7f9"></span></div><div class="price">99 490 ₽</div></div></article><article class="product-card"><div class="product-media"><img src="/assets/iphone17promax-local.png" alt="Apple iPhone 17 Pro Max 256Gb" loading="lazy"></div><div class="product-body"><div class="product-title">Apple iPhone 17 Pro Max 256Gb</div><div class="product-sub">Deep Blue, тёмно-синий</div><div class="product-meta"><span class="meta-chip">256 ГБ</span><span class="meta-chip">NANO SIM+ESIM</span></div><div class="color-dots"><span class="color-dot" style="background:#2f3444"></span><span class="color-dot" style="background:#ff7a1a"></span></div><div class="price">110 490 ₽</div></div></article></div></div></div>
+      </div>
+      <div class="buyers-dots buyers-dots-desktop"><button data-i="0" class="buyers-dot buyers-dot-desktop is-active" aria-label="buyers page 1"></button></div>
+      <div class="buyers-dots buyers-dots-mobile"><button data-i="0" class="buyers-dot buyers-dot-mobile is-active" aria-label="buyers mobile page 1"></button><button data-i="1" class="buyers-dot buyers-dot-mobile" aria-label="buyers mobile page 2"></button></div>
+    </section>
+    
+    <section class="section" id="gift">
+      <div class="gift">
+        <div>
+          <h2>Подарочный сертификат</h2>
+          <p>У нас можно приобрести подарочный сертификат.</p>
+          <p>Не знаете что конкретно подарить? Подарите сертификат на сумму от 5 000 до 200 000 рублей и уже сами выберут себе подарок.</p>
+        </div>
+        <div class="gift-img"><img src="/assets/gift-cert.png" alt="Подарочный сертификат"></div>
+      </div>
+    </section>
+    
+    <section class="section">
+      <div class="promo-grid">
+        <article class="promo-card is-tradein">
+          <div class="promo-content">
+            <h3 class="promo-title">Trade-In: обменяй старое на новое</h3>
+            <p class="promo-text">Сдайте старое устройство и получите скидку на покупку нового. Получите дополнительную выгоду уже при обмене.</p>
+            <a class="promo-btn" href="/catalog/">Подробнее</a>
+          </div>
+          <div class="promo-image">
+            <img src="/assets/trade-in-hero.png" alt="Trade-In">
+          </div>
+        </article>
+        <article class="promo-card is-installment">
+          <div class="promo-content">
+            <h3 class="promo-title">Рассрочка без процентов</h3>
+            <p class="promo-text">Оформите покупку в рассрочку на выгодных условиях без переплат на срок до 36 месяцев.</p>
+            <a class="promo-btn" href="/catalog/">Подробнее</a>
+          </div>
+          <div class="promo-image">
+            <img src="/assets/installment-0.png" alt="Рассрочка 0%">
+          </div>
+        </article>
+      </div>
+    </section>
+    
+    <section class="section">
+      <h2 class="section-title" style="margin-bottom:16px">Отзывы</h2>
+      <div class="reviews" data-reviews>
+        <div class="reviews-head">
+          <a class="brand" href="https://2gis.ru/nabchelny/firm/70000001065465431/tab/reviews?m=52.394279%2C55.739588%2F16.38" target="_blank" rel="noopener">
+            <img class="brand-logo" src="/2gis.svg" alt="2GIS">
+            <div class="rating">4.9</div>
+            <div class="stars">★★★★★</div>
+          </a>
+          <div class="review-controls">
+            <button class="review-arrow prev" aria-label="prev">‹</button>
+            <button class="review-arrow next" aria-label="next">›</button>
+          </div>
+          <a class="to-2gis" href="https://2gis.ru/nabchelny/firm/70000001065465431/tab/reviews?m=52.394279%2C55.739588%2F16.38" target="_blank" rel="noopener">Читать все на 2GIS</a>
+        </div>
+        <div class="review-slider">
+          <div class="review-viewport">
+            <div class="review-track review-track-desktop"><div class="review-slide"><article class="review-card"><div class="review-author">Артур А.</div><div class="review-date">Отзыв с 2GIS</div><p>Быстро подобрали iPhone 17, все показали и спокойно объяснили разницу между моделями. Отдельное спасибо консультанту, который не пытался продать что-то ненужное и честно рассказал про плюсы каждой версии.</p></article><article class="review-card"><div class="review-author">Алина Н.</div><div class="review-date">Отзыв с 2GIS</div><p>Нормальный сервис, вежливые ребята, без навязчивости. Покупкой довольна, телефон пришёл в оригинальной запечатанной упаковке, всё проверили вместе. Буду рекомендовать друзьям.</p></article></div><div class="review-slide"><article class="review-card"><div class="review-author">Роман Т.</div><div class="review-date">Отзыв с 2GIS</div><p>Брал iPhone 17 Pro, цена адекватная, по наличию всё как обещали. Упаковали аккуратно, приложили чек. Связь с магазином чёткая, отвечают быстро в мессенджерах.</p></article><article class="review-card"><div class="review-author">Виктория К.</div><div class="review-date">Отзыв с 2GIS</div><p>Понравилось, что можно сравнить модели на месте и сразу выбрать нужную память. Персонал терпеливо ответил на все вопросы, не торопили. Магазин выглядит современно и приятно.</p></article></div><div class="review-slide"><article class="review-card"><div class="review-author">Илья П.</div><div class="review-date">Отзыв с 2GIS</div><p>Оформили быстро, проверили устройство при мне, всё работало из коробки. Заодно подобрали защитное стекло и чехол. В следующий раз приду уже за AirPods.</p></article><article class="review-card"><div class="review-author">Марина Л.</div><div class="review-date">Отзыв с 2GIS</div><p>Консультация по делу, помогли выбрать между 17 и 17 Air. Спасибо за честность — сказали, что мне именно Air зайдёт лучше. Так и вышло, в руке ощущается совсем по-другому.</p></article></div><div class="review-slide"><article class="review-card"><div class="review-author">Руслан М.</div><div class="review-date">Отзыв с 2GIS</div><p>Хороший магазин, удобное расположение, приятное обслуживание. Брал iPhone сестре на день рождения, упаковали красиво и дали подарочный пакет. Остался очень доволен.</p></article><article class="review-card"><div class="review-author">Олег Д.</div><div class="review-date">Отзыв с 2GIS</div><p>Брал 17 Pro Max, всё оригинал, коробка и комплект в порядке. Активировали на месте, перенесли данные со старого телефона. Сервис на высоте, приятно иметь дело.</p></article></div><div class="review-slide"><article class="review-card"><div class="review-author">Екатерина С.</div><div class="review-date">Отзыв с 2GIS</div><p>Понравился подход: без спешки, с нормальными ответами на вопросы. Для меня смартфон — большая покупка, так что внимание важно. Всё объяснили, ничего не навязывали.</p></article><article class="review-card"><div class="review-author">Денис В.</div><div class="review-date">Отзыв с 2GIS</div><p>Для презентационного магазина выглядит достойно: чисто, понятно, удобно. Выбор большой, сразу видно актуальные модели. Зайду ещё за часами, если будет хорошая цена.</p></article></div></div>
+            <div class="review-track review-track-mobile"><div class="review-slide"><article class="review-card"><div class="review-author">Артур А.</div><div class="review-date">Отзыв с 2GIS</div><p>Быстро подобрали iPhone 17, все показали и спокойно объяснили разницу между моделями. Отдельное спасибо консультанту, который не пытался продать что-то ненужное и честно рассказал про плюсы каждой версии.</p></article></div><div class="review-slide"><article class="review-card"><div class="review-author">Алина Н.</div><div class="review-date">Отзыв с 2GIS</div><p>Нормальный сервис, вежливые ребята, без навязчивости. Покупкой довольна, телефон пришёл в оригинальной запечатанной упаковке, всё проверили вместе. Буду рекомендовать друзьям.</p></article></div><div class="review-slide"><article class="review-card"><div class="review-author">Роман Т.</div><div class="review-date">Отзыв с 2GIS</div><p>Брал iPhone 17 Pro, цена адекватная, по наличию всё как обещали. Упаковали аккуратно, приложили чек. Связь с магазином чёткая, отвечают быстро в мессенджерах.</p></article></div><div class="review-slide"><article class="review-card"><div class="review-author">Виктория К.</div><div class="review-date">Отзыв с 2GIS</div><p>Понравилось, что можно сравнить модели на месте и сразу выбрать нужную память. Персонал терпеливо ответил на все вопросы, не торопили. Магазин выглядит современно и приятно.</p></article></div><div class="review-slide"><article class="review-card"><div class="review-author">Илья П.</div><div class="review-date">Отзыв с 2GIS</div><p>Оформили быстро, проверили устройство при мне, всё работало из коробки. Заодно подобрали защитное стекло и чехол. В следующий раз приду уже за AirPods.</p></article></div><div class="review-slide"><article class="review-card"><div class="review-author">Марина Л.</div><div class="review-date">Отзыв с 2GIS</div><p>Консультация по делу, помогли выбрать между 17 и 17 Air. Спасибо за честность — сказали, что мне именно Air зайдёт лучше. Так и вышло, в руке ощущается совсем по-другому.</p></article></div><div class="review-slide"><article class="review-card"><div class="review-author">Руслан М.</div><div class="review-date">Отзыв с 2GIS</div><p>Хороший магазин, удобное расположение, приятное обслуживание. Брал iPhone сестре на день рождения, упаковали красиво и дали подарочный пакет. Остался очень доволен.</p></article></div><div class="review-slide"><article class="review-card"><div class="review-author">Олег Д.</div><div class="review-date">Отзыв с 2GIS</div><p>Брал 17 Pro Max, всё оригинал, коробка и комплект в порядке. Активировали на месте, перенесли данные со старого телефона. Сервис на высоте, приятно иметь дело.</p></article></div><div class="review-slide"><article class="review-card"><div class="review-author">Екатерина С.</div><div class="review-date">Отзыв с 2GIS</div><p>Понравился подход: без спешки, с нормальными ответами на вопросы. Для меня смартфон — большая покупка, так что внимание важно. Всё объяснили, ничего не навязывали.</p></article></div><div class="review-slide"><article class="review-card"><div class="review-author">Денис В.</div><div class="review-date">Отзыв с 2GIS</div><p>Для презентационного магазина выглядит достойно: чисто, понятно, удобно. Выбор большой, сразу видно актуальные модели. Зайду ещё за часами, если будет хорошая цена.</p></article></div></div>
+          </div>
+        </div>
+        <div class="review-dots review-dots-desktop"><button data-i="0" class="review-dot review-dot-desktop is-active" aria-label="reviews slide 1"></button><button data-i="1" class="review-dot review-dot-desktop" aria-label="reviews slide 2"></button><button data-i="2" class="review-dot review-dot-desktop" aria-label="reviews slide 3"></button><button data-i="3" class="review-dot review-dot-desktop" aria-label="reviews slide 4"></button><button data-i="4" class="review-dot review-dot-desktop" aria-label="reviews slide 5"></button></div>
+        <div class="review-dots review-dots-mobile"><button data-i="0" class="review-dot review-dot-mobile is-active" aria-label="reviews mobile slide 1"></button><button data-i="1" class="review-dot review-dot-mobile" aria-label="reviews mobile slide 2"></button><button data-i="2" class="review-dot review-dot-mobile" aria-label="reviews mobile slide 3"></button><button data-i="3" class="review-dot review-dot-mobile" aria-label="reviews mobile slide 4"></button><button data-i="4" class="review-dot review-dot-mobile" aria-label="reviews mobile slide 5"></button><button data-i="5" class="review-dot review-dot-mobile" aria-label="reviews mobile slide 6"></button><button data-i="6" class="review-dot review-dot-mobile" aria-label="reviews mobile slide 7"></button><button data-i="7" class="review-dot review-dot-mobile" aria-label="reviews mobile slide 8"></button><button data-i="8" class="review-dot review-dot-mobile" aria-label="reviews mobile slide 9"></button><button data-i="9" class="review-dot review-dot-mobile" aria-label="reviews mobile slide 10"></button></div>
+      </div>
+    </section>
+    
+    <section class="section" id="contacts">
+      <h2 class="section-title" style="margin-bottom:16px">Контакты</h2>
+      <div class="contacts">
+        <div class="contacts-info">
+          <div class="row">
+            <div class="label">Адрес</div>
+            <p>Набережные Челны, ул. Сююмбике 21/33 (41/04 по комплексу), вход со стороны пр. Беляева</p>
+          </div>
+          <div class="row">
+            <div class="label">Режим работы</div>
+            <p>10:00–20:00 ежедневно</p>
+          </div>
+          <div class="row">
+            <div class="label">Телефон магазина</div>
+            <p><a href="tel:+79870059039">+7 (987) 005-90-39</a></p>
+          </div>
+          <div class="row">
+            <div class="label">Сервис iRemont-116</div>
+            <p><a href="tel:+79172757445">+7 (917) 275-74-45</a></p>
+          </div>
+          <div class="row">
+            <div class="label">Email</div>
+            <p><a href="mailto:istore116shop@gmail.com">istore116shop@gmail.com</a></p>
+          </div>
+          <div class="row">
+            <div class="label">Соцсети и заявки</div>
+            <div class="social-info">
+              <p><a href="https://t.me/iStore116Bot" target="_blank" rel="noopener">Заявки на покупку</a></p>
+              <p><a href="https://t.me/iStore116/1616" target="_blank" rel="noopener">Розыгрыш призов</a></p>
+              <div class="social-icons" aria-label="Соцсети">
+                <a class="social-icon-btn" href="https://t.me/iStore116" target="_blank" rel="noopener" aria-label="Telegram канал">
+                  <svg class="social-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21.8 4.5c.3-1.4-1-2.1-2.2-1.7L2.9 9.2c-1.5.6-1.5 2.7.1 3.1l4.6 1.3 1.7 5.3c.4 1.3 2.1 1.6 3 .6l2.6-2.6 4.7 3.4c1 .7 2.3.2 2.5-1.1L21.8 4.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M8 13.5 18.8 6.9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+                </a>
+                <a class="social-icon-btn" href="https://max.ru/iStore116" target="_blank" rel="noopener" aria-label="MAX канал">
+                  <svg class="social-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4.5 18.5V5.5h3.8l3.7 6.2 3.7-6.2h3.8v13h-3.3V11l-3 5h-2.4l-3-5v7.5H4.5Z" fill="currentColor"/></svg>
+                </a>
+                <a class="social-icon-btn" href="https://www.instagram.com/istore_shop116?igsh=YnpsNmkzYzduNmp6&utm_source=qr" target="_blank" rel="noopener" aria-label="Instagram">
+                  <svg class="social-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7.5 3.8h9A3.7 3.7 0 0 1 20.2 7.5v9a3.7 3.7 0 0 1-3.7 3.7h-9A3.7 3.7 0 0 1 3.8 16.5v-9A3.7 3.7 0 0 1 7.5 3.8Z" stroke="currentColor" stroke-width="1.7"/><path d="M12 16.2a4.2 4.2 0 1 0 0-8.4 4.2 4.2 0 0 0 0 8.4Z" stroke="currentColor" stroke-width="1.7"/><path d="M17.2 6.9h.01" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"/></svg>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="contacts-map">
+          <iframe src="https://yandex.ru/map-widget/v1/?ll=52.394279%2C55.739588&mode=search&sll=52.394279%2C55.739588&sspn=0.01%2C0.005&text=%D0%9D%D0%B0%D0%B1%D0%B5%D1%80%D0%B5%D0%B6%D0%BD%D1%8B%D0%B5%20%D0%A7%D0%B5%D0%BB%D0%BD%D1%8B%20%D0%A1%D1%8E%D1%8E%D0%BC%D0%B1%D0%B8%D0%BA%D0%B5%2021%2F33&z=17" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+      </div>
+    </section>
+    
+    <footer class="footer">
+      <div class="footer-grid">
+        <div>
+          <h3>iStore Набережные Челны</h3>
+          <p>Набережные Челны, ул. Сююмбике 21/33 (41/04 по комплексу), вход со стороны пр. Беляева</p>
+          <p>10:00–20:00 ежедневно</p>
+        </div>
+        <div>
+          <h3>Связь</h3>
+          <p><a href="tel:+79870059039">+7 (987) 005-90-39</a></p>
+          <p><a href="tel:+79172757445">+7 (917) 275-74-45</a> — сервис</p>
+          <p><a href="mailto:istore116shop@gmail.com">istore116shop@gmail.com</a></p>
+          <p style="margin-top:12px"><a href="https://t.me/iStore116Bot" target="_blank" rel="noopener">Заявки на покупку</a></p>
+          <p><a href="https://t.me/iStore116/1616" target="_blank" rel="noopener">Розыгрыш призов</a></p>
+          <div class="social-icons" aria-label="Соцсети">
+            <a class="social-icon-btn" href="https://t.me/iStore116" target="_blank" rel="noopener" aria-label="Telegram канал">
+              <svg class="social-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21.8 4.5c.3-1.4-1-2.1-2.2-1.7L2.9 9.2c-1.5.6-1.5 2.7.1 3.1l4.6 1.3 1.7 5.3c.4 1.3 2.1 1.6 3 .6l2.6-2.6 4.7 3.4c1 .7 2.3.2 2.5-1.1L21.8 4.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M8 13.5 18.8 6.9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+            </a>
+            <a class="social-icon-btn" href="https://max.ru/iStore116" target="_blank" rel="noopener" aria-label="MAX канал">
+              <svg class="social-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4.5 18.5V5.5h3.8l3.7 6.2 3.7-6.2h3.8v13h-3.3V11l-3 5h-2.4l-3-5v7.5H4.5Z" fill="currentColor"/></svg>
+            </a>
+            <a class="social-icon-btn" href="https://www.instagram.com/istore_shop116?igsh=YnpsNmkzYzduNmp6&utm_source=qr" target="_blank" rel="noopener" aria-label="Instagram">
+              <svg class="social-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7.5 3.8h9A3.7 3.7 0 0 1 20.2 7.5v9a3.7 3.7 0 0 1-3.7 3.7h-9A3.7 3.7 0 0 1 3.8 16.5v-9A3.7 3.7 0 0 1 7.5 3.8Z" stroke="currentColor" stroke-width="1.7"/><path d="M12 16.2a4.2 4.2 0 1 0 0-8.4 4.2 4.2 0 0 0 0 8.4Z" stroke="currentColor" stroke-width="1.7"/><path d="M17.2 6.9h.01" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"/></svg>
+            </a>
+          </div>
+        </div>
+        <div>
+          <h3>Разделы</h3>
+          <p><a href="/">Главная</a></p>
+          <p><a href="/catalog/">Каталог</a></p>
+          <p><a href="https://2gis.ru/nabchelny/firm/70000001065465431/tab/reviews?m=52.394279%2C55.739588%2F16.38" target="_blank" rel="noopener">Отзывы в 2GIS</a></p>
+        </div>
+      </div>
+      <div class="footer-copy">© iStore Набережные Челны. Все товарные знаки принадлежат их правообладателям.</div>
+    </footer>
+    </div><script>
+(function(){
+  function norm(s){return (s||"").toString().toLowerCase().trim()}
+  function getQ(){
+    try{
+      return new URLSearchParams(location.search).get("q")||""
+    }catch(e){return ""}
+  }
+  function filterByQuery(q){
+    q=norm(q)
+    const selectors=[".product-card",".catalog-tile",".cat-card"]
+    const nodes=selectors.flatMap(sel=>Array.from(document.querySelectorAll(sel)))
+    if(!nodes.length)return
+    nodes.forEach(el=>{
+      const text=norm(el.textContent)
+      el.style.display = !q || text.includes(q) ? "" : "none"
+    })
+  }
+  const form=document.querySelector("[data-search]")
+  if(form){
+    const input=form.querySelector("input[name='q']")
+    const initial=getQ()
+    if(input && initial){input.value=initial}
+    if(initial){filterByQuery(initial)}
+    form.addEventListener("submit",(e)=>{
+      e.preventDefault()
+      const q=input?input.value:""
+      const url=new URL(location.href)
+      if(q && q.trim()) url.searchParams.set("q",q.trim()); else url.searchParams.delete("q")
+      history.replaceState(null,"",url.toString())
+      filterByQuery(q)
+    })
+  }
+
+  const root=document.querySelector('[data-hero]');
+  if(!root)return;
+
+  function initHero(){
+    const slides=root.querySelectorAll('.hero-slide');
+    const dots=root.querySelectorAll('.hero-dot');
+    if(!slides.length||!dots.length) return;
+    let i=0,timer;
+    function go(n){i=(n+slides.length)%slides.length;slides.forEach((s,idx)=>s.classList.toggle('is-active',idx===i));dots.forEach((d,idx)=>d.classList.toggle('is-active',idx===i));}
+    function next(){go(i+1)}
+    function prev(){go(i-1)}
+    function start(){timer=setInterval(next,5000)}
+    function stop(){clearInterval(timer)}
+    const nextBtn=root.querySelector('.hero-arrow.next');
+    const prevBtn=root.querySelector('.hero-arrow.prev');
+    if(nextBtn)nextBtn.addEventListener('click',()=>{stop();next();start()});
+    if(prevBtn)prevBtn.addEventListener('click',()=>{stop();prev();start()});
+    dots.forEach((d,idx)=>d.addEventListener('click',()=>{stop();go(idx);start()}));
+    start();
+  }
+
+  (async function(){
+    try{
+      const res=await fetch('/api/public/hero',{cache:'no-store'});
+      if(!res.ok) return initHero();
+      const json=await res.json();
+      const data=Array.isArray(json.data)?json.data:[];
+      if(!data.length) return initHero();
+      const slidesHost=root.querySelector('.hero-slides');
+      const dotsHost=root.querySelector('.hero-dots');
+      if(!slidesHost||!dotsHost) return initHero();
+      slidesHost.innerHTML='';
+      dotsHost.innerHTML='';
+      data.forEach((s,idx)=>{
+        const url=(s&&s.image_url)?String(s.image_url):'';
+        const title=(s&&s.title)?String(s.title):('Баннер '+(idx+1));
+        const slide=document.createElement('div');
+        slide.className='hero-slide'+(idx===0?' is-active':'');
+        if(url) slide.setAttribute('style',"--hero-bg:url('"+url.replace(/'/g,"%27")+"')");
+        const img=document.createElement('img');
+        img.className='hero-img';
+        img.src=url||'/assets/hero-banner-full.png';
+        img.alt=title;
+        img.loading = idx===0 ? 'eager' : 'lazy';
+        slide.appendChild(img);
+        slidesHost.appendChild(slide);
+
+        const dot=document.createElement('button');
+        dot.className='hero-dot'+(idx===0?' is-active':'');
+        dot.setAttribute('aria-label','slide '+(idx+1));
+        dotsHost.appendChild(dot);
+      });
+      initHero();
+    }catch(e){
+      initHero();
+    }
+  })();
+})();
+
+(function(){
+  const root=document.querySelector('[data-cats]');
+  if(!root)return;
+  const track=root.querySelector('.cats-track');
+  const prevBtn=document.querySelector('[data-cats-prev]');
+  const nextBtn=document.querySelector('[data-cats-next]');
+  let i=0;
+  const isMobile=()=>window.innerWidth<=760;
+  const getPages=()=>Array.from(track.querySelectorAll(isMobile()?'.cats-page-mobile':'.cats-page-desktop'));
+  const getDots=()=>Array.from(root.querySelectorAll(isMobile()?'.cats-dot-mobile':'.cats-dot-desktop'));
+  function go(n){
+    const pages=getPages();
+    if(!pages.length)return;
+    i=(n+pages.length)%pages.length;
+    track.style.transform='translateX(-'+(i*100)+'%)';
+    getDots().forEach((d,idx)=>d.classList.toggle('is-active',idx===i));
+  }
+  if(nextBtn)nextBtn.addEventListener('click',()=>go(i+1));
+  if(prevBtn)prevBtn.addEventListener('click',()=>go(i-1));
+  root.querySelectorAll('.cats-dot').forEach((d)=>d.addEventListener('click',()=>go(parseInt(d.dataset.i||'0',10))));
+  window.addEventListener('resize',()=>{i=0;go(0)});
+  go(0);
+})();
+
+(function(){
+  const root=document.querySelector('[data-buyers]');
+  if(!root)return;
+  const track=root.querySelector('.buyers-track');
+  const section=root.closest('.section');
+  const prevBtn=section?section.querySelector('.buyers-arrow.prev'):null;
+  const nextBtn=section?section.querySelector('.buyers-arrow.next'):null;
+  let i=0;
+  const isMobile=()=>window.innerWidth<=760;
+  const getPages=()=>Array.from(track.querySelectorAll(isMobile()?'.buyers-page-mobile':'.buyers-page-desktop'));
+  const getDots=()=>Array.from(root.querySelectorAll(isMobile()?'.buyers-dot-mobile':'.buyers-dot-desktop'));
+  function esc(s){return String(s||'').replace(/[&<>"']/g,(c)=>({ "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;" }[c]))}
+  function fmt(n){try{return new Intl.NumberFormat('ru-RU').format(n)+' ₽'}catch(e){return String(n)+' ₽'}}
+  function uniq(arr){return Array.from(new Set(arr.filter(Boolean)))}
+  function colorsFromVariants(vs){
+    const out=[];
+    for(let k=0;k<vs.length;k++){
+      const cs=Array.isArray(vs[k]&&vs[k].colors)?vs[k].colors:[];
+      for(let j=0;j<cs.length;j++) out.push(cs[j]);
+    }
+    return uniq(out).slice(0,8);
+  }
+  function renderCard(p){
+    const img=(Array.isArray(p.imageUrls)&&p.imageUrls[0])?String(p.imageUrls[0]):'/assets/hero-banner-full.png';
+    const variants=Array.isArray(p.variants)?p.variants:[];
+    const stor=uniq(variants.map(v=>v&&v.storageGb?String(v.storageGb):'')).slice(0,2);
+    const sim=uniq(variants.map(v=>v&&v.simType?String(v.simType).toUpperCase():'')) .slice(0,1);
+    const dots=colorsFromVariants(variants).map(c=>'<span class="color-dot" style="background:'+esc(c)+'"></span>').join('');
+    const chips=[
+      stor[0]?('<span class="meta-chip">'+esc(stor[0])+' ГБ</span>'):'',
+      sim[0]?('<span class="meta-chip">'+esc(sim[0].replaceAll('_','+'))+'</span>'):''
+    ].filter(Boolean).join('');
+    return (
+      '<a class="product-card" href="/product/'+encodeURIComponent(p.slug)+'/">'+
+        '<div class="product-media"><img src="'+esc(img)+'" alt="'+esc(p.title||'')+'" loading="lazy"></div>'+
+        '<div class="product-body">'+
+          '<div class="product-title">'+esc(p.title||'')+'</div>'+
+          (p.subtitle?('<div class="product-sub">'+esc(p.subtitle)+'</div>'):'')+
+          (chips?('<div class="product-meta">'+chips+'</div>'):'')+
+          (dots?('<div class="color-dots">'+dots+'</div>'):'')+
+          '<div class="price">'+fmt(p.basePrice||0)+'</div>'+
+        '</div>'+
+      '</a>'
+    );
+  }
+  function buildPages(items, perPage, cls){
+    const pages=[];
+    for(let start=0; start<items.length; start+=perPage){
+      const chunk=items.slice(start,start+perPage);
+      pages.push('<div class="buyers-page '+cls+'">'+chunk.map(renderCard).join('')+'</div>');
+    }
+    return pages;
+  }
+  function buildDots(count, cls){
+    const host=root.closest('.section')?root.closest('.section').querySelector('.buyers-dots.'+cls):null;
+    if(!host) return;
+    host.innerHTML='';
+    for(let idx=0; idx<count; idx++){
+      const b=document.createElement('button');
+      b.className='buyers-dot buyers-dot-'+(cls==='buyers-dots-mobile'?'mobile':'desktop')+(idx===0?' is-active':'');
+      b.dataset.i=String(idx);
+      b.setAttribute('aria-label','buyers '+cls+' page '+(idx+1));
+      host.appendChild(b);
+    }
+  }
+  function go(n){
+    const pages=getPages();
+    if(!pages.length)return;
+    i=(n+pages.length)%pages.length;
+    track.style.transform='translateX(-'+(i*100)+'%)';
+    getDots().forEach((d,idx)=>d.classList.toggle('is-active',idx===i));
+  }
+  function bind(){
+    if(nextBtn)nextBtn.onclick=()=>go(i+1);
+    if(prevBtn)prevBtn.onclick=()=>go(i-1);
+    root.querySelectorAll('.buyers-dot').forEach((d)=>d.addEventListener('click',()=>go(parseInt(d.dataset.i||'0',10))));
+    window.addEventListener('resize',()=>{i=0;go(0)});
+    go(0);
+  }
+
+  (async function(){
+    try{
+      const res=await fetch('/api/public/featured',{cache:'no-store'});
+      if(!res.ok) return bind();
+      const json=await res.json();
+      const items=Array.isArray(json.data)?json.data:[];
+      if(!items.length) return bind();
+      track.innerHTML = buildPages(items,4,'buyers-page-desktop').concat(buildPages(items,2,'buyers-page-mobile')).join('');
+      buildDots(Math.ceil(items.length/4),'buyers-dots-desktop');
+      buildDots(Math.ceil(items.length/2),'buyers-dots-mobile');
+      bind();
+    }catch(e){
+      bind();
+    }
+  })();
+})();
+
+(function(){
+  const root=document.querySelector('[data-reviews]');
+  if(!root)return;
+  const isMobile=()=>window.innerWidth<=760;
+  const getTrack=()=>root.querySelector(isMobile()?'.review-track-mobile':'.review-track-desktop');
+  const getSlides=()=>Array.from((getTrack()||root).querySelectorAll('.review-slide'));
+  const getDots=()=>Array.from(root.querySelectorAll(isMobile()?'.review-dot-mobile':'.review-dot-desktop'));
+  let i=0,timer;
+  function go(n){
+    const track=getTrack();
+    const slides=getSlides();
+    if(!track || !slides.length)return;
+    i=(n+slides.length)%slides.length;
+    track.style.transform='translateX(-'+(i*100)+'%)';
+    getDots().forEach((d,idx)=>d.classList.toggle('is-active',idx===i));
+  }
+  function next(){go(i+1)}
+  function prev(){go(i-1)}
+  function start(){timer=setInterval(next,5500)}
+  function stop(){clearInterval(timer)}
+  root.querySelector('.review-arrow.next').addEventListener('click',()=>{stop();next();start()});
+  root.querySelector('.review-arrow.prev').addEventListener('click',()=>{stop();prev();start()});
+  root.querySelectorAll('.review-dot').forEach((d)=>d.addEventListener('click',()=>{stop();go(parseInt(d.dataset.i||'0',10));start()}));
+  window.addEventListener('resize',()=>{i=0;go(0)});
+  go(0);
+  start();
+})();
+</script></body></html>

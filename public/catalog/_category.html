@@ -1,0 +1,337 @@
+<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Категория — iStore Набережные Челны</title><meta name="description" content="Магазин техники Apple и аксессуаров в Набережных Челнах."><link rel="icon" type="image/png" href="/assets/header-logo.png"><script defer src="/assets/storefront.js?v=20260425-1"></script><style>
+:root{--bg:#1a1a1a;--panel:#222;--panel-2:#2a2a2a;--line:#323232;--text:#f2f2f2;--muted:#a8a8a8;--accent:#ff6600;--accent-2:#ff8533;--radius:24px;--shadow:0 12px 36px rgba(0,0,0,.35)}
+*{box-sizing:border-box}html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}img{max-width:100%;display:block}
+button{font-family:inherit;cursor:pointer}
+.page{max-width:1440px;margin:0 auto;padding:0 16px 40px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:12px 8px 10px;color:#cfcfcf;font-size:13px}
+.topbar-left,.topbar-right{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+.topbar a:hover{color:var(--accent)}
+.header{position:sticky;top:8px;z-index:30;background:rgba(30,30,30,.92);backdrop-filter:blur(16px);border:1px solid var(--line);border-radius:28px;padding:10px 14px;box-shadow:var(--shadow)}
+.header-row{display:flex;align-items:center;gap:14px;padding-left:170px}
+.logo-slot{position:absolute;left:14px;top:10px;bottom:10px;width:150px;border:none;background:transparent;display:flex;align-items:center;justify-content:center;overflow:visible}
+.logo-slot img{height:100%;width:auto;object-fit:contain;display:block}
+.search{height:48px;width:clamp(260px,38vw,460px);border-radius:999px;border:1px solid #333;background:#161616;display:flex;align-items:center;gap:10px;padding:0 18px;color:#7a7a7a}
+.search-icon{position:relative;flex:0 0 auto;width:16px;height:16px;display:inline-block}
+.search-icon::before{content:"";position:absolute;inset:0;border:2px solid #666;border-radius:50%}
+.search-icon::after{content:"";position:absolute;width:9px;height:2px;background:#666;right:-6px;bottom:-1px;transform:rotate(45deg);transform-origin:left center;border-radius:2px}
+.search-input{flex:1 1 auto;min-width:0;height:100%;border:0;outline:0;background:transparent;color:#ddd;font-size:14px}
+.search-input::placeholder{color:#7a7a7a}
+.search-btn{flex:0 0 auto;border:0;background:transparent;color:#9a9a9a;font-weight:700;font-size:12px;letter-spacing:.2px;padding:0 2px}
+.search-btn:hover{color:#fff}
+.cart-link{margin-left:auto;display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:999px;border:1px solid #333;background:#161616;position:relative}
+.cart-link:hover{background:#1f1f1f;border-color:#3a3a3a}
+.cart-badge{position:absolute;top:-6px;right:-6px;min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:var(--accent);color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;line-height:1}
+.nav{display:flex;gap:8px;overflow:auto;padding-top:10px;scrollbar-width:none;margin-left:170px}
+.nav::-webkit-scrollbar{display:none}
+.nav a{padding:10px 18px;border-radius:999px;background:#1b1b1b;border:1px solid #2d2d2d;white-space:nowrap;font-size:14px;color:#d9d9d9}
+.nav a:hover{background:#252525;border-color:#3a3a3a}
+.nav a.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.nav a.catalog-link{background:var(--accent);border-color:var(--accent);color:#fff}
+.section{margin-top:28px}
+.section-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:16px}
+.section-title{margin:0;font-size:32px;line-height:1.1;font-weight:800;letter-spacing:-.5px}
+.section-link{color:var(--accent);font-weight:600}
+.section-controls{display:flex;align-items:center;gap:12px}
+.muted{color:var(--muted)}
+.breadcrumbs{margin:18px 4px 8px;color:var(--muted);font-size:13px}
+.breadcrumbs a{color:var(--muted)}.breadcrumbs a:hover{color:var(--accent)}
+.breadcrumbs span.sep{margin:0 6px;color:#444}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.product-card{background:var(--panel);border:1px solid #2d2d2d;border-radius:24px;overflow:hidden;box-shadow:var(--shadow);transition:border-color .2s;display:block}
+.product-card:hover{border-color:var(--accent)}
+.product-media{height:260px;background:#181818;padding:20px;display:flex;align-items:center;justify-content:center}
+.product-media img{height:100%;width:100%;object-fit:contain}
+.product-body{padding:16px 18px 20px}
+.product-title{font-size:20px;font-weight:700;margin-bottom:6px;line-height:1.2}
+.product-sub{font-size:13px;color:var(--muted);margin-bottom:14px}
+.product-meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.meta-chip{display:inline-flex;align-items:center;padding:4px 10px;border-radius:999px;background:#efefef;border:1px solid #dfdfdf;color:#7d7d7d;font-size:11px;font-weight:700;letter-spacing:.2px}
+.color-dots{display:flex;gap:6px;align-items:center;margin-bottom:10px}
+.color-dot{width:10px;height:10px;border-radius:50%;border:1px solid rgba(255,255,255,.18);background:#777}
+.price{font-size:26px;font-weight:800;color:var(--accent);letter-spacing:-.3px;margin-top:2px}
+.empty-state{background:var(--panel);border:1px dashed #3a3a3a;border-radius:24px;padding:60px 24px;text-align:center;color:var(--muted);font-size:18px}
+.footer{margin-top:40px;border-top:1px solid #2d2d2d;padding-top:26px}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:18px}
+.footer h3{margin:0 0 12px;font-size:16px}
+.footer p{margin:0 0 10px;color:#cfcfcf;font-size:14px;line-height:1.5}
+.footer a:hover{color:var(--accent)}
+.footer-copy{margin-top:10px;color:#888;font-size:12px}
+@media (max-width:760px){
+  /* Match etalon header behavior on mobile (logo does not shrink) */
+  .header-row{display:grid;grid-template-columns:1fr auto;padding-left:0}
+  .logo-slot{display:none}
+  .search{grid-column:1/-1;width:100%}
+  .nav{margin-left:0}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .footer-grid{grid-template-columns:1fr}
+}
+</style></head><body><div class="page">
+  <div class="topbar">
+    <div class="topbar-left">
+      <a href="/installment/">Рассрочка</a>
+      <a href="/trade-in/">Trade-In</a>
+      <a href="/gifts/">Подарки</a>
+      <a href="/raffle/">Розыгрыш</a>
+      <a href="/#gift">Сертификат</a>
+      <a href="/iremont116/">Сервис</a>
+      <a href="/#contacts">Контакты</a>
+    </div>
+    <div class="topbar-right">
+      <span>Набережные Челны, Сююмбике 21/33</span>
+      <span>10:00–20:00 ежедневно</span>
+      <a href="tel:+79870059039">+7 (987) 005-90-39</a>
+    </div>
+  </div>
+  <header class="header">
+    <div class="header-row">
+      <div class="logo-slot" aria-label="logo"><img src="/assets/header-logo.png" alt="iStore logo"></div>
+      <form class="search" role="search" action="/catalog/" method="get" data-search>
+        <span class="search-icon" aria-hidden="true"></span>
+        <input class="search-input" name="q" placeholder="Поиск по каталогу" autocomplete="off">
+        <button class="search-btn" type="submit">Найти</button>
+      </form>
+      <a class="cart-link" href="/cart" aria-label="Корзина">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M7 7h14l-2 8H8L7 7Z" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/>
+          <path d="M7 7 6.3 4.8A2 2 0 0 0 4.4 3.5H3" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M9.5 20.2a1.2 1.2 0 1 0 0-2.4 1.2 1.2 0 0 0 0 2.4Z" fill="#fff"/>
+          <path d="M18 20.2a1.2 1.2 0 1 0 0-2.4 1.2 1.2 0 0 0 0 2.4Z" fill="#fff"/>
+        </svg>
+        <span class="cart-badge" data-cart-badge style="display:none">0</span>
+      </a>
+    </div>
+    <nav class="nav">
+      <a class="catalog-link active" href="/catalog/">Каталог</a>
+      <a class="" href="/catalog/iphone/">iPhone</a>
+      <a class="" href="/catalog/air-pods/">AirPods</a>
+      <a class="" href="/catalog/mac/">Mac</a>
+      <a class="" href="/catalog/apple-watch/">Apple Watch</a>
+      <a class="" href="/catalog/ipad/">iPad</a>
+      <a class="" href="/catalog/samsung/">Samsung</a>
+      <a class="" href="/catalog/dyson/">Dyson</a>
+      <a class="" href="/catalog/aksessuary/">Аксессуары</a>
+    </nav>
+  </header>
+
+  <nav class="breadcrumbs"><a href="/">Главная</a><span class="sep">/</span><a href="/catalog/">Каталог</a><span class="sep">/</span><span data-cat-title>Категория</span></nav><section class="section"><div class="section-head"><h1 class="section-title" data-cat-h1>Категория</h1></div><div class="grid" id="productsGrid"></div><div class="empty-state" id="emptyState" style="display:none">Скоро в наличии</div></section>
+
+  <footer class="footer">
+    <div class="footer-grid">
+      <div>
+        <h3>iStore Набережные Челны</h3>
+        <p>Набережные Челны, ул. Сююмбике 21/33 (41/04 по комплексу), вход со стороны пр. Беляева</p>
+        <p>10:00–20:00 ежедневно</p>
+      </div>
+      <div>
+        <h3>Связь</h3>
+        <p><a href="tel:+79870059039">+7 (987) 005-90-39</a></p>
+        <p><a href="tel:+79172757445">+7 (917) 275-74-45</a> — сервис</p>
+        <p><a href="mailto:istore116shop@gmail.com">istore116shop@gmail.com</a></p>
+      </div>
+      <div>
+        <h3>Разделы</h3>
+        <p><a href="/">Главная</a></p>
+        <p><a href="/catalog/">Каталог</a></p>
+      </div>
+    </div>
+    <div class="footer-copy">© iStore Набережные Челны. Все товарные знаки принадлежат их правообладателям.</div>
+  </footer>
+</div>
+
+<script>
+(function(){
+  function getSlug(){
+    var parts=location.pathname.split('/').filter(Boolean);
+    var i=parts.indexOf('catalog');
+    return i>=0 ? (parts[i+1]||'') : '';
+  }
+  var slug=getSlug();
+
+  // Legacy slugs from the original ready UI → real slugs in Supabase after import.
+  // Important: products must show ONLY for the mapped category.
+  var map={
+    // iPhone is an aggregator: should include all iPhone categories.
+    'iphone':'iphone',
+    'air-pods':'airpods',
+    'apple-watch':'applewatch',
+    'mac':'macbook',
+    'aksessuary':'aksessuary',
+    'samsung':'samsung',
+    'dyson':'dyson',
+    'ipad':'ipad'
+  };
+  var querySlug = map[slug] || slug;
+
+  function setTitle(t){
+    var el1=document.querySelector('[data-cat-title]');
+    var el2=document.querySelector('[data-cat-h1]');
+    if(el1) el1.textContent=t;
+    if(el2) el2.textContent=t;
+    document.title = t + ' — iStore Набережные Челны';
+  }
+
+  function guessTitleFromUi(){
+    try{
+      var href1='/catalog/'+slug+'/';
+      var href2='/catalog/'+slug;
+      var link=document.querySelector('.nav a[href="'+href1+'"],.nav a[href="'+href2+'"]');
+      if(link && link.textContent) return String(link.textContent).trim();
+    }catch(_e){}
+    return '';
+  }
+
+  function prettyFromSlug(s){
+    s=String(s||'').trim();
+    if(!s) return 'Категория';
+    var dict={
+      'iphone':'iPhone',
+      'air-pods':'AirPods',
+      'apple-watch':'Apple Watch',
+      'mac':'Mac',
+      'ipad':'iPad',
+      'samsung':'Samsung',
+      'dyson':'Dyson',
+      'aksessuary':'Аксессуары',
+      'google':'Google Pixel',
+      'igrovye-pristavki':'Игровые приставки',
+      'tehnika-dlya-doma':'Техника для дома',
+      'fitnes-braslety':'Фитнес-браслеты',
+      'smartfony':'Смартфоны',
+      'planshety':'Планшеты',
+      'smart-chasy':'Смарт-часы',
+      'noutbuki':'Ноутбуки',
+      'fototehnika':'Фототехника',
+      'akustika':'Акустика',
+      'sistemy-virtualnoy-realnosti':'Системы виртуальной реальности'
+    };
+    if(dict[s]) return dict[s];
+    var t=s.replace(/-/g,' ');
+    return t.charAt(0).toUpperCase()+t.slice(1);
+  }
+
+  // Set title immediately (no "Категория" flash), then refine from API.
+  setTitle(guessTitleFromUi() || prettyFromSlug(slug));
+
+  function normalizeColor(v){
+    v=String(v||'').trim();
+    if(!v) return '#777';
+    if(v[0]==='#') return v;
+    var k=v.toLowerCase();
+    var dict={
+      'black':'#111111','midnight':'#1b1f2a','starlight':'#f4efe6','white':'#f6f7f9','silver':'#e6e7ea',
+      'blue':'#2f5fb3','green':'#2fa36b','red':'#c73737','pink':'#d77aa9','yellow':'#d9b72b',
+      'gold':'#c9a46b','purple':'#6b4bb3','teal':'#2aa9a6','ultramarine':'#1d3fa8','orange':'#ff7a1a',
+      'sage':'#7b8f7a','lavender':'#8f7bb8','natural':'#b7b0a6','graphite':'#3a3a3a'
+    };
+    if(dict[k]) return dict[k];
+    // If value contains multiple words like "Esim Orange" - pick last token.
+    var parts=k.split(/\s+/); 
+    var last=parts[parts.length-1];
+    if(dict[last]) return dict[last];
+    return '#777';
+  }
+
+  function priceFmt(n){
+    try{ return Number(n||0).toLocaleString('ru-RU') + ' ₽'; }catch(_e){ return (n||0)+' ₽'; }
+  }
+
+  function uniq(arr){
+    var s=new Set();
+    arr.forEach(function(x){ if(x) s.add(x); });
+    return Array.from(s);
+  }
+
+  function simLabel(simType){
+    if(simType==='esim') return 'ESIM';
+    if(simType==='sim') return 'NANO SIM';
+    if(simType==='sim_esim') return 'NANO SIM+ESIM';
+    return '';
+  }
+
+  function renderCard(p){
+    var variants = Array.isArray(p.variants)?p.variants:[];
+    variants = variants.slice().sort(function(a,b){ return (a.price||0)-(b.price||0); });
+    var v = variants[0] || null;
+
+    var chips='';
+    if(v && v.storageGb){
+      chips += '<span class="meta-chip">'+String(v.storageGb)+' ГБ</span>';
+    }
+    var s = v ? simLabel(v.simType) : '';
+    if(s){
+      chips += '<span class="meta-chip">'+s+'</span>';
+    }
+    chips = chips ? ('<div class="product-meta">'+chips+'</div>') : '';
+
+    // Avoid Array.prototype.flatMap for wider browser support.
+    var allColors = [];
+    for (var ii = 0; ii < variants.length; ii++) {
+      var cc = variants[ii] && Array.isArray(variants[ii].colors) ? variants[ii].colors : [];
+      for (var jj = 0; jj < cc.length; jj++) allColors.push(cc[jj]);
+    }
+    var colors = uniq(allColors).slice(0,8);
+    var dots = colors.map(function(c){ return '<span class="color-dot" style="background:'+normalizeColor(c)+'" title="'+String(c).replace(/\"/g,'')+'"></span>'; }).join('');
+
+    return (
+      '<a class="product-card" href="/product/'+encodeURIComponent(p.slug)+'">'+
+        '<div class="product-media"><div style="opacity:.6;font-weight:900">Фото позже</div></div>'+
+        '<div class="product-body">'+
+          '<div class="product-title">'+escapeHtml(p.title||'')+'</div>'+
+          '<div class="product-sub">'+escapeHtml(p.subtitle||'')+'</div>'+
+          chips+
+          (dots?('<div class="color-dots">'+dots+'</div>'):'<div style="height:10px"></div>')+
+          '<div class="price">'+priceFmt(p.basePrice)+'</div>'+
+        '</div>'+
+      '</a>'
+    );
+  }
+
+  function escapeHtml(s){
+    return String(s||'').replace(/[&<>"]/g,function(ch){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[ch];});
+  }
+
+  async function load(){
+    try{
+      // Title from categories API if present
+      var cats = await fetch('/api/public/categories', { cache: 'no-store' }).then(function(r){return r.ok?r.json():null;});
+      if(cats && cats.data){
+        var cat = cats.data.find(function(c){ return c.slug===querySlug; });
+        if(!cat && map[slug]) cat = cats.data.find(function(c){ return c.slug===map[slug]; });
+        if(!cat && slug) cat = cats.data.find(function(c){ return c.slug===slug; });
+        if(cat) setTitle(cat.title||slug);
+        else setTitle(slug || 'Каталог');
+      }else{
+        setTitle(slug || 'Каталог');
+      }
+
+      // no-store so it always loads immediately; retry once on transient network failure
+      var url = '/api/public/products?category='+encodeURIComponent(querySlug);
+      var res;
+      try{
+        res = await fetch(url, { cache: 'no-store' });
+      }catch(e1){
+        res = await fetch(url, { cache: 'no-store' });
+      }
+      if(!res.ok) throw new Error('HTTP '+res.status);
+      var json = await res.json();
+      var items = (json && json.data) ? json.data : [];
+      var grid = document.getElementById('productsGrid');
+      var empty = document.getElementById('emptyState');
+      if(!grid) return;
+      if(!items.length){
+        if(empty) empty.style.display='block';
+        return;
+      }
+      grid.innerHTML = items.map(renderCard).join('');
+    }catch(e){
+      var empty = document.getElementById('emptyState');
+      if(empty) empty.style.display='block';
+    }
+  }
+
+  load();
+})();
+</script>
+</body></html>
+
