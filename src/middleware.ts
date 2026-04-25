@@ -5,7 +5,7 @@ export async function middleware(req: NextRequest) {
   if (req.nextUrl.pathname.startsWith("/admin") && !req.nextUrl.pathname.startsWith("/admin/login")) {
     const token = req.cookies.get(ADMIN_COOKIE_NAME)?.value;
     const ok = await verifySessionToken(token);
-    if (ok) return;
+    if (ok) return NextResponse.next();
     const url = new URL("/admin/login", req.url);
     return NextResponse.redirect(url);
   }

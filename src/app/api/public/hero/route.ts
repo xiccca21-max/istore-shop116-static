@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
-import { supabaseService } from "@/lib/supabaseServer";
+import { supabaseAnon } from "@/lib/supabaseServer";
 import { readEtalonHeroSlidesFromWww } from "@/lib/heroEtalon";
 
 export async function GET() {
-  const sb = supabaseService();
+  const sb = supabaseAnon();
   const withImage = await sb
     .from("hero_slides")
     .select("id,title,image_url,sort_order,is_active")
@@ -27,7 +27,8 @@ export async function GET() {
     }
   })();
 
-  const enriched = (data as any[]).map((s) => {
+  type HeroRow = { id: string; title: string; image_url?: string | null; sort_order?: number; is_active?: boolean };
+  const enriched = (data as HeroRow[]).map((s) => {
     if (!s) return s;
     if (s.image_url) return s;
     const img = etalonByTitle.get(String(s.title || "")) || null;

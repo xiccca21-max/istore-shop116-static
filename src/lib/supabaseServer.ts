@@ -18,8 +18,7 @@ async function fetchWithRetry(input: RequestInfo | URL, init?: RequestInit): Pro
       return await fetch(input, init);
     } catch (e) {
       lastErr = e;
-      // No artificial delays: immediate retries.
-      if (i < tries - 1) await sleep(0);
+      if (i < tries - 1) await sleep(50 * (i + 1));
     }
   }
   throw lastErr;

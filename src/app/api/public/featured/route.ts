@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { supabaseService } from "@/lib/supabaseServer";
+import { supabaseAnon } from "@/lib/supabaseServer";
 
 type ApiProduct = {
   id: string;
@@ -23,7 +23,7 @@ type ApiProduct = {
 };
 
 export async function GET() {
-  const sb = supabaseService();
+  const sb = supabaseAnon();
 
   const { data, error } = await sb
     .from("homepage_featured_products")
@@ -59,7 +59,7 @@ export async function GET() {
 
   const mapped: ApiProduct[] = rows
     .map((r) => r.products)
-    .filter(Boolean)
+    .filter((p): p is NonNullable<(typeof rows)[number]["products"]> => p != null && p.is_active)
     .map((p) => ({
       id: p!.id,
       slug: p!.slug,

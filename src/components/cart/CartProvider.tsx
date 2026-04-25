@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 import type { CartItem } from "@/lib/cartTypes";
-import { notifyCartChanged } from "@/lib/cartEvents";
+import { CART_CHANGED_EVENT, notifyCartChanged } from "@/lib/cartEvents";
 import { loadCart, saveCart } from "@/lib/cartStorage";
 
 type CartContextValue = {
@@ -24,8 +24,23 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     function onStorage(e: StorageEvent) {
       if (e.key === "istore_cart_v1") setItems(loadCart());
     }
+    function onSameTabCart() {
+      setItems((prev) => {
+        const next = loadCart();
+        try {
+          if (JSON.stringify(prev) === JSON.stringify(next)) return prev;
+        } catch {
+          /* ignore */
+        }
+        return next;
+      });
+    }
     window.addEventListener("storage", onStorage);
-    return () => window.removeEventListener("storage", onStorage);
+    window.addEventListener(CART_CHANGED_EVENT, onSameTabCart);
+    return () => {
+      window.removeEventListener("storage", onStorage);
+      window.removeEventListener(CART_CHANGED_EVENT, onSameTabCart);
+    };
   }, []);
 
   useEffect(() => {

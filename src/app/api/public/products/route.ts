@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { supabaseService } from "@/lib/supabaseServer";
+import { supabaseAnon } from "@/lib/supabaseServer";
 
 type ApiProduct = {
   id: string;
@@ -34,7 +34,7 @@ export async function GET(req: Request) {
   const limit = limitRaw ? Math.max(0, Math.min(50, parseInt(limitRaw, 10) || 0)) : 0;
   const cacheKey = `${categorySlug || "__all__"}|q=${searchQ.toLowerCase()}|l=${limit || 0}`;
 
-  const sb = supabaseService();
+  const sb = supabaseAnon();
 
   function escLike(s: string) {
     // Escape characters meaningful to LIKE/ILIKE and PostgREST filters.
@@ -65,7 +65,7 @@ export async function GET(req: Request) {
         }
         return NextResponse.json({ error: catsErr.message }, { status: 500 });
       }
-      const ids = (cats || []).map((c: any) => c.id).filter(Boolean);
+      const ids = (cats || []).map((c: { id: string }) => c.id).filter(Boolean);
       if (!ids.length) return NextResponse.json({ data: [] });
 
       let q = sb

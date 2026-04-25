@@ -8,9 +8,6 @@ const nextConfig: NextConfig = {
     return [
       // Serve the current static storefront as the homepage.
       { source: "/", destination: "/index.html" },
-      // Cart
-      { source: "/cart", destination: "/cart/index.html" },
-      { source: "/cart/", destination: "/cart/index.html" },
       // Service landing
       { source: "/iremont116", destination: "/iremont116/index.html" },
       { source: "/iremont116/", destination: "/iremont116/index.html" },

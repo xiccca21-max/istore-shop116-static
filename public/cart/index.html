@@ -158,7 +158,7 @@ a{color:inherit;text-decoration:none}img{max-width:100%;display:block}button,inp
   function esc(s){return String(s||'').replace(/[&<>"']/g,(c)=>({ "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;" }[c]))}
   function safeJson(raw){try{return JSON.parse(raw)}catch(e){return null}}
   function load(){const v=safeJson(localStorage.getItem(KEY)||'');return Array.isArray(v)?v:[]}
-  function save(items){localStorage.setItem(KEY, JSON.stringify(items)); window.dispatchEvent(new StorageEvent('storage',{key:KEY}))}
+  function save(items){localStorage.setItem(KEY, JSON.stringify(items)); window.dispatchEvent(new StorageEvent('storage',{key:KEY})); window.dispatchEvent(new Event('istore-cart-changed'))}
   function fmt(n){try{return new Intl.NumberFormat('ru-RU').format(n)+' ₽'}catch(e){return String(n)+' ₽'}}
   function count(items){return items.reduce((s,it)=>s+Math.max(0,parseInt(it&&it.qty||0,10)||0),0)}
   function total(items){return items.reduce((s,it)=>s+(Math.max(0,parseInt(it&&it.qty||0,10)||0)*(parseInt(it&&it.price||0,10)||0)),0)}

@@ -1,11 +1,20 @@
 import { NextResponse } from "next/server";
-import { supabaseService } from "@/lib/supabaseServer";
+import { supabaseAnon } from "@/lib/supabaseServer";
 
-let cache: any[] | null = null;
+type CategoryRow = {
+  id: string;
+  slug: string;
+  title: string;
+  image_url: string | null;
+  sort_order: number;
+  is_hidden: boolean;
+};
+
+let cache: CategoryRow[] | null = null;
 let cacheAt = 0;
 
 export async function GET() {
-  const sb = supabaseService();
+  const sb = supabaseAnon();
   const { data, error } = await sb
     .from("categories")
     .select("id,slug,title,image_url,sort_order,is_hidden")

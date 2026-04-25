@@ -15,10 +15,6 @@
     return Array.isArray(v) ? v : [];
   }
 
-  function saveCart(items) {
-    localStorage.setItem(CART_KEY, JSON.stringify(items));
-  }
-
   function cartCount(items) {
     return items.reduce((sum, it) => sum + Math.max(0, parseInt(it?.qty ?? 0, 10) || 0), 0);
   }
@@ -91,25 +87,6 @@
     slot.appendChild(a);
   }
 
-  function addToCartFromCard(card) {
-    const title = card.querySelector(".product-title")?.textContent?.trim() || "Товар";
-    const subtitle = card.querySelector(".product-sub")?.textContent?.trim() || "";
-    const img = card.querySelector("img")?.getAttribute("src") || null;
-    const priceText = card.querySelector(".price")?.textContent || "";
-    const price = parseInt(String(priceText).replace(/[^\d]/g, ""), 10) || 0;
-
-    // Use stable id derived from title+price+img.
-    const variantId = btoa(unescape(encodeURIComponent(`${title}|${price}|${img || ""}`))).slice(0, 32);
-    const productId = variantId;
-
-    const items = loadCart();
-    const idx = items.findIndex((x) => x?.variantId === variantId);
-    if (idx >= 0) items[idx] = { ...items[idx], qty: (items[idx].qty || 0) + 1 };
-    else items.push({ variantId, productId, title, subtitle, imageUrl: img, price, qty: 1 });
-    saveCart(items);
-    renderBadge();
-  }
-
   function slugify(input) {
     return String(input)
       .trim()
@@ -144,8 +121,10 @@
           window.location.href = `/product/${slug}`;
           return;
         }
+        window.location.href = `/catalog/?q=${encodeURIComponent(title)}`;
+        return;
       }
-      addToCartFromCard(card); // fallback
+      window.location.href = "/catalog/";
     });
   }
 
