@@ -49,7 +49,7 @@ button{font-family:inherit;cursor:pointer}
 .hero-arrow.prev{left:18px}.hero-arrow.next{right:18px}
 .hero-dots{position:absolute;bottom:16px;left:0;right:0;display:flex;gap:8px;justify-content:center}
 .hero-dot{width:8px;height:8px;border-radius:50%;background:#555;border:none;padding:0}
-.hero-dot.is-active{background:var(--accent);width:24px;border-radius:4px}
+.hero-dot.is-active{background:var(--accent)}
 
 .cats-carousel{position:relative}
 .cats-viewport{overflow:hidden;border-radius:24px}
@@ -65,7 +65,7 @@ button{font-family:inherit;cursor:pointer}
 .cats-arrow:disabled{opacity:.35;cursor:default}
 .cats-dots{display:flex;gap:8px;justify-content:center;margin-top:14px}
 .cats-dot{width:8px;height:8px;border-radius:50%;background:#3a3a3a;border:none;padding:0}
-.cats-dot.is-active{background:var(--accent);width:22px;border-radius:4px}
+.cats-dot.is-active{background:var(--accent)}
 .cats-dots-mobile{display:none}
 
 .grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
@@ -79,7 +79,7 @@ button{font-family:inherit;cursor:pointer}
 .buyers-arrow:disabled{opacity:.35;cursor:default}
 .buyers-dots{display:flex;gap:8px;justify-content:center;margin-top:14px}
 .buyers-dot{width:8px;height:8px;border-radius:50%;background:#3a3a3a;border:none;padding:0}
-.buyers-dot.is-active{background:var(--accent);width:22px;border-radius:4px}
+.buyers-dot.is-active{background:var(--accent)}
 .buyers-dots-mobile{display:none}
 .product-card{background:var(--panel);border:1px solid #2d2d2d;border-radius:24px;overflow:hidden;box-shadow:var(--shadow);transition:border-color .2s}
 .product-card:hover{border-color:var(--accent)}
@@ -131,7 +131,7 @@ button{font-family:inherit;cursor:pointer}
 .review-arrow:hover{background:var(--accent);border-color:var(--accent)}
 .review-dots{display:flex;gap:8px;justify-content:center;margin-top:18px}
 .review-dot{width:8px;height:8px;border-radius:50%;background:#3a3a3a;border:none;padding:0}
-.review-dot.is-active{background:var(--accent);width:22px;border-radius:4px}
+.review-dot.is-active{background:var(--accent)}
 .review-dots-mobile{display:none}
 
 .contacts{display:grid;grid-template-columns:1fr 1.2fr;gap:24px;background:var(--panel);border:1px solid #2d2d2d;border-radius:30px;padding:26px;box-shadow:var(--shadow)}
@@ -149,6 +149,9 @@ button{font-family:inherit;cursor:pointer}
 .footer p,.footer a{color:#bfbfbf;line-height:1.7;font-size:14px}
 .footer a:hover{color:var(--accent)}
 .footer-copy{margin-top:24px;padding-top:18px;border-top:1px solid #242424;color:#7b7b7b;font-size:12px}
+.social-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.social-link{display:inline-flex;align-items:center;gap:8px;padding:9px 12px;border-radius:999px;background:#171717;border:1px solid #2d2d2d;color:#e7e7e7;font-weight:700;font-size:13px;line-height:1}
+.social-link:hover{border-color:var(--accent);background:#1e1e1e}
 
 @media (max-width:1150px){
   .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -229,6 +232,13 @@ button{font-family:inherit;cursor:pointer}
           <p><a href="tel:+79870059039">+7 (987) 005-90-39</a></p>
           <p><a href="tel:+79172757445">+7 (917) 275-74-45</a> — сервис</p>
           <p><a href="mailto:istore116shop@gmail.com">istore116shop@gmail.com</a></p>
+          <div class="social-links">
+            <a class="social-link" href="https://t.me/iStore116" target="_blank" rel="noopener">Telegram</a>
+            <a class="social-link" href="https://max.ru/iStore116" target="_blank" rel="noopener">MAX</a>
+            <a class="social-link" href="https://www.instagram.com/istore_shop116?igsh=YnpsNmkzYzduNmp6&utm_source=qr" target="_blank" rel="noopener">Instagram</a>
+            <a class="social-link" href="https://t.me/iStore116Bot" target="_blank" rel="noopener">Бот заявок</a>
+            <a class="social-link" href="https://t.me/iStore116/1616" target="_blank" rel="noopener">Розыгрыш</a>
+          </div>
         </div>
         <div>
           <h3>Разделы</h3>

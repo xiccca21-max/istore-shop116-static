@@ -12,7 +12,13 @@ button{font-family:inherit;cursor:pointer}
 .logo-slot{position:absolute;left:14px;top:10px;bottom:10px;width:150px;border:none;background:transparent;display:flex;align-items:center;justify-content:center;overflow:visible}
 .logo-slot img{height:100%;width:auto;object-fit:contain;display:block}
 .search{height:48px;width:clamp(260px,38vw,460px);border-radius:999px;border:1px solid #333;background:#161616;display:flex;align-items:center;gap:10px;padding:0 18px;color:#7a7a7a}
-.search::before{content:"";width:16px;height:16px;border:2px solid #666;border-radius:50%;display:inline-block}
+.search-icon{position:relative;flex:0 0 auto;width:16px;height:16px;display:inline-block}
+.search-icon::before{content:"";position:absolute;inset:0;border:2px solid #666;border-radius:50%}
+.search-icon::after{content:"";position:absolute;width:9px;height:2px;background:#666;right:-6px;bottom:-1px;transform:rotate(45deg);transform-origin:left center;border-radius:2px}
+.search-input{flex:1 1 auto;min-width:0;height:100%;border:0;outline:0;background:transparent;color:#ddd;font-size:14px}
+.search-input::placeholder{color:#7a7a7a}
+.search-btn{flex:0 0 auto;border:0;background:transparent;color:#9a9a9a;font-weight:700;font-size:12px;letter-spacing:.2px;padding:0 2px}
+.search-btn:hover{color:#fff}
 .nav{display:flex;gap:8px;overflow:auto;padding-top:10px;scrollbar-width:none}
 .nav{margin-left:170px}
 .nav::-webkit-scrollbar{display:none}
@@ -38,18 +44,25 @@ button{font-family:inherit;cursor:pointer}
 .promo-btn:hover{background:var(--accent-2)}
 .promo-image{display:flex;align-items:end;justify-content:end;background:#1b1b1b}
 .promo-image img{width:100%;height:100%;object-fit:cover}
+.promo-card.is-tradein .promo-image{background:transparent;align-items:center;justify-content:center}
+.promo-card.is-tradein .promo-image img{object-fit:contain;width:92%;height:92%}
+.promo-card.is-installment .promo-image{background:transparent;align-items:center;justify-content:center}
+.promo-card.is-installment .promo-image img{object-fit:contain;width:88%;height:88%}
 
-.hero{position:relative;background:linear-gradient(145deg,#1f1f1f,#262626);border:1px solid #2c2c2c;border-radius:30px;overflow:hidden;box-shadow:var(--shadow);height:240px}
+.hero{position:relative;background:#fff;border:1px solid #2c2c2c;border-radius:30px;overflow:hidden;box-shadow:var(--shadow);height:384px}
 .hero-slides{position:relative;height:100%}
-.hero-slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;opacity:0;transition:opacity .7s ease;padding:0 80px}
+.hero-slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .7s ease}
 .hero-slide.is-active{opacity:1}
-.hero-slide h2{margin:0;font-size:64px;font-weight:800;letter-spacing:-1.5px;background:linear-gradient(120deg,#fff,#ffb980);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.hero-arrow{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:1px solid #3a3a3a;background:rgba(0,0,0,.5);color:#fff;font-size:20px;display:flex;align-items:center;justify-content:center}
+.hero-slide img.hero-img{width:min(1024px,100%);height:auto;max-height:100%;object-fit:contain}
+.hero-arrow{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:1px solid #3a3a3a;background:rgba(0,0,0,.5);color:#fff;position:absolute;display:block;line-height:0;padding:0;font-size:0}
+.hero-arrow::before{content:"";position:absolute;left:50%;top:50%;width:9px;height:9px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:translate(-50%,-50%) rotate(-45deg)}
+.hero-arrow.prev::before{transform:translate(-50%,-50%) rotate(135deg)}
 .hero-arrow:hover{background:var(--accent);border-color:var(--accent)}
 .hero-arrow.prev{left:18px}.hero-arrow.next{right:18px}
 .hero-dots{position:absolute;bottom:16px;left:0;right:0;display:flex;gap:8px;justify-content:center}
 .hero-dot{width:8px;height:8px;border-radius:50%;background:#555;border:none;padding:0}
-.hero-dot.is-active{background:var(--accent);width:24px;border-radius:4px}
+.hero-dot.is-active{background:var(--accent)}
+.hero-dots:has(.hero-dot:only-child){display:none}
 
 .cats-carousel{position:relative}
 .cats-viewport{overflow:hidden;border-radius:24px}
@@ -57,15 +70,17 @@ button{font-family:inherit;cursor:pointer}
 .cats-page{min-width:100%;display:grid;grid-template-columns:repeat(4,1fr);gap:14px;padding:2px}
 .cats-page-mobile{display:none}
 .cat-card{background:var(--panel);border:1px solid #2e2e2e;border-radius:22px;padding:18px;box-shadow:var(--shadow);transition:transform .2s,border-color .2s;display:block}
-.cat-card:hover{transform:translateY(-3px);border-color:var(--accent)}
+.cat-card:hover{transform:none;border-color:var(--accent)}
 .cat-card img{height:130px;width:100%;object-fit:contain;margin-bottom:14px}
 .cat-card-name{font-size:20px;font-weight:700;line-height:1.2;text-align:center}
-.cats-arrow{width:40px;height:40px;border-radius:50%;border:1px solid #3a3a3a;background:#1a1a1a;color:#fff;font-size:20px;display:flex;align-items:center;justify-content:center;transition:background .2s,border-color .2s}
+.cats-arrow{position:relative;width:40px;height:40px;border-radius:50%;border:1px solid #3a3a3a;background:#1a1a1a;color:#fff;display:block;line-height:0;padding:0;font-size:0;transition:background .2s,border-color .2s}
+.cats-arrow::before{content:"";position:absolute;left:50%;top:50%;width:8px;height:8px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:translate(-50%,-50%) rotate(-45deg)}
+.cats-arrow.prev::before{transform:translate(-50%,-50%) rotate(135deg)}
 .cats-arrow:hover{background:var(--accent);border-color:var(--accent)}
 .cats-arrow:disabled{opacity:.35;cursor:default}
 .cats-dots{display:flex;gap:8px;justify-content:center;margin-top:14px}
 .cats-dot{width:8px;height:8px;border-radius:50%;background:#3a3a3a;border:none;padding:0}
-.cats-dot.is-active{background:var(--accent);width:22px;border-radius:4px}
+.cats-dot.is-active{background:var(--accent)}
 .cats-dots-mobile{display:none}
 
 .grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
@@ -74,12 +89,14 @@ button{font-family:inherit;cursor:pointer}
 .buyers-track{display:flex;transition:transform .55s ease;will-change:transform}
 .buyers-page{min-width:100%;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;padding:2px}
 .buyers-page-mobile{display:none}
-.buyers-arrow{width:40px;height:40px;border-radius:50%;border:1px solid #3a3a3a;background:#1a1a1a;color:#fff;font-size:20px;display:flex;align-items:center;justify-content:center;transition:background .2s,border-color .2s}
+.buyers-arrow{position:relative;width:40px;height:40px;border-radius:50%;border:1px solid #3a3a3a;background:#1a1a1a;color:#fff;display:block;line-height:0;padding:0;font-size:0;transition:background .2s,border-color .2s}
+.buyers-arrow::before{content:"";position:absolute;left:50%;top:50%;width:8px;height:8px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:translate(-50%,-50%) rotate(-45deg)}
+.buyers-arrow.prev::before{transform:translate(-50%,-50%) rotate(135deg)}
 .buyers-arrow:hover{background:var(--accent);border-color:var(--accent)}
 .buyers-arrow:disabled{opacity:.35;cursor:default}
 .buyers-dots{display:flex;gap:8px;justify-content:center;margin-top:14px}
 .buyers-dot{width:8px;height:8px;border-radius:50%;background:#3a3a3a;border:none;padding:0}
-.buyers-dot.is-active{background:var(--accent);width:22px;border-radius:4px}
+.buyers-dot.is-active{background:var(--accent)}
 .buyers-dots-mobile{display:none}
 .product-card{background:var(--panel);border:1px solid #2d2d2d;border-radius:24px;overflow:hidden;box-shadow:var(--shadow);transition:border-color .2s}
 .product-card:hover{border-color:var(--accent)}
@@ -127,11 +144,13 @@ button{font-family:inherit;cursor:pointer}
 .review-author{font-weight:700;margin-bottom:6px;font-size:17px}
 .review-date{color:var(--muted);font-size:12px;margin-bottom:14px}
 .review-card p{margin:0;color:#d6d6d6;line-height:1.6;font-size:15px;flex:1}
-.review-arrow{flex:0 0 auto;width:44px;height:44px;border-radius:50%;border:1px solid #3a3a3a;background:#1a1a1a;color:#fff;font-size:22px;display:flex;align-items:center;justify-content:center;align-self:center;transition:background .2s,border-color .2s}
+.review-arrow{position:relative;flex:0 0 auto;width:44px;height:44px;border-radius:50%;border:1px solid #3a3a3a;background:#1a1a1a;color:#fff;display:block;line-height:0;padding:0;font-size:0;align-self:center;transition:background .2s,border-color .2s}
+.review-arrow::before{content:"";position:absolute;left:50%;top:50%;width:9px;height:9px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:translate(-50%,-50%) rotate(-45deg)}
+.review-arrow.prev::before{transform:translate(-50%,-50%) rotate(135deg)}
 .review-arrow:hover{background:var(--accent);border-color:var(--accent)}
 .review-dots{display:flex;gap:8px;justify-content:center;margin-top:18px}
 .review-dot{width:8px;height:8px;border-radius:50%;background:#3a3a3a;border:none;padding:0}
-.review-dot.is-active{background:var(--accent);width:22px;border-radius:4px}
+.review-dot.is-active{background:var(--accent)}
 .review-dots-mobile{display:none}
 
 .contacts{display:grid;grid-template-columns:1fr 1.2fr;gap:24px;background:var(--panel);border:1px solid #2d2d2d;border-radius:30px;padding:26px;box-shadow:var(--shadow)}
@@ -140,6 +159,11 @@ button{font-family:inherit;cursor:pointer}
 .contacts-info .label{color:var(--muted);font-size:13px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
 .contacts-info a{color:var(--accent)}
 .contacts-info .row{margin-bottom:16px}
+.social-info p{margin:0 0 10px;color:#d8d8d8;line-height:1.45}
+.social-icons{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+.social-icon-btn{width:44px;height:44px;border-radius:999px;display:grid;place-items:center;border:1px solid rgba(255,255,255,.14);background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.06));box-shadow:0 10px 26px rgba(0,0,0,.35);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);transition:transform .15s ease,border-color .15s ease,background .15s ease}
+.social-icon-btn:hover{transform:translateY(-1px);border-color:rgba(255,102,0,.55);background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.07))}
+.social-icon{width:20px;height:20px;display:block;color:#f3f3f3}
 .contacts-map{border-radius:20px;overflow:hidden;min-height:340px;background:#0e0e0e}
 .contacts-map iframe{width:100%;height:100%;min-height:340px;border:0;display:block;filter:grayscale(.2) contrast(1.05)}
 
@@ -188,10 +212,11 @@ button{font-family:inherit;cursor:pointer}
   .promo-title{font-size:28px}
   .promo-text{font-size:15px}
   .footer-grid{grid-template-columns:1fr}
-  .hero{height:190px}
+  .hero{height:304px}
   .hero-slide h2{font-size:32px}
   .hero-arrow{display:none}
-  .cats-arrow,.review-arrow{width:36px;height:36px;font-size:18px}
+  .cats-arrow,.review-arrow{width:36px;height:36px}
+  .cats-arrow::before,.review-arrow::before{width:7px;height:7px;border-right-width:2px;border-bottom-width:2px}
   .reviews-head{align-items:flex-start}
   .review-controls{order:2;margin-left:0}
   .reviews-head .to-2gis{order:3}
@@ -212,17 +237,28 @@ button{font-family:inherit;cursor:pointer}
     <header class="header">
       <div class="header-row">
         <div class="logo-slot" aria-label="logo"><img src="/assets/header-logo.png" alt="iStore logo"></div>
-        <div class="search">Поиск по каталогу</div>
+        <form class="search" role="search" action="/catalog/" method="get" data-search>
+          <span class="search-icon" aria-hidden="true"></span>
+          <input class="search-input" name="q" placeholder="Поиск по каталогу" autocomplete="off">
+          <button class="search-btn" type="submit">Найти</button>
+        </form>
       </div>
       <nav class="nav"><a class="catalog-link " href="/catalog/">Каталог</a><a class="" href="/catalog/iphone/">iPhone</a><a class="" href="/catalog/air-pods/">AirPods</a><a class="" href="/catalog/mac/">Mac</a><a class="" href="/catalog/apple-watch/">Apple Watch</a><a class="" href="/catalog/ipad/">iPad</a><a class="" href="/catalog/samsung/">Samsung</a><a class="" href="/catalog/dyson/">Dyson</a><a class="" href="/catalog/aksessuary/">Аксессуары</a></nav>
     </header>
     
     <section class="section">
       <div class="hero" data-hero>
-        <div class="hero-slides"><div class="hero-slide is-active"><h2>Новинки</h2></div><div class="hero-slide"><h2>Специальное предложение</h2></div><div class="hero-slide"><h2>Лучший подарок</h2></div></div>
+        <div class="hero-slides">
+          <div class="hero-slide is-active" style="--hero-bg:url('/assets/hero-rozigrish.png')">
+            <img class="hero-img" src="/assets/hero-rozigrish.png" alt="Баннер 1" loading="eager">
+          </div>
+          <div class="hero-slide" style="--hero-bg:url('/assets/hero-iphone-gifts.png')">
+            <img class="hero-img" src="/assets/hero-iphone-gifts.png" alt="Баннер 2" loading="lazy">
+          </div>
+        </div>
         <button class="hero-arrow prev" aria-label="prev">‹</button>
         <button class="hero-arrow next" aria-label="next">›</button>
-        <div class="hero-dots"><button class="hero-dot is-active" aria-label="slide 1"></button><button class="hero-dot" aria-label="slide 2"></button><button class="hero-dot" aria-label="slide 3"></button></div>
+        <div class="hero-dots"><button class="hero-dot is-active" aria-label="slide 1"></button><button class="hero-dot" aria-label="slide 2"></button></div>
       </div>
     </section>
     
@@ -272,24 +308,24 @@ button{font-family:inherit;cursor:pointer}
     
     <section class="section">
       <div class="promo-grid">
-        <article class="promo-card">
+        <article class="promo-card is-tradein">
           <div class="promo-content">
             <h3 class="promo-title">Trade-In: обменяй старое на новое</h3>
             <p class="promo-text">Сдайте старое устройство и получите скидку на покупку нового. Получите дополнительную выгоду уже при обмене.</p>
             <a class="promo-btn" href="/catalog/">Подробнее</a>
           </div>
           <div class="promo-image">
-            <img src="/trade-in.jpg" alt="Trade in">
+            <img src="/assets/trade-in-hero.png" alt="Trade-In">
           </div>
         </article>
-        <article class="promo-card">
+        <article class="promo-card is-installment">
           <div class="promo-content">
             <h3 class="promo-title">Рассрочка без процентов</h3>
             <p class="promo-text">Оформите покупку в рассрочку на выгодных условиях без переплат на срок до 36 месяцев.</p>
             <a class="promo-btn" href="/catalog/">Подробнее</a>
           </div>
           <div class="promo-image">
-            <img src="/percent.jpg" alt="Рассрочка">
+            <img src="/assets/installment-0.png" alt="Рассрочка 0%">
           </div>
         </article>
       </div>
@@ -345,6 +381,24 @@ button{font-family:inherit;cursor:pointer}
             <div class="label">Email</div>
             <p><a href="mailto:istore116shop@gmail.com">istore116shop@gmail.com</a></p>
           </div>
+          <div class="row">
+            <div class="label">Соцсети и заявки</div>
+            <div class="social-info">
+              <p><a href="https://t.me/iStore116Bot" target="_blank" rel="noopener">Заявки на покупку</a></p>
+              <p><a href="https://t.me/iStore116/1616" target="_blank" rel="noopener">Розыгрыш призов</a></p>
+              <div class="social-icons" aria-label="Соцсети">
+                <a class="social-icon-btn" href="https://t.me/iStore116" target="_blank" rel="noopener" aria-label="Telegram канал">
+                  <svg class="social-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21.8 4.5c.3-1.4-1-2.1-2.2-1.7L2.9 9.2c-1.5.6-1.5 2.7.1 3.1l4.6 1.3 1.7 5.3c.4 1.3 2.1 1.6 3 .6l2.6-2.6 4.7 3.4c1 .7 2.3.2 2.5-1.1L21.8 4.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M8 13.5 18.8 6.9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+                </a>
+                <a class="social-icon-btn" href="https://max.ru/iStore116" target="_blank" rel="noopener" aria-label="MAX канал">
+                  <svg class="social-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4.5 18.5V5.5h3.8l3.7 6.2 3.7-6.2h3.8v13h-3.3V11l-3 5h-2.4l-3-5v7.5H4.5Z" fill="currentColor"/></svg>
+                </a>
+                <a class="social-icon-btn" href="https://www.instagram.com/istore_shop116?igsh=YnpsNmkzYzduNmp6&utm_source=qr" target="_blank" rel="noopener" aria-label="Instagram">
+                  <svg class="social-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7.5 3.8h9A3.7 3.7 0 0 1 20.2 7.5v9a3.7 3.7 0 0 1-3.7 3.7h-9A3.7 3.7 0 0 1 3.8 16.5v-9A3.7 3.7 0 0 1 7.5 3.8Z" stroke="currentColor" stroke-width="1.7"/><path d="M12 16.2a4.2 4.2 0 1 0 0-8.4 4.2 4.2 0 0 0 0 8.4Z" stroke="currentColor" stroke-width="1.7"/><path d="M17.2 6.9h.01" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"/></svg>
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="contacts-map">
           <iframe src="https://yandex.ru/map-widget/v1/?ll=52.394279%2C55.739588&mode=search&sll=52.394279%2C55.739588&sspn=0.01%2C0.005&text=%D0%9D%D0%B0%D0%B1%D0%B5%D1%80%D0%B5%D0%B6%D0%BD%D1%8B%D0%B5%20%D0%A7%D0%B5%D0%BB%D0%BD%D1%8B%20%D0%A1%D1%8E%D1%8E%D0%BC%D0%B1%D0%B8%D0%BA%D0%B5%2021%2F33&z=17" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
@@ -364,6 +418,19 @@ button{font-family:inherit;cursor:pointer}
           <p><a href="tel:+79870059039">+7 (987) 005-90-39</a></p>
           <p><a href="tel:+79172757445">+7 (917) 275-74-45</a> — сервис</p>
           <p><a href="mailto:istore116shop@gmail.com">istore116shop@gmail.com</a></p>
+          <p style="margin-top:12px"><a href="https://t.me/iStore116Bot" target="_blank" rel="noopener">Заявки на покупку</a></p>
+          <p><a href="https://t.me/iStore116/1616" target="_blank" rel="noopener">Розыгрыш призов</a></p>
+          <div class="social-icons" aria-label="Соцсети">
+            <a class="social-icon-btn" href="https://t.me/iStore116" target="_blank" rel="noopener" aria-label="Telegram канал">
+              <svg class="social-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21.8 4.5c.3-1.4-1-2.1-2.2-1.7L2.9 9.2c-1.5.6-1.5 2.7.1 3.1l4.6 1.3 1.7 5.3c.4 1.3 2.1 1.6 3 .6l2.6-2.6 4.7 3.4c1 .7 2.3.2 2.5-1.1L21.8 4.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M8 13.5 18.8 6.9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+            </a>
+            <a class="social-icon-btn" href="https://max.ru/iStore116" target="_blank" rel="noopener" aria-label="MAX канал">
+              <svg class="social-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4.5 18.5V5.5h3.8l3.7 6.2 3.7-6.2h3.8v13h-3.3V11l-3 5h-2.4l-3-5v7.5H4.5Z" fill="currentColor"/></svg>
+            </a>
+            <a class="social-icon-btn" href="https://www.instagram.com/istore_shop116?igsh=YnpsNmkzYzduNmp6&utm_source=qr" target="_blank" rel="noopener" aria-label="Instagram">
+              <svg class="social-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7.5 3.8h9A3.7 3.7 0 0 1 20.2 7.5v9a3.7 3.7 0 0 1-3.7 3.7h-9A3.7 3.7 0 0 1 3.8 16.5v-9A3.7 3.7 0 0 1 7.5 3.8Z" stroke="currentColor" stroke-width="1.7"/><path d="M12 16.2a4.2 4.2 0 1 0 0-8.4 4.2 4.2 0 0 0 0 8.4Z" stroke="currentColor" stroke-width="1.7"/><path d="M17.2 6.9h.01" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"/></svg>
+            </a>
+          </div>
         </div>
         <div>
           <h3>Разделы</h3>
@@ -376,6 +443,38 @@ button{font-family:inherit;cursor:pointer}
     </footer>
     </div><script>
 (function(){
+  function norm(s){return (s||"").toString().toLowerCase().trim()}
+  function getQ(){
+    try{
+      return new URLSearchParams(location.search).get("q")||""
+    }catch(e){return ""}
+  }
+  function filterByQuery(q){
+    q=norm(q)
+    const selectors=[".product-card",".catalog-tile",".cat-card"]
+    const nodes=selectors.flatMap(sel=>Array.from(document.querySelectorAll(sel)))
+    if(!nodes.length)return
+    nodes.forEach(el=>{
+      const text=norm(el.textContent)
+      el.style.display = !q || text.includes(q) ? "" : "none"
+    })
+  }
+  const form=document.querySelector("[data-search]")
+  if(form){
+    const input=form.querySelector("input[name='q']")
+    const initial=getQ()
+    if(input && initial){input.value=initial}
+    if(initial){filterByQuery(initial)}
+    form.addEventListener("submit",(e)=>{
+      e.preventDefault()
+      const q=input?input.value:""
+      const url=new URL(location.href)
+      if(q && q.trim()) url.searchParams.set("q",q.trim()); else url.searchParams.delete("q")
+      history.replaceState(null,"",url.toString())
+      filterByQuery(q)
+    })
+  }
+
   const root=document.querySelector('[data-hero]');
   if(!root)return;
   const slides=root.querySelectorAll('.hero-slide');
@@ -384,7 +483,7 @@ button{font-family:inherit;cursor:pointer}
   function go(n){i=(n+slides.length)%slides.length;slides.forEach((s,idx)=>s.classList.toggle('is-active',idx===i));dots.forEach((d,idx)=>d.classList.toggle('is-active',idx===i));}
   function next(){go(i+1)}
   function prev(){go(i-1)}
-  function start(){timer=setInterval(next,4500)}
+  function start(){timer=setInterval(next,5000)}
   function stop(){clearInterval(timer)}
   root.querySelector('.hero-arrow.next').addEventListener('click',()=>{stop();next();start()});
   root.querySelector('.hero-arrow.prev').addEventListener('click',()=>{stop();prev();start()});
