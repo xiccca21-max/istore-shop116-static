@@ -4,6 +4,11 @@ import os
 import sys
 from urllib.parse import urlsplit
 
+if __name__ == "__main__":
+    print("ERROR: server.py is deprecated for this project.")
+    print("Use: npm install && npm run dev")
+    raise SystemExit(1)
+
 ROOT = os.path.join(os.path.dirname(__file__), "www")
 ASSETS_DIR = os.path.join(ROOT, "assets")
 PORT = int(sys.argv[1]) if len(sys.argv) > 1 else 3000
@@ -70,12 +75,4 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         print(f"  {args[0]}  {args[1]}")
 
 
-if __name__ == "__main__":
-    print(f"Serving {ROOT} at http://localhost:{PORT}/")
-    server = http.server.ThreadingHTTPServer(("127.0.0.1", PORT), Handler)
-    try:
-        server.serve_forever()
-    except KeyboardInterrupt:
-        pass
-    finally:
-        server.server_close()
+# (legacy) kept for reference, but blocked above

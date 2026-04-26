@@ -33,6 +33,10 @@ function sync() {
   const pub = path.join(root, "public");
 
   if (!fs.existsSync(www)) throw new Error("Missing ./www folder");
+  // Safety: avoid accidental overwrites in dev/CI. This script is legacy-only.
+  if (process.env.ALLOW_WWW_SYNC !== "1") {
+    throw new Error("Refusing to sync www/ -> public/ without ALLOW_WWW_SYNC=1");
+  }
   ensureDir(pub);
 
   // 1) index.html
