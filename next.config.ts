@@ -4,6 +4,17 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: __dirname,
   },
+  async redirects() {
+    return [
+      // Legacy marketing URLs (from old site)
+      { source: "/tradein", destination: "/trade-in", permanent: true },
+      { source: "/tradein/", destination: "/trade-in", permanent: true },
+      { source: "/graw", destination: "/raffle", permanent: true },
+      { source: "/graw/", destination: "/raffle", permanent: true },
+      { source: "/surprise", destination: "/gifts", permanent: true },
+      { source: "/surprise/", destination: "/gifts", permanent: true },
+    ];
+  },
   async rewrites() {
     return [
       // Serve the current static storefront as the homepage.
@@ -11,15 +22,9 @@ const nextConfig: NextConfig = {
       // Service landing
       { source: "/iremont116", destination: "/iremont116/index.html" },
       { source: "/iremont116/", destination: "/iremont116/index.html" },
-      // Simple landings (later we'll redesign)
+      // Simple landing
       { source: "/installment", destination: "/installment/index.html" },
       { source: "/installment/", destination: "/installment/index.html" },
-      { source: "/trade-in", destination: "/trade-in/index.html" },
-      { source: "/trade-in/", destination: "/trade-in/index.html" },
-      { source: "/gifts", destination: "/gifts/index.html" },
-      { source: "/gifts/", destination: "/gifts/index.html" },
-      { source: "/raffle", destination: "/raffle/index.html" },
-      { source: "/raffle/", destination: "/raffle/index.html" },
       // Checkout / cart
       { source: "/checkout", destination: "/checkout/index.html" },
       { source: "/checkout/", destination: "/checkout/index.html" },

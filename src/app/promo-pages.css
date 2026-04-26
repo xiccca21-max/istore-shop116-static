@@ -1,0 +1,1456 @@
+.promoPage {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 16px 40px;
+  color: var(--foreground);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+.promoPage a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.promoPage .topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 8px 10px;
+  color: #cfcfcf;
+  font-size: 13px;
+}
+
+.promoPage .topbar-left,
+.promoPage .topbar-right {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.promoPage .topbar a:hover {
+  color: #ff6600;
+}
+
+.promoPage .header {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 8px;
+  z-index: 30;
+  background: rgba(30, 30, 30, 0.92);
+  backdrop-filter: blur(16px);
+  border: 1px solid #323232;
+  border-radius: 28px;
+  padding: 10px 14px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.35);
+}
+
+.promoPage .header-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-left: 170px;
+}
+
+.promoPage .logo-slot {
+  position: absolute;
+  left: 14px;
+  top: 10px;
+  bottom: 10px;
+  width: 150px;
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+
+.promoPage .logo-slot img {
+  height: 100%;
+  width: auto;
+  object-fit: contain;
+  display: block;
+}
+
+.promoPage .search {
+  height: 48px;
+  width: clamp(260px, 38vw, 460px);
+  border-radius: 999px;
+  border: 1px solid #333;
+  background: #161616;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 18px;
+  color: #7a7a7a;
+}
+
+.promoPage .search-icon {
+  position: relative;
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+}
+
+.promoPage .search-icon::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 2px solid #666;
+  border-radius: 50%;
+}
+
+.promoPage .search-icon::after {
+  content: "";
+  position: absolute;
+  width: 9px;
+  height: 2px;
+  background: #666;
+  right: -6px;
+  bottom: -1px;
+  transform: rotate(45deg);
+  transform-origin: left center;
+  border-radius: 2px;
+}
+
+.promoPage .search-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #ddd;
+  font-size: 14px;
+}
+
+.promoPage .search-input::placeholder {
+  color: #7a7a7a;
+}
+
+.promoPage .search-btn {
+  flex: 0 0 auto;
+  border: 0;
+  background: transparent;
+  color: #9a9a9a;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.2px;
+  padding: 0 2px;
+  cursor: pointer;
+}
+
+.promoPage .search-btn:hover {
+  color: #fff;
+}
+
+.promoPage .nav {
+  display: flex;
+  gap: 8px;
+  overflow: auto;
+  padding-top: 10px;
+  margin-left: 170px;
+  scrollbar-width: none;
+}
+
+.promoPage .nav::-webkit-scrollbar {
+  display: none;
+}
+
+.promoPage .nav a {
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: #1b1b1b;
+  border: 1px solid #2d2d2d;
+  white-space: nowrap;
+  font-size: 14px;
+  color: #d9d9d9;
+}
+
+.promoPage .nav a:hover {
+  background: #252525;
+  border-color: #3a3a3a;
+}
+
+.promoPage .catalog-link {
+  background: #ff6600 !important;
+  border-color: #ff6600 !important;
+  color: #fff !important;
+}
+
+.promoPage .breadcrumbs {
+  margin: 18px 4px 8px;
+  color: #a8a8a8;
+  font-size: 13px;
+}
+
+.promoPage .breadcrumbs .sep {
+  margin: 0 6px;
+  color: #444;
+}
+
+.promoPage .section {
+  margin-top: 28px;
+}
+
+.promoPage .hero {
+  border-radius: 30px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.35);
+  padding: 28px;
+  background: #222;
+  border: 1px solid #2d2d2d;
+}
+
+.promoPage .tradeInHero {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 24px;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.promoPage .tradeInHeroLeft {
+  min-width: 0;
+  padding-bottom: 78px; /* room for bottom-left CTA */
+}
+
+.promoPage .tradeInKicker {
+  position: absolute;
+  left: 28px;
+  top: 18px;
+}
+
+.promoPage .tradeInHeroLeft .cta {
+  position: absolute;
+  left: 28px;
+  bottom: 18px;
+  margin-top: 0;
+}
+
+.promoPage .tradeInHeroLeft .cta .btn {
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  gap: 10px;
+  box-shadow:
+    0 18px 46px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+
+.promoPage .tradeInBtnIcon {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  opacity: 0.9;
+}
+
+.promoPage .tradeInHeroLeft .cta .btn:hover {
+  border-color: rgba(255, 102, 0, 0.55);
+  background: rgba(255, 255, 255, 0.10);
+}
+
+.promoPage .tradeInHeroLeft .cta .btn.primary {
+  background: linear-gradient(180deg, rgba(255, 102, 0, 0.92), rgba(255, 102, 0, 0.72));
+  border-color: rgba(255, 102, 0, 0.65);
+  box-shadow:
+    0 22px 58px rgba(0, 0, 0, 0.55),
+    0 10px 30px rgba(255, 102, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.promoPage .tradeInPill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 26px;
+  padding: 0 12px;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 12px;
+  border: 1px solid #3a3a3a;
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(242, 242, 242, 0.85);
+}
+
+.promoPage .tradeInHero h1 {
+  margin-top: 14px;
+  font-size: 44px;
+}
+
+.promoPage .tradeInTitle {
+  display: grid;
+  gap: 2px;
+}
+
+.promoPage .tradeInTitleLine1,
+.promoPage .tradeInTitleLine2 {
+  display: block;
+}
+
+.promoPage .tradeInTitleLine2 {
+  color: #ff6600;
+  font-size: 72px;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.promoPage .tradeInHero p {
+  margin-top: 12px;
+  max-width: 62ch;
+  font-size: 15px;
+  color: rgba(242, 242, 242, 0.68);
+}
+
+.promoPage .tradeInHeroRight {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 0;
+}
+
+.promoPage .tradeInHero.raffleHero {
+  grid-template-columns: 1fr;
+  min-height: 384px; /* match homepage hero height */
+}
+
+.promoPage .hero.raffleBanner {
+  height: 384px; /* match homepage hero height */
+  padding: 0;
+  background: #ffffff;
+  border: 1px solid #2c2c2c;
+  border-radius: 30px;
+  overflow: hidden;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.promoPage .raffleBannerImg {
+  width: min(1024px, 100%);
+  height: auto;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.promoPage .tradeInHeroImg {
+  width: min(520px, 100%);
+  height: 360px;
+  object-fit: contain;
+  filter: drop-shadow(0 22px 60px rgba(0, 0, 0, 0.55));
+  transform: translateX(-18px);
+}
+
+.promoPage .tradeInInfo {
+  margin-top: 22px;
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 0;
+  align-items: start;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  overflow: hidden;
+  box-shadow:
+    0 26px 80px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.10);
+  position: relative;
+}
+
+.promoPage .tradeInInfo.raffleHowInfo {
+  grid-template-columns: 1fr;
+}
+
+.promoPage .tradeInInfo.rafflePrizesInfo {
+  grid-template-columns: 1fr;
+}
+
+.promoPage .raffleSteps {
+  margin-top: 14px;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.promoPage .raffleStepCard {
+  position: relative;
+  border-radius: 18px;
+  border: 1px solid rgba(0, 0, 0, 0.10);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow:
+    0 18px 60px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  padding: 14px 14px 16px;
+  overflow: hidden;
+}
+
+.promoPage .raffleStepCard::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: 18px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.70),
+    inset 0 34px 80px rgba(255, 255, 255, 0.32);
+}
+
+.promoPage .raffleStepCard::after {
+  content: none;
+}
+
+.promoPage .raffleStepTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-right: 60px; /* room for big num */
+  min-height: 28px;
+}
+
+.promoPage .raffleStepBigNum {
+  position: absolute;
+  right: 12px;
+  top: 10px;
+  font-weight: 1000;
+  font-size: 46px;
+  letter-spacing: -0.04em;
+  color: rgba(0, 0, 0, 0.10);
+  line-height: 1;
+  user-select: none;
+}
+
+.promoPage .raffleStepTitle {
+  margin-top: 0;
+  font-weight: 1000;
+  font-size: 18px;
+  letter-spacing: -0.02em;
+  color: rgba(0, 0, 0, 0.86);
+  line-height: 1.15;
+}
+
+.promoPage .raffleStepText {
+  margin-top: 10px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: rgba(0, 0, 0, 0.58);
+}
+
+.promoPage .raffleStepText b {
+  color: rgba(0, 0, 0, 0.78);
+}
+
+.promoPage .raffleBannerInfo {
+  max-width: 980px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.promoPage .raffleBannerInfoTitle {
+  font-weight: 1000;
+  font-size: 28px;
+  letter-spacing: -0.3px;
+  color: rgba(242, 242, 242, 0.96);
+}
+
+.promoPage .raffleBannerInfoGrid {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.promoPage .raffleBannerInfoItem {
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow:
+    0 16px 50px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.10);
+  padding: 10px 10px 11px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+}
+
+.promoPage .raffleBannerInfoNum {
+  width: 22px;
+  height: 22px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  font-weight: 1000;
+  font-size: 12px;
+  color: rgba(255, 140, 60, 0.98);
+  background: rgba(255, 102, 0, 0.16);
+  border: 1px solid rgba(255, 102, 0, 0.45);
+  flex: 0 0 auto;
+}
+
+.promoPage .raffleBannerInfoText {
+  font-size: 13px;
+  line-height: 1.2;
+  color: rgba(242, 242, 242, 0.78);
+  font-weight: 800;
+}
+
+@media (max-width: 1100px) {
+  .promoPage .raffleSteps {
+    grid-template-columns: 1fr;
+  }
+}
+
+.promoPage .tradeInInfo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.08;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
+}
+
+.promoPage .tradeInHow,
+.promoPage .tradeInFactors {
+  padding: 18px;
+}
+
+.promoPage .tradeInFactors {
+  /* no divider line */
+}
+
+.promoPage .tradeInHow,
+.promoPage .tradeInFactors,
+.promoPage .tradeInNote {
+  position: relative;
+  z-index: 1;
+}
+
+.promoPage .tradeInNote {
+  grid-column: 1 / -1;
+  margin-top: 14px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px dashed rgba(255, 255, 255, 0.16);
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.promoPage .tradeInNoteIcon {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  border-radius: 8px;
+  background: rgba(255, 102, 0, 0.18);
+  border: 1px solid rgba(255, 102, 0, 0.55);
+  color: rgba(255, 140, 60, 0.98);
+  font-weight: 1000;
+  display: grid;
+  place-items: center;
+  line-height: 1;
+  margin-top: 1px;
+}
+
+.promoPage .tradeInNoteText {
+  color: rgba(242, 242, 242, 0.78);
+  font-style: italic;
+  line-height: 1.55;
+  font-size: 14px;
+}
+
+.promoPage .tradeInNoteText b {
+  color: rgba(242, 242, 242, 0.92);
+  font-style: normal;
+}
+
+/* Glass 3D hero for Trade-In banner */
+.promoPage .hero.tradeInHero {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow:
+    0 26px 90px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.promoPage .hero.tradeInHero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  /* no gradients; just a subtle top highlight */
+  box-shadow: inset 0 36px 80px rgba(255, 255, 255, 0.04);
+  border-radius: 30px;
+}
+
+.promoPage .hero.giftsHero {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  padding: 0;
+}
+
+.promoPage .giftsHeroInner {
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+  padding-top: 0;
+}
+
+.promoPage .giftsHeroTitle {
+  margin: 0;
+  font-size: 44px;
+  font-weight: 1000;
+  letter-spacing: -0.6px;
+  line-height: 1.1;
+  text-wrap: balance;
+}
+
+.promoPage .giftsHeroLine1,
+.promoPage .giftsHeroLine2 {
+  display: block;
+}
+
+.promoPage .giftsHeroLine2 {
+  font-size: 62px;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  margin-top: 4px;
+}
+
+.promoPage .giftsHeroAccent {
+  color: #ff6600;
+}
+
+.promoPage .giftsHeroLine1 {
+  font-weight: 900;
+  color: rgba(242, 242, 242, 0.92);
+}
+
+.promoPage .giftsHeroLine2 {
+  font-weight: 1000;
+}
+
+.promoPage .giftsHeroSub {
+  margin: 12px auto 0;
+  max-width: 70ch;
+  color: rgba(242, 242, 242, 0.68);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.promoPage .giftsHeroSub b {
+  color: rgba(242, 242, 242, 0.92);
+}
+
+.promoPage .giftsHeroCta {
+  margin-top: 32px;
+  display: flex;
+  justify-content: center;
+}
+
+/* extra specificity to avoid overrides */
+.promoPage .giftsHeroInner .giftsHeroCta {
+  margin-top: 32px;
+}
+
+.promoPage .giftsHeroCta .btn.primary {
+  padding: 12px 18px; /* equal top/bottom */
+  min-height: 44px;
+  line-height: 1;
+  border: 1px solid rgba(255, 102, 0, 0.72);
+  background: linear-gradient(180deg, rgba(255, 102, 0, 0.98), rgba(255, 102, 0, 0.78));
+  box-shadow:
+    0 18px 46px rgba(0, 0, 0, 0.55),
+    0 10px 26px rgba(255, 102, 0, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.20);
+  transition: transform 0.18s ease, filter 0.18s ease, box-shadow 0.18s ease;
+}
+
+.promoPage .giftsHeroCta .btn.primary:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.04);
+  box-shadow:
+    0 22px 58px rgba(0, 0, 0, 0.60),
+    0 12px 32px rgba(255, 102, 0, 0.20),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+
+.promoPage .giftsCarousel {
+  position: relative;
+}
+
+.promoPage .giftsViewport {
+  overflow: visible;
+  border-radius: 24px;
+  padding: 4px 2px 2px;
+}
+
+.promoPage .giftsCards {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.promoPage .giftsCard {
+  flex: 0 0 320px;
+  border-radius: 24px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow:
+    0 18px 60px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.10);
+  cursor: pointer;
+  transition: transform 0.18s ease, border-color 0.18s ease;
+}
+
+.promoPage .giftsCard:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 102, 0, 0.35);
+}
+
+.promoPage .giftsCardMedia {
+  height: 260px;
+  background: rgba(0, 0, 0, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px;
+}
+
+.promoPage .giftsCardMedia img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.promoPage .giftsCardBody {
+  padding: 14px 16px 16px;
+}
+
+.promoPage .giftsCardTag {
+  font-size: 12px;
+  color: rgba(255, 102, 0, 0.95);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 900;
+}
+
+.promoPage .giftsCardTitle {
+  margin-top: 8px;
+  font-weight: 1000;
+  font-size: 20px;
+  letter-spacing: -0.2px;
+  color: rgba(255, 255, 255, 0.98);
+}
+
+.promoPage .giftsCardDesc {
+  margin-top: 6px;
+  color: rgba(242, 242, 242, 0.68);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.promoPage .giftsNote {
+  width: fit-content;
+  max-width: min(920px, 100%);
+  margin: 6px auto 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow:
+    0 16px 50px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.10);
+  color: rgba(242, 242, 242, 0.78);
+  line-height: 1.6;
+  font-size: 13px;
+  position: relative;
+}
+
+.promoPage .giftsNote::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 19px;
+  pointer-events: none;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 102, 0, 0.38),
+    rgba(255, 255, 255, 0.10),
+    rgba(255, 102, 0, 0.14)
+  );
+  opacity: 0.55;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+  padding: 1px;
+}
+
+.promoPage .giftsNoteIcon {
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  border-radius: 9px;
+  background: rgba(255, 102, 0, 0.18);
+  border: 1px solid rgba(255, 102, 0, 0.55);
+  color: rgba(255, 140, 60, 0.98);
+  font-weight: 1000;
+  display: grid;
+  place-items: center;
+  line-height: 1;
+}
+
+.promoPage .giftsNoteText {
+  min-width: 0;
+}
+
+@media (max-width: 760px) {
+  .promoPage .giftsKicker {
+    left: 18px;
+    top: 16px;
+  }
+  .promoPage .giftsHeroInner {
+    text-align: left;
+    padding-top: 10px;
+  }
+  .promoPage .giftsHeroTitle {
+    font-size: 34px;
+  }
+
+  .promoPage .giftsHeroLine2 {
+    font-size: 44px;
+  }
+  .promoPage .giftsCard {
+    flex-basis: 82vw;
+  }
+
+}
+
+.promoPage .tradeInHow h2,
+.promoPage .tradeInFactors h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: -0.2px;
+}
+
+.promoPage .tradeInTimeline {
+  position: relative;
+  height: 18px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.promoPage .tradeInTimeline .line {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  top: 50%;
+  height: 2px;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+}
+
+.promoPage .tradeInTimeline .dot {
+  position: absolute;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.55);
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.45);
+}
+
+.promoPage .tradeInTimeline .dot.is-1 {
+  background: rgba(255, 102, 0, 0.95);
+}
+
+.promoPage .tradeInTimeline .dot.is-1 {
+  left: 10px;
+  transform: translate(0, -50%);
+}
+.promoPage .tradeInTimeline .dot.is-2 {
+  left: 50%;
+}
+.promoPage .tradeInTimeline .dot.is-3 {
+  left: calc(100% - 10px);
+  transform: translate(-100%, -50%);
+}
+
+.promoPage .tradeInSteps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.promoPage .tradeInStepNum {
+  font-weight: 900;
+  color: rgba(242, 242, 242, 0.9);
+  font-size: 18px;
+}
+
+.promoPage .tradeInStepText {
+  margin-top: 6px;
+  color: rgba(242, 242, 242, 0.65);
+  line-height: 1.45;
+  font-size: 15px;
+}
+
+.promoPage .tradeInCheck {
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 12px;
+}
+
+.promoPage .tradeInCheck li {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  color: rgba(242, 242, 242, 0.82);
+  font-size: 16px;
+}
+
+.promoPage .tradeInCheck .cb {
+  flex: 0 0 auto;
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  background: #ff6600;
+  box-shadow: 0 8px 18px rgba(255, 102, 0, 0.18);
+  position: relative;
+}
+
+.promoPage .tradeInCheck .cb::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 2px;
+  width: 4px;
+  height: 7px;
+  border-right: 2px solid rgba(255, 255, 255, 0.95);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.95);
+  transform: rotate(45deg);
+}
+
+.promoPage .kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(242, 242, 242, 0.7);
+}
+
+.promoPage .kdot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #ff6600;
+}
+
+.promoPage h1 {
+  margin: 12px 0 0;
+  font-size: 44px;
+  line-height: 1.02;
+  font-weight: 900;
+  letter-spacing: -0.6px;
+}
+
+.promoPage .hero p {
+  margin: 12px 0 0;
+  color: #a8a8a8;
+  font-size: 16px;
+  line-height: 1.6;
+  max-width: 75ch;
+}
+
+.promoPage .cta {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+
+.promoPage .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 14px;
+  border: 1px solid #2d2d2d;
+  background: #1b1b1b;
+  color: #fff;
+  cursor: pointer;
+}
+
+.promoPage .btn:hover {
+  background: #252525;
+  border-color: #3a3a3a;
+}
+
+.promoPage .primary {
+  background: #ff6600;
+  border-color: #ff6600;
+}
+
+.promoPage .primary:hover {
+  background: #ff8533;
+  border-color: #ff8533;
+}
+
+.promoPage .grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.promoPage .card {
+  grid-column: 1 / -1;
+  border: 1px solid #2d2d2d;
+  border-radius: 22px;
+  background: #191919;
+  padding: 18px;
+}
+
+.promoPage .split .card {
+  grid-column: auto;
+}
+
+.promoPage .card h2 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.promoPage .card p {
+  margin: 8px 0 0;
+  color: #d8d8d8;
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+.promoPage .note {
+  grid-column: 1 / -1;
+  border: 1px dashed #3a3a3a;
+  border-radius: 22px;
+  padding: 16px 18px;
+  color: #bfbfbf;
+  line-height: 1.6;
+  font-size: 13px;
+}
+
+.promoPage .footer {
+  margin-top: 40px;
+  background: #141414;
+  border: 1px solid #222;
+  border-radius: 30px;
+  padding: 30px 32px;
+}
+
+.promoPage .footerRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.promoPage .footerLinks {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.promoPage .ft {
+  font-weight: 1000;
+}
+
+.promoPage .fp {
+  margin-top: 8px;
+  color: #bfbfbf;
+  line-height: 1.7;
+  font-size: 14px;
+}
+
+.promoPage .small {
+  margin-top: 14px;
+  color: #7b7b7b;
+  font-size: 12px;
+}
+
+/* Footer — same as public/index.html */
+.siteFooter {
+  margin-top: 40px;
+  background: #141414;
+  border: 1px solid #222;
+  border-radius: 30px;
+  padding: 30px 32px;
+}
+
+.siteFooterGrid {
+  display: grid;
+  grid-template-columns: 1.3fr 0.9fr 0.9fr;
+  gap: 28px;
+}
+
+.siteFooter h3 {
+  margin: 0 0 14px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.siteFooter p,
+.siteFooter a {
+  margin: 8px 0 0;
+  color: #bfbfbf;
+  line-height: 1.7;
+  font-size: 14px;
+}
+
+.siteFooter a:hover {
+  color: #ff6600;
+}
+
+.siteFooterCopy {
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid #242424;
+  color: #7b7b7b;
+  font-size: 12px;
+}
+
+.siteSocialIcons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.siteSocialBtn {
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.06));
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+
+.siteSocialBtn:hover {
+  transform: translateY(-1px);
+  border-color: rgba(255, 102, 0, 0.55);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.07));
+}
+
+.siteSocialIcon {
+  width: 20px;
+  height: 20px;
+  display: block;
+  color: #f3f3f3;
+}
+
+@media (max-width: 1150px) {
+  .siteFooterGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .siteFooterGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Page-specific blocks reused on these promo pages */
+.promoPage .steps {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.promoPage .step {
+  border: 1px solid #2d2d2d;
+  border-radius: 22px;
+  background: #191919;
+  padding: 18px;
+}
+
+.promoPage .n {
+  font-weight: 1000;
+  color: #a8a8a8;
+  letter-spacing: 0.12em;
+}
+
+.promoPage .st {
+  margin-top: 8px;
+  color: #f2f2f2;
+  font-weight: 900;
+}
+
+.promoPage .sd {
+  margin-top: 6px;
+  color: #d8d8d8;
+  line-height: 1.55;
+  font-size: 14px;
+}
+
+.promoPage .cols {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.promoPage .list {
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.promoPage .li {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  color: #d8d8d8;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.promoPage .tick {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  border-radius: 6px;
+  background: rgba(255, 102, 0, 0.16);
+  border: 1px solid rgba(255, 102, 0, 0.35);
+  position: relative;
+  margin-top: 2px;
+}
+
+.promoPage .tick:after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 3px;
+  width: 6px;
+  height: 9px;
+  border-right: 2px solid rgba(255, 102, 0, 0.95);
+  border-bottom: 2px solid rgba(255, 102, 0, 0.95);
+  transform: rotate(45deg);
+}
+
+.promoPage .three {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.promoPage .gift {
+  border: 1px solid #2d2d2d;
+  border-radius: 22px;
+  background: #191919;
+  padding: 18px;
+}
+
+.promoPage .gift .t {
+  font-weight: 1000;
+}
+
+.promoPage .gift .d {
+  margin-top: 6px;
+  color: #d8d8d8;
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+.promoPage .split {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.promoPage .prizes {
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.promoPage .prizes li {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  color: #d8d8d8;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.promoPage .badge {
+  flex: 0 0 auto;
+  min-width: 28px;
+  height: 22px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 102, 0, 0.35);
+  background: rgba(255, 102, 0, 0.16);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 1000;
+  color: rgba(255, 170, 110, 0.95);
+  font-size: 12px;
+  margin-top: 1px;
+}
+
+@media (max-width: 1100px) {
+  .promoPage h1 {
+    font-size: 34px;
+  }
+  .promoPage .steps {
+    grid-template-columns: 1fr;
+  }
+  .promoPage .cols {
+    grid-template-columns: 1fr;
+  }
+  .promoPage .three {
+    grid-template-columns: 1fr;
+  }
+  .promoPage .split {
+    grid-template-columns: 1fr;
+  }
+
+  .promoPage .tradeInHero {
+    grid-template-columns: 1fr;
+  }
+
+  .promoPage .tradeInKicker {
+    left: 18px;
+    top: 16px;
+  }
+
+  .promoPage .tradeInHeroLeft {
+    padding-bottom: 0;
+  }
+
+  .promoPage .tradeInHeroLeft .cta {
+    position: static;
+    margin-top: 16px;
+  }
+
+  .promoPage .tradeInHeroRight {
+    justify-content: center;
+  }
+
+  .promoPage .tradeInHeroImg {
+    height: 280px;
+    width: min(520px, 100%);
+  }
+
+  .promoPage .tradeInTitleLine2 {
+    font-size: 44px;
+  }
+
+  .promoPage .tradeInInfo {
+    grid-template-columns: 1fr;
+  }
+
+  .promoPage .tradeInFactors {
+    /* no divider line */
+  }
+
+  .promoPage .tradeInSteps {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .promoPage .topbar {
+    display: none;
+  }
+  .promoPage .header-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    padding-left: 0;
+  }
+  .promoPage .logo-slot {
+    display: none;
+  }
+  .promoPage .search {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+  .promoPage .nav {
+    margin-left: 0;
+  }
+
+  .promoPage .tradeInHero.raffleHero {
+    min-height: 304px; /* match homepage hero height */
+  }
+
+  .promoPage .hero.raffleBanner {
+    height: 304px; /* match homepage hero height */
+  }
+
+  .promoPage .raffleBannerInfoTitle {
+    font-size: 22px;
+  }
+
+  .promoPage .raffleBannerInfoGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .promoPage .raffleBannerInfoItem {
+    justify-content: flex-start;
+  }
+}

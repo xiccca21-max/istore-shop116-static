@@ -12,19 +12,26 @@
     "@supabase/supabase-js": "^2.104.1",
     "better-sqlite3": "^12.9.0",
     "cheerio": "^1.2.0",
+    "clsx": "^2.1.1",
+    "framer-motion": "^12.38.0",
     "jose": "^6.2.2",
     "next": "16.2.4",
     "react": "19.2.4",
     "react-dom": "19.2.4",
+    "tailwind-merge": "^3.5.0",
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.2.4",
     "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "autoprefixer": "^10.5.0",
     "eslint": "^9",
     "eslint-config-next": "16.2.4",
+    "postcss": "^8.5.12",
+    "tailwindcss": "^4.2.4",
     "typescript": "^5"
   }
 }

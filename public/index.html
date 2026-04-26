@@ -541,6 +541,7 @@ button{font-family:inherit;cursor:pointer}
   const root=document.querySelector('[data-cats]');
   if(!root)return;
   const track=root.querySelector('.cats-track');
+  const viewport=root.querySelector('.cats-viewport');
   const prevBtn=document.querySelector('[data-cats-prev]');
   const nextBtn=document.querySelector('[data-cats-next]');
   let i=0;
@@ -557,6 +558,74 @@ button{font-family:inherit;cursor:pointer}
   if(nextBtn)nextBtn.addEventListener('click',()=>go(i+1));
   if(prevBtn)prevBtn.addEventListener('click',()=>go(i-1));
   root.querySelectorAll('.cats-dot').forEach((d)=>d.addEventListener('click',()=>go(parseInt(d.dataset.i||'0',10))));
+
+  // Support swipe/trackpad scroll so active dot updates when user "scrolls" the carousel.
+  (function bindGesture(){
+    if(!viewport) return;
+    let startX=0,startY=0,active=false,locked=false;
+    const THRESH=32;
+    function onStart(x,y){
+      startX=x; startY=y; active=true; locked=false;
+    }
+    function onMove(x,y,ev){
+      if(!active) return;
+      const dx=x-startX, dy=y-startY;
+      if(!locked){
+        // Lock direction once movement is clear.
+        if(Math.abs(dx)<6 && Math.abs(dy)<6) return;
+        locked = Math.abs(dx) > Math.abs(dy);
+      }
+      if(!locked) return; // vertical scroll
+      if(ev && ev.cancelable) ev.preventDefault();
+    }
+    function onEnd(x){
+      if(!active) return;
+      const dx=x-startX;
+      active=false;
+      if(Math.abs(dx) < THRESH) return;
+      go(i + (dx<0 ? 1 : -1));
+    }
+
+    // Touch events
+    viewport.addEventListener('touchstart',(e)=>{
+      const t=e.touches && e.touches[0]; if(!t) return;
+      onStart(t.clientX,t.clientY);
+    },{passive:true});
+    viewport.addEventListener('touchmove',(e)=>{
+      const t=e.touches && e.touches[0]; if(!t) return;
+      onMove(t.clientX,t.clientY,e);
+    },{passive:false});
+    viewport.addEventListener('touchend',(e)=>{
+      const t=e.changedTouches && e.changedTouches[0]; if(!t) return;
+      onEnd(t.clientX);
+    },{passive:true});
+
+    // Pointer events (mouse drag / touch pen)
+    viewport.addEventListener('pointerdown',(e)=>{
+      if(!(e && typeof e.clientX==='number')) return;
+      if(e.pointerType==='mouse' && e.button!==0) return;
+      onStart(e.clientX,e.clientY);
+      try{ viewport.setPointerCapture(e.pointerId); }catch(_e){}
+    });
+    viewport.addEventListener('pointermove',(e)=>onMove(e.clientX,e.clientY,e));
+    viewport.addEventListener('pointerup',(e)=>onEnd(e.clientX));
+    viewport.addEventListener('pointercancel',()=>{active=false;});
+
+    // Trackpad / wheel: horizontal scroll while hovering the carousel
+    let wheelLock=false;
+    viewport.addEventListener('wheel',(e)=>{
+      if(wheelLock) return;
+      const dx = e.deltaX || 0;
+      const dy = e.deltaY || 0;
+      const horiz = Math.abs(dx) > Math.abs(dy) ? dx : (e.shiftKey ? dy : 0);
+      if(Math.abs(horiz) < 10) return;
+      e.preventDefault();
+      wheelLock=true;
+      go(i + (horiz>0 ? 1 : -1));
+      setTimeout(()=>{wheelLock=false;},220);
+    },{passive:false});
+  })();
+
   window.addEventListener('resize',()=>{i=0;go(0)});
   go(0);
 })();
