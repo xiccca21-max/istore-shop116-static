@@ -49,6 +49,17 @@ export async function GET(req: Request) {
 
   let categoryId: string | null = null;
   if (categorySlug) {
+    const normalizedCategorySlug = (() => {
+      // Legacy storefront slugs → DB slugs (imported categories).
+      // Keep this in sync with `public/catalog/_category.html` mapping.
+      const m: Record<string, string> = {
+        "air-pods": "airpods",
+        "apple-watch": "applewatch",
+        mac: "macbook",
+      };
+      return m[categorySlug] || categorySlug;
+    })();
+
     if (categorySlug === "iphone") {
       // Aggregator category: include all iPhone categories imported from the donor.
       const { data: cats, error: catsErr } = await sb
@@ -148,7 +159,7 @@ export async function GET(req: Request) {
       return NextResponse.json({ data: filtered });
     }
 
-    const { data: cat, error: catErr } = await sb.from("categories").select("id").eq("slug", categorySlug).maybeSingle();
+    const { data: cat, error: catErr } = await sb.from("categories").select("id").eq("slug", normalizedCategorySlug).maybeSingle();
     if (catErr) {
       const cached = cacheByCategory.get(cacheKey);
       if (cached) {
