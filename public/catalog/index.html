@@ -107,6 +107,14 @@ button{font-family:inherit;cursor:pointer}
 .catalog-tile-img img{max-height:100%;max-width:100%;object-fit:contain}
 .catalog-tile-name{font-size:22px;font-weight:700;text-align:center}
 .empty-state{background:var(--panel);border:1px dashed #3a3a3a;border-radius:24px;padding:60px 24px;text-align:center;color:var(--muted);font-size:18px}
+.products-wrap{position:relative;min-height:240px}
+.list-loading{display:none;position:absolute;inset:0;align-items:center;justify-content:center}
+.list-loading .boot-dot{width:10px;height:10px;border-radius:50%;background:var(--accent);opacity:.25;animation:bootpulse 1s infinite ease-in-out}
+.list-loading .boot-dot:nth-child(2){animation-delay:.15s;margin-left:10px}
+.list-loading .boot-dot:nth-child(3){animation-delay:.3s;margin-left:10px}
+@keyframes bootpulse{0%,100%{transform:scale(.8);opacity:.25}50%{transform:scale(1.15);opacity:.95}}
+.products-wrap.is-loading .list-loading{display:flex}
+.products-wrap.is-loading #searchGrid{opacity:0;pointer-events:none}
 
 .gift{display:grid;grid-template-columns:1.1fr 1fr;gap:24px;align-items:center;background:var(--panel);border:1px solid #2d2d2d;border-radius:30px;padding:30px;box-shadow:var(--shadow)}
 .gift h2{margin:0 0 14px;font-size:36px;font-weight:800;letter-spacing:-.5px}
@@ -237,7 +245,7 @@ button{font-family:inherit;cursor:pointer}
     <nav class="breadcrumbs"><a href="/">Главная</a><span class="sep">/</span><span>Каталог</span></nav><section class="section"><div class="section-head"><h1 class="section-title">Каталог</h1></div>
       <div id="searchResults" style="display:none">
         <div class="muted" style="margin:4px 0 14px">Результаты поиска</div>
-        <div class="grid" id="searchGrid"></div>
+        <div class="products-wrap" id="searchWrap"><div class="list-loading" id="searchLoading" aria-label="loading"><div style="display:flex;align-items:center;justify-content:center"><span class="boot-dot"></span><span class="boot-dot"></span><span class="boot-dot"></span></div></div><div class="grid" id="searchGrid"></div></div>
         <div class="empty-state" id="searchEmpty" style="display:none">Ничего не найдено</div>
         <div style="height:18px"></div>
       </div>
@@ -313,12 +321,17 @@ button{font-family:inherit;cursor:pointer}
       const grid=document.getElementById("searchGrid")
       const empty=document.getElementById("searchEmpty")
       const tiles=document.getElementById("catalogTiles")
+      const wrap=document.getElementById("searchWrap")
+      const loader=document.getElementById("searchLoading")
       if(!host||!grid||!empty||!tiles) return
       if(!q){ host.style.display="none"; empty.style.display="none"; tiles.style.display="grid"; return }
       host.style.display="block"
       tiles.style.display="none"
       grid.innerHTML=""
       empty.style.display="none"
+      if(wrap) wrap.classList.add("is-loading")
+      if(loader) loader.style.display=""
+      grid.style.opacity="0"
       try{
         const res=await fetch("/api/public/products?q="+encodeURIComponent(q),{cache:"no-store"})
         const json=await res.json()
@@ -331,13 +344,16 @@ button{font-family:inherit;cursor:pointer}
               '<div class="product-body">'+
                 '<div class="product-title">'+esc(p.title||"")+'</div>'+
                 '<div class="product-sub">'+esc(p.subtitle||"")+'</div>'+
-                '<div class="price">'+priceFmt(p.basePrice)+'</div>'+
               '</div>'+
             '</a>'
           );
         }).join("")
       }catch(e){
         empty.style.display="block"
+      }finally{
+        if(wrap) wrap.classList.remove("is-loading")
+        if(loader) loader.style.display="none"
+        grid.style.opacity=""
       }
     }
     if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",run)

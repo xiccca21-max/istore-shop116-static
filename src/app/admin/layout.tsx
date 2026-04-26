@@ -26,6 +26,9 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           <a href="/admin/home" style={chip}>
             Главная
           </a>
+          <a href="/admin/raffle" style={chip}>
+            Розыгрыш
+          </a>
           <a href="/admin/orders" style={chip}>
             Заявки
           </a>

@@ -15,8 +15,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "iStore Shop 116",
-  description: "iStore Shop 116",
+  title: "iStore Набережные Челны",
+  description: "Магазин техники Apple и аксессуаров в Набережных Челнах.",
+  icons: {
+    icon: [{ url: "/assets/header-logo.png", type: "image/png" }],
+    shortcut: [{ url: "/assets/header-logo.png", type: "image/png" }],
+    apple: [{ url: "/assets/header-logo.png", type: "image/png" }],
+  },
 };
 
 export default function RootLayout({

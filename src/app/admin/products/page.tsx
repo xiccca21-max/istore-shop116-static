@@ -8,6 +8,7 @@ type Variant = {
   storageGb: number;
   simType: string;
   colors: string[];
+  imageUrl?: string | null;
   price: number;
   sku: string | null;
   inStock: boolean;
@@ -36,7 +37,6 @@ export default function AdminProductsPage() {
   const [newTitle, setNewTitle] = useState("");
   const [newSlug, setNewSlug] = useState("");
   const [newSubtitle, setNewSubtitle] = useState("");
-  const [newBasePrice, setNewBasePrice] = useState<number>(0);
   const [newCategoryId, setNewCategoryId] = useState<string>("");
   const [creating, setCreating] = useState(false);
 
@@ -94,6 +94,34 @@ export default function AdminProductsPage() {
     await load();
   }
 
+  async function uploadImage(file: File, folder: string): Promise<string> {
+    const fd = new FormData();
+    fd.set("file", file);
+    fd.set("folder", folder);
+    const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
+    if (res.status === 401) {
+      window.location.href = "/admin/login";
+      throw new Error("unauthorized");
+    }
+    if (!res.ok) throw new Error("upload_failed");
+    const json = await res.json();
+    const url = json?.data?.url;
+    if (!url || typeof url !== "string") throw new Error("upload_no_url");
+    return url;
+  }
+
+  async function uploadProductImage(productId: string, file: File) {
+    const url = await uploadImage(file, "products");
+    // Save immediately (no URL input in UI).
+    await patchProduct(productId, { imageUrls: [url] });
+  }
+
+  async function uploadVariantImage(variantId: string, file: File) {
+    const url = await uploadImage(file, "variants");
+    // Save immediately (no URL input in UI).
+    await patchVariant(variantId, { imageUrl: url } as any);
+  }
+
   async function createProduct() {
     if (creating) return;
     const slug = newSlug.trim() || slugify(newTitle);
@@ -109,7 +137,7 @@ export default function AdminProductsPage() {
           title,
           subtitle: newSubtitle.trim(),
           categoryId: newCategoryId,
-          basePrice: Number(newBasePrice || 0),
+          basePrice: 0,
           imageUrls: [],
           isActive: true,
           variants: [],
@@ -123,7 +151,6 @@ export default function AdminProductsPage() {
       setNewTitle("");
       setNewSlug("");
       setNewSubtitle("");
-      setNewBasePrice(0);
       await load();
     } finally {
       setCreating(false);
@@ -153,7 +180,7 @@ export default function AdminProductsPage() {
     await fetch("/api/admin/variants", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ productId, storageGb: 128, simType: "sim_esim", colors: [], price: 0, sku: null, inStock: true }),
+      body: JSON.stringify({ productId, storageGb: 128, simType: "sim_esim", colors: [], imageUrl: null, price: 0, sku: null, inStock: true }),
     });
     await load();
   }
@@ -221,10 +248,6 @@ export default function AdminProductsPage() {
             <div style={lbl}>Подзаголовок</div>
             <input value={newSubtitle} onChange={(e) => setNewSubtitle(e.target.value)} style={input} placeholder="Например: Cosmic Orange, оранжевый" />
           </div>
-          <div>
-            <div style={lbl}>Цена (base)</div>
-            <input value={String(newBasePrice)} onChange={(e) => setNewBasePrice(Number(e.target.value || 0))} style={input} />
-          </div>
           <div style={{ gridColumn: "1 / -1" }}>
             <div style={lbl}>Категория</div>
             <select value={newCategoryId} onChange={(e) => setNewCategoryId(e.target.value)} style={input}>
@@ -273,20 +296,12 @@ export default function AdminProductsPage() {
               </div>
             </div>
 
-            <div style={{ marginTop: 10, display: "grid", gridTemplateColumns: "1fr 260px", gap: 12, alignItems: "start" }}>
+            <div style={{ marginTop: 10, display: "grid", gap: 12, alignItems: "start" }}>
               <div style={{ display: "grid", gap: 10 }}>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
                   <div>
                     <div style={lbl}>Название</div>
                     <input value={p.title} onChange={(e) => setProducts((prev) => prev.map((x) => (x.id === p.id ? { ...x, title: e.target.value } : x)))} style={input} />
-                  </div>
-                  <div>
-                    <div style={lbl}>Цена (base)</div>
-                    <input
-                      value={String(p.basePrice)}
-                      onChange={(e) => setProducts((prev) => prev.map((x) => (x.id === p.id ? { ...x, basePrice: Number(e.target.value || 0) } : x)))}
-                      style={input}
-                    />
                   </div>
                 </div>
 
@@ -312,9 +327,47 @@ export default function AdminProductsPage() {
                   </select>
                 </div>
 
+                <div>
+                  <div style={lbl}>Фото модели</div>
+                  <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+                    <div
+                      style={{
+                        width: 92,
+                        height: 92,
+                        borderRadius: 14,
+                        border: "1px solid #2d2d2d",
+                        background: "#101010",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        overflow: "hidden",
+                      }}
+                    >
+                      {p.imageUrls && p.imageUrls[0] ? <img src={p.imageUrls[0]} alt="" style={{ width: "100%", height: "100%", objectFit: "contain" }} /> : <span style={{ opacity: 0.6, fontSize: 12 }}>нет</span>}
+                    </div>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={async (e) => {
+                        const f = e.currentTarget.files && e.currentTarget.files[0];
+                        e.currentTarget.value = "";
+                        if (!f) return;
+                        try {
+                          await uploadProductImage(p.id, f);
+                        } catch {
+                          // ignore
+                        }
+                      }}
+                      style={{ maxWidth: 260 }}
+                    />
+                  </div>
+                </div>
+
                 <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                   <button
-                    onClick={() => patchProduct(p.id, { slug: p.slug, title: p.title, subtitle: p.subtitle, basePrice: p.basePrice, categoryId: p.categoryId })}
+                    onClick={() =>
+                      patchProduct(p.id, { slug: p.slug, title: p.title, subtitle: p.subtitle, categoryId: p.categoryId, imageUrls: p.imageUrls })
+                    }
                     style={btnPrimary}
                   >
                     Сохранить товар
@@ -327,14 +380,28 @@ export default function AdminProductsPage() {
                   </button>
                 </div>
               </div>
+            </div>
 
-              <div style={{ border: "1px solid #333", borderRadius: 14, padding: 10, background: "#161616" }}>
-                <div style={{ fontWeight: 900, marginBottom: 8 }}>Варианты</div>
-                <div style={{ display: "grid", gap: 8 }}>
-                  {p.variants.map((v) => (
-                    <div key={v.id} style={{ border: "1px solid #2d2d2d", borderRadius: 12, padding: 10, background: "#111" }}>
+            <div style={{ border: "1px solid #333", borderRadius: 16, padding: 12, background: "#161616" }}>
+              <div style={{ fontWeight: 900, marginBottom: 10 }}>Варианты</div>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 10 }}>
+                {p.variants.map((v) => (
+                  <div key={v.id} style={{ border: "1px solid #2d2d2d", borderRadius: 16, overflow: "hidden", background: "#111" }}>
+                    <div style={{ height: 140, background: "#101010", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      {(v as any).imageUrl || (p.imageUrls && p.imageUrls[0]) ? (
+                        <img
+                          src={String((v as any).imageUrl || (p.imageUrls && p.imageUrls[0]) || "")}
+                          alt=""
+                          style={{ width: "100%", height: "100%", objectFit: "contain" }}
+                        />
+                      ) : (
+                        <span style={{ opacity: 0.6, fontSize: 12 }}>нет фото</span>
+                      )}
+                    </div>
+
+                    <div style={{ padding: 10, display: "grid", gap: 8 }}>
                       <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: 10, alignItems: "center" }}>
-                        <div style={{ opacity: 0.8, fontSize: 12 }}>
+                        <div style={{ opacity: 0.85, fontSize: 12 }}>
                           {v.storageGb}GB · {v.simType} · {v.inStock ? "в наличии" : "нет"}
                         </div>
                         <button onClick={() => delVariant(v.id)} style={btnDanger}>
@@ -342,7 +409,7 @@ export default function AdminProductsPage() {
                         </button>
                       </div>
 
-                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginTop: 8 }}>
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
                         <div>
                           <div style={lbl}>Память (GB)</div>
                           <input
@@ -373,45 +440,88 @@ export default function AdminProductsPage() {
                         </div>
                       </div>
 
-                      <div style={{ marginTop: 8 }}>
-                        <div style={lbl}>Цвет</div>
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                        <div>
+                          <div style={lbl}>SIM</div>
+                          <select
+                            value={String(v.simType || "sim_esim")}
+                            onChange={(e) =>
+                              setProducts((prev) =>
+                                prev.map((x) =>
+                                  x.id === p.id ? { ...x, variants: x.variants.map((vv) => (vv.id === v.id ? { ...vv, simType: e.target.value } : vv)) } : x,
+                                ),
+                              )
+                            }
+                            style={input}
+                          >
+                            <option value="sim_esim">SIM + eSIM</option>
+                            <option value="esim">eSIM</option>
+                            <option value="sim">SIM</option>
+                          </select>
+                        </div>
+                        <div>
+                          <div style={lbl}>Цвет</div>
+                          <input
+                            value={String((v.colors && v.colors[0]) || "")}
+                            onChange={(e) =>
+                              setProducts((prev) =>
+                                prev.map((x) =>
+                                  x.id === p.id
+                                    ? {
+                                        ...x,
+                                        variants: x.variants.map((vv) => (vv.id === v.id ? { ...vv, colors: [e.target.value.trim()].filter(Boolean) } : vv)),
+                                      }
+                                    : x,
+                                ),
+                              )
+                            }
+                            style={input}
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <div style={lbl}>Фото варианта</div>
                         <input
-                          value={String((v.colors && v.colors[0]) || "")}
-                          onChange={(e) =>
-                            setProducts((prev) =>
-                              prev.map((x) =>
-                                x.id === p.id
-                                  ? {
-                                      ...x,
-                                      variants: x.variants.map((vv) =>
-                                        vv.id === v.id ? { ...vv, colors: [e.target.value.trim()].filter(Boolean) } : vv,
-                                      ),
-                                    }
-                                  : x,
-                              ),
-                            )
-                          }
-                          style={input}
+                          type="file"
+                          accept="image/*"
+                          onChange={async (e) => {
+                            const f = e.currentTarget.files && e.currentTarget.files[0];
+                            e.currentTarget.value = "";
+                            if (!f) return;
+                            try {
+                              await uploadVariantImage(v.id, f);
+                            } catch {
+                              // ignore
+                            }
+                          }}
+                          style={{ maxWidth: 260 }}
                         />
                       </div>
 
-                      <div style={{ display: "flex", gap: 8, marginTop: 8, flexWrap: "wrap" }}>
-                        <button onClick={() => patchVariant(v.id, { storageGb: v.storageGb, price: v.price, colors: v.colors })} style={btnPrimarySmall}>
+                      <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                        <button
+                          onClick={() =>
+                            patchVariant(v.id, {
+                              storageGb: v.storageGb,
+                              simType: v.simType as any,
+                              price: v.price,
+                              colors: v.colors,
+                              imageUrl: (v as any).imageUrl ?? null,
+                            } as any)
+                          }
+                          style={btnPrimarySmall}
+                        >
                           Сохранить вариант
                         </button>
-                        {(v.colors || []).length > 1 ? (
-                          <button onClick={() => splitVariantByColors(v)} style={btnChip("#1b1b1b")}>
-                            Разделить по цветам
-                          </button>
-                        ) : null}
                         <button onClick={() => patchVariant(v.id, { inStock: !v.inStock })} style={btnChip(v.inStock ? "#1b1b1b" : "#3a1b1b")}>
                           {v.inStock ? "В наличии" : "Нет"}
                         </button>
                       </div>
                     </div>
-                  ))}
-                  {p.variants.length === 0 ? <div style={{ opacity: 0.7, fontSize: 12 }}>Нет вариантов</div> : null}
-                </div>
+                  </div>
+                ))}
+                {p.variants.length === 0 ? <div style={{ opacity: 0.7, fontSize: 12 }}>Нет вариантов</div> : null}
               </div>
             </div>
           </div>

@@ -32,6 +32,7 @@ create table if not exists public.product_variants (
   storage_gb integer not null,
   sim_type public.sim_type not null,
   colors jsonb not null default '[]'::jsonb,
+  image_url text,
   price integer not null,
   sku text,
   in_stock boolean not null default true,
@@ -61,6 +62,17 @@ create table if not exists public.homepage_featured_products (
 
 create unique index if not exists homepage_featured_products_product_unique on public.homepage_featured_products(product_id);
 create index if not exists idx_homepage_featured_products_sort on public.homepage_featured_products(sort_order);
+
+create table if not exists public.raffle_prizes (
+  id uuid primary key default gen_random_uuid(),
+  title text not null,
+  product_id uuid references public.products(id) on delete set null,
+  sort_order integer not null default 0,
+  is_active boolean not null default true,
+  created_at timestamptz not null default now()
+);
+
+create index if not exists idx_raffle_prizes_sort on public.raffle_prizes(sort_order);
 
 do $$ begin
   create type public.order_status as enum ('new','handled');
@@ -92,6 +104,7 @@ alter table public.products enable row level security;
 alter table public.product_variants enable row level security;
 alter table public.hero_slides enable row level security;
 alter table public.homepage_featured_products enable row level security;
+alter table public.raffle_prizes enable row level security;
 alter table public.orders enable row level security;
 alter table public.order_items enable row level security;
 
@@ -110,6 +123,9 @@ do $$ begin
 exception when duplicate_object then null; end $$;
 do $$ begin
   create policy "public_read_homepage_featured" on public.homepage_featured_products for select using (true);
+exception when duplicate_object then null; end $$;
+do $$ begin
+  create policy "public_read_raffle_prizes" on public.raffle_prizes for select using (true);
 exception when duplicate_object then null; end $$;
 
 -- Public insert for orders (MVP lead form)

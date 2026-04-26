@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { supabaseService } from "@/lib/supabaseServer";
-import { ProductBuyBox } from "./ui";
+import { ProductVariantsGrid } from "./ui";
 
 function simLabel(t: string) {
   const m: Record<string, string> = { sim_esim: "SIM + eSIM", esim: "eSIM", sim: "SIM" };
@@ -17,7 +17,7 @@ export default async function ProductPage(props: { params: Promise<{ slug: strin
       `
       id,slug,title,subtitle,base_price,image_urls,
       categories:category_id ( slug,title ),
-      product_variants ( id, storage_gb, sim_type, colors, price, sku, in_stock )
+      product_variants ( id, storage_gb, sim_type, colors, image_url, price, sku, in_stock )
     `,
     )
     .eq("slug", slug)
@@ -75,20 +75,24 @@ export default async function ProductPage(props: { params: Promise<{ slug: strin
             </div>
           ) : null}
 
-          <ProductBuyBox
-            productId={data.id}
-            title={data.title}
-            subtitle={data.subtitle || ""}
-            imageUrl={heroImage}
-            variants={variants.map((v: Record<string, unknown>) => ({
-              id: String(v.id),
-              storageGb: Number(v.storage_gb),
-              simType: String(v.sim_type || ""),
-              colors: Array.isArray(v.colors) ? (v.colors as string[]) : [],
-              price: Number(v.price ?? 0),
-              inStock: Boolean(v.in_stock),
-            }))}
-          />
+          <div style={{ marginTop: 14 }}>
+            <div style={{ fontSize: 12, fontWeight: 900, opacity: 0.75, marginBottom: 10, letterSpacing: 0.2 }}>Варианты</div>
+            <ProductVariantsGrid
+              productId={data.id}
+              title={data.title}
+              baseSubtitle={data.subtitle || ""}
+              fallbackImageUrl={heroImage}
+              variants={variants.map((v: Record<string, unknown>) => ({
+                id: String(v.id),
+                storageGb: Number(v.storage_gb),
+                simType: String(v.sim_type || ""),
+                colors: Array.isArray(v.colors) ? (v.colors as string[]) : [],
+                imageUrl: typeof (v as any).image_url === "string" ? String((v as any).image_url) : null,
+                price: Number(v.price ?? 0),
+                inStock: Boolean(v.in_stock),
+              }))}
+            />
+          </div>
 
           <div className="pdp-badges">
             <a className="pdp-badge" href="/trade-in/">

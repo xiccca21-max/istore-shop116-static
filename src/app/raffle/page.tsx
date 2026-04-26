@@ -1,7 +1,28 @@
 import Script from "next/script";
 import { SiteFooter } from "@/components/SiteFooter";
+import { supabaseAnon } from "@/lib/supabaseServer";
 
-export default function RafflePage() {
+async function getPrizes(): Promise<string[]> {
+  try {
+    const sb = supabaseAnon();
+    const { data, error } = await sb
+      .from("raffle_prizes")
+      .select("title,is_active,sort_order,products:product_id(title)")
+      .eq("is_active", true)
+      .order("sort_order", { ascending: true });
+    if (error) return [];
+    const rows = (data || []) as unknown as Array<{ title: string; products: { title: string } | null }>;
+    return rows.map((r) => (r.title || r.products?.title || "").trim()).filter(Boolean);
+  } catch {
+    return [];
+  }
+}
+
+export default async function RafflePage() {
+  const prizes =
+    (await getPrizes()) || [];
+  const fallback = ["Apple iPad", "Apple Watch", "Apple AirPods Pro 3", "Apple AirPods 4", "Сертификат на 10 000 рублей"];
+  const list = prizes.length ? prizes : fallback;
   return (
     <div className="page promoPage">
       <Script src="/assets/storefront.js?v=20260426-2" strategy="afterInteractive" />
@@ -110,26 +131,12 @@ export default function RafflePage() {
         <div className="raffleBannerInfo" aria-label="Информация о призах">
           <div className="raffleBannerInfoTitle">Розыгрыш призов</div>
           <div className="raffleBannerInfoGrid" role="list">
-            <div className="raffleBannerInfoItem" role="listitem">
-              <span className="raffleBannerInfoNum">1</span>
-              <span className="raffleBannerInfoText">Apple iPad</span>
-            </div>
-            <div className="raffleBannerInfoItem" role="listitem">
-              <span className="raffleBannerInfoNum">2</span>
-              <span className="raffleBannerInfoText">Apple Watch</span>
-            </div>
-            <div className="raffleBannerInfoItem" role="listitem">
-              <span className="raffleBannerInfoNum">3</span>
-              <span className="raffleBannerInfoText">Apple AirPods Pro 3</span>
-            </div>
-            <div className="raffleBannerInfoItem" role="listitem">
-              <span className="raffleBannerInfoNum">4</span>
-              <span className="raffleBannerInfoText">Apple AirPods 4</span>
-            </div>
-            <div className="raffleBannerInfoItem" role="listitem">
-              <span className="raffleBannerInfoNum">5</span>
-              <span className="raffleBannerInfoText">Сертификат на 10 000 рублей</span>
-            </div>
+            {list.slice(0, 9).map((t, idx) => (
+              <div key={idx} className="raffleBannerInfoItem" role="listitem">
+                <span className="raffleBannerInfoNum">{idx + 1}</span>
+                <span className="raffleBannerInfoText">{t}</span>
+              </div>
+            ))}
           </div>
           <div className="cta" style={{ marginTop: 12, justifyContent: "center" }}>
             <a className="btn primary" href="https://t.me/iStore116" target="_blank" rel="noopener">
@@ -145,28 +152,14 @@ export default function RafflePage() {
       <section className="section">
         <div className="tradeInInfo rafflePrizesInfo">
           <div className="tradeInFactors">
-            <h2>Апрель: 5 призов</h2>
+            <h2>Призы: {list.length}</h2>
             <ul className="tradeInCheck">
-              <li>
-                <span className="cb" aria-hidden="true" />
-                <span>Apple iPad</span>
-              </li>
-              <li>
-                <span className="cb" aria-hidden="true" />
-                <span>Apple Watch</span>
-              </li>
-              <li>
-                <span className="cb" aria-hidden="true" />
-                <span>AirPods Pro 3</span>
-              </li>
-              <li>
-                <span className="cb" aria-hidden="true" />
-                <span>AirPods 4</span>
-              </li>
-              <li>
-                <span className="cb" aria-hidden="true" />
-                <span>Сертификат на 10 000 ₽</span>
-              </li>
+              {list.map((t, idx) => (
+                <li key={idx}>
+                  <span className="cb" aria-hidden="true" />
+                  <span>{t}</span>
+                </li>
+              ))}
             </ul>
 
             <div className="cta" style={{ marginTop: 12 }}>

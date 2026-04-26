@@ -51,6 +51,14 @@ button{font-family:inherit;cursor:pointer}
 .color-dot{width:10px;height:10px;border-radius:50%;border:1px solid rgba(255,255,255,.18);background:#777}
 .price{font-size:26px;font-weight:800;color:var(--accent);letter-spacing:-.3px;margin-top:2px}
 .empty-state{background:var(--panel);border:1px dashed #3a3a3a;border-radius:24px;padding:60px 24px;text-align:center;color:var(--muted);font-size:18px}
+.products-wrap{position:relative;min-height:240px}
+.list-loading{display:none;position:absolute;inset:0;align-items:center;justify-content:center}
+.list-loading .boot-dot{width:10px;height:10px;border-radius:50%;background:var(--accent);opacity:.25;animation:bootpulse 1s infinite ease-in-out}
+.list-loading .boot-dot:nth-child(2){animation-delay:.15s;margin-left:10px}
+.list-loading .boot-dot:nth-child(3){animation-delay:.3s;margin-left:10px}
+@keyframes bootpulse{0%,100%{transform:scale(.8);opacity:.25}50%{transform:scale(1.15);opacity:.95}}
+.products-wrap.is-loading .list-loading{display:flex}
+.products-wrap.is-loading #productsGrid{opacity:0;pointer-events:none}
 .footer{margin-top:40px;border-top:1px solid #2d2d2d;padding-top:26px}
 .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:18px}
 .footer h3{margin:0 0 12px;font-size:16px}
@@ -114,7 +122,7 @@ button{font-family:inherit;cursor:pointer}
     </nav>
   </header>
 
-  <nav class="breadcrumbs"><a href="/">Главная</a><span class="sep">/</span><a href="/catalog/">Каталог</a><span class="sep">/</span><span data-cat-title>Категория</span></nav><section class="section"><div class="section-head"><h1 class="section-title" data-cat-h1>Категория</h1></div><div class="grid" id="productsGrid"></div><div class="empty-state" id="emptyState" style="display:none">Скоро в наличии</div></section>
+  <nav class="breadcrumbs"><a href="/">Главная</a><span class="sep">/</span><a href="/catalog/">Каталог</a><span class="sep">/</span><span data-cat-title>Категория</span></nav><section class="section"><div class="section-head"><h1 class="section-title" data-cat-h1>Категория</h1></div><div class="products-wrap is-loading" id="productsWrap"><div class="list-loading" id="productsLoading" aria-label="loading"><div style="display:flex;align-items:center;justify-content:center"><span class="boot-dot"></span><span class="boot-dot"></span><span class="boot-dot"></span></div></div><div class="grid" id="productsGrid"></div></div><div class="empty-state" id="emptyState" style="display:none">Скоро в наличии</div></section>
 
   <footer class="footer">
     <div class="footer-grid">
@@ -281,7 +289,6 @@ button{font-family:inherit;cursor:pointer}
           '<div class="product-sub">'+escapeHtml(p.subtitle||'')+'</div>'+
           chips+
           (dots?('<div class="color-dots">'+dots+'</div>'):'<div style="height:10px"></div>')+
-          '<div class="price">'+priceFmt(p.basePrice)+'</div>'+
         '</div>'+
       '</a>'
     );
@@ -292,6 +299,14 @@ button{font-family:inherit;cursor:pointer}
   }
 
   async function load(){
+    var wrap = document.getElementById('productsWrap');
+    var loader = document.getElementById('productsLoading');
+    var grid = document.getElementById('productsGrid');
+    var empty0 = document.getElementById('emptyState');
+    if(wrap) wrap.classList.add('is-loading');
+    if(loader) loader.style.display = '';
+    if(grid) grid.style.opacity = '0';
+    if(empty0) empty0.style.display = 'none';
     try{
       // Title from categories API if present
       var cats = await fetch('/api/public/categories', { cache: 'no-store' }).then(function(r){return r.ok?r.json():null;});
@@ -316,7 +331,6 @@ button{font-family:inherit;cursor:pointer}
       if(!res.ok) throw new Error('HTTP '+res.status);
       var json = await res.json();
       var items = (json && json.data) ? json.data : [];
-      var grid = document.getElementById('productsGrid');
       var empty = document.getElementById('emptyState');
       if(!grid) return;
       if(!items.length){
@@ -327,6 +341,10 @@ button{font-family:inherit;cursor:pointer}
     }catch(e){
       var empty = document.getElementById('emptyState');
       if(empty) empty.style.display='block';
+    }finally{
+      if(wrap) wrap.classList.remove('is-loading');
+      if(loader) loader.style.display = 'none';
+      if(grid) grid.style.opacity = '';
     }
   }
 

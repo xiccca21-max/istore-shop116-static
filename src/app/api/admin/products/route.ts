@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
       `
       id,slug,title,subtitle,category_id,base_price,image_urls,is_active,
       categories:category_id ( slug,title ),
-      product_variants ( id, storage_gb, sim_type, colors, price, sku, in_stock )
+      product_variants ( id, storage_gb, sim_type, colors, image_url, price, sku, in_stock )
     `,
     )
     .order("base_price", { ascending: false });

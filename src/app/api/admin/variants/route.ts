@@ -16,6 +16,7 @@ const CreateSchema = z.object({
   storageGb: z.number().int().positive(),
   simType: z.enum(["esim", "sim_esim", "sim"]),
   colors: z.array(z.string().min(1)).max(64).default([]),
+  imageUrl: z.string().trim().nullable().optional().default(null),
   price: z.number().int().nonnegative(),
   sku: z.string().nullable().optional().default(null),
   inStock: z.boolean().default(true),
@@ -34,6 +35,7 @@ export async function POST(req: NextRequest) {
     storage_gb: payload.storageGb,
     sim_type: payload.simType,
     colors: payload.colors,
+    image_url: payload.imageUrl,
     price: payload.price,
     sku: payload.sku,
     in_stock: payload.inStock,
@@ -47,6 +49,7 @@ const PatchSchema = z.object({
   storageGb: z.number().int().positive().optional(),
   simType: z.enum(["esim", "sim_esim", "sim"]).optional(),
   colors: z.array(z.string().min(1)).max(64).optional(),
+  imageUrl: z.string().trim().nullable().optional(),
   price: z.number().int().nonnegative().optional(),
   sku: z.string().nullable().optional(),
   inStock: z.boolean().optional(),
@@ -61,6 +64,7 @@ export async function PATCH(req: NextRequest) {
   if (payload.storageGb !== undefined) patch.storage_gb = payload.storageGb;
   if (payload.simType !== undefined) patch.sim_type = payload.simType;
   if (payload.colors !== undefined) patch.colors = payload.colors;
+  if (payload.imageUrl !== undefined) patch.image_url = payload.imageUrl;
   if (payload.price !== undefined) patch.price = payload.price;
   if (payload.sku !== undefined) patch.sku = payload.sku;
   if (payload.inStock !== undefined) patch.in_stock = payload.inStock;

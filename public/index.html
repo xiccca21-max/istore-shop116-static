@@ -221,7 +221,17 @@ button{font-family:inherit;cursor:pointer}
   .review-controls{order:2;margin-left:0}
   .reviews-head .to-2gis{order:3}
 }
-</style></head><body><div class="page">
+</style>
+<style>
+  /* Boot loader to avoid "flash" while fetching DB-driven blocks. */
+  body.is-booting{overflow:hidden}
+  #bootOverlay{position:fixed;inset:0;background:var(--bg);z-index:99999;display:flex;align-items:center;justify-content:center}
+  #bootOverlay .boot-dot{width:10px;height:10px;border-radius:50%;background:var(--accent);opacity:.25;animation:bootpulse 1s infinite ease-in-out}
+  #bootOverlay .boot-dot:nth-child(2){animation-delay:.15s;margin-left:10px}
+  #bootOverlay .boot-dot:nth-child(3){animation-delay:.3s;margin-left:10px}
+  @keyframes bootpulse{0%,100%{transform:scale(.8);opacity:.25}50%{transform:scale(1.15);opacity:.95}}
+</style>
+</head><body class="is-booting"><div id="bootOverlay" aria-label="loading"><div style="display:flex;align-items:center;justify-content:center"><span class="boot-dot"></span><span class="boot-dot"></span><span class="boot-dot"></span></div></div><div class="page">
     <div class="topbar">
       <div class="topbar-left">
         <a href="/installment/">Рассрочка</a>
@@ -292,10 +302,10 @@ button{font-family:inherit;cursor:pointer}
         </div>
       </div>
       <div class="buyers-carousel" data-buyers>
-        <div class="buyers-viewport"><div class="buyers-track"><div class="buyers-page buyers-page-desktop"><article class="product-card"><div class="product-media"><img src="/assets/iphone17-local.png" alt="Apple iPhone 17 256Gb" loading="lazy"></div><div class="product-body"><div class="product-title">Apple iPhone 17 256Gb</div><div class="product-sub">Black, черный</div><div class="product-meta"><span class="meta-chip">256 ГБ</span><span class="meta-chip">NANO SIM+ESIM</span></div><div class="color-dots"><span class="color-dot" style="background:#2f3444"></span><span class="color-dot" style="background:#f6f7f9"></span></div><div class="price">89 990 ₽</div></div></article><article class="product-card"><div class="product-media"><img src="/assets/iphone17air-local.png" alt="Apple iPhone 17 Air 256Gb" loading="lazy"></div><div class="product-body"><div class="product-title">Apple iPhone 17 Air 256Gb</div><div class="product-sub">Silver, серебристый</div><div class="product-meta"><span class="meta-chip">256 ГБ</span><span class="meta-chip">NANO SIM+ESIM</span></div><div class="color-dots"><span class="color-dot" style="background:#f6f7f9"></span><span class="color-dot" style="background:#2f3444"></span></div><div class="price">99 990 ₽</div></div></article><article class="product-card"><div class="product-media"><img src="/assets/iphone17pro-local.png" alt="Apple iPhone 17 Pro 256Gb" loading="lazy"></div><div class="product-body"><div class="product-title">Apple iPhone 17 Pro 256Gb</div><div class="product-sub">Cosmic Orange, оранжевый</div><div class="product-meta"><span class="meta-chip">256 ГБ</span><span class="meta-chip">NANO SIM+ESIM</span></div><div class="color-dots"><span class="color-dot" style="background:#ff7a1a"></span><span class="color-dot" style="background:#2f3444"></span><span class="color-dot" style="background:#f6f7f9"></span></div><div class="price">99 490 ₽</div></div></article><article class="product-card"><div class="product-media"><img src="/assets/iphone17promax-local.png" alt="Apple iPhone 17 Pro Max 256Gb" loading="lazy"></div><div class="product-body"><div class="product-title">Apple iPhone 17 Pro Max 256Gb</div><div class="product-sub">Deep Blue, тёмно-синий</div><div class="product-meta"><span class="meta-chip">256 ГБ</span><span class="meta-chip">NANO SIM+ESIM</span></div><div class="color-dots"><span class="color-dot" style="background:#2f3444"></span><span class="color-dot" style="background:#ff7a1a"></span></div><div class="price">110 490 ₽</div></div></article></div><div class="buyers-page buyers-page-mobile"><article class="product-card"><div class="product-media"><img src="/assets/iphone17-local.png" alt="Apple iPhone 17 256Gb" loading="lazy"></div><div class="product-body"><div class="product-title">Apple iPhone 17 256Gb</div><div class="product-sub">Black, черный</div><div class="product-meta"><span class="meta-chip">256 ГБ</span><span class="meta-chip">NANO SIM+ESIM</span></div><div class="color-dots"><span class="color-dot" style="background:#2f3444"></span><span class="color-dot" style="background:#f6f7f9"></span></div><div class="price">89 990 ₽</div></div></article><article class="product-card"><div class="product-media"><img src="/assets/iphone17air-local.png" alt="Apple iPhone 17 Air 256Gb" loading="lazy"></div><div class="product-body"><div class="product-title">Apple iPhone 17 Air 256Gb</div><div class="product-sub">Silver, серебристый</div><div class="product-meta"><span class="meta-chip">256 ГБ</span><span class="meta-chip">NANO SIM+ESIM</span></div><div class="color-dots"><span class="color-dot" style="background:#f6f7f9"></span><span class="color-dot" style="background:#2f3444"></span></div><div class="price">99 990 ₽</div></div></article></div><div class="buyers-page buyers-page-mobile"><article class="product-card"><div class="product-media"><img src="/assets/iphone17pro-local.png" alt="Apple iPhone 17 Pro 256Gb" loading="lazy"></div><div class="product-body"><div class="product-title">Apple iPhone 17 Pro 256Gb</div><div class="product-sub">Cosmic Orange, оранжевый</div><div class="product-meta"><span class="meta-chip">256 ГБ</span><span class="meta-chip">NANO SIM+ESIM</span></div><div class="color-dots"><span class="color-dot" style="background:#ff7a1a"></span><span class="color-dot" style="background:#2f3444"></span><span class="color-dot" style="background:#f6f7f9"></span></div><div class="price">99 490 ₽</div></div></article><article class="product-card"><div class="product-media"><img src="/assets/iphone17promax-local.png" alt="Apple iPhone 17 Pro Max 256Gb" loading="lazy"></div><div class="product-body"><div class="product-title">Apple iPhone 17 Pro Max 256Gb</div><div class="product-sub">Deep Blue, тёмно-синий</div><div class="product-meta"><span class="meta-chip">256 ГБ</span><span class="meta-chip">NANO SIM+ESIM</span></div><div class="color-dots"><span class="color-dot" style="background:#2f3444"></span><span class="color-dot" style="background:#ff7a1a"></span></div><div class="price">110 490 ₽</div></div></article></div></div></div>
+        <div class="buyers-viewport"><div class="buyers-track"></div></div>
       </div>
-      <div class="buyers-dots buyers-dots-desktop"><button data-i="0" class="buyers-dot buyers-dot-desktop is-active" aria-label="buyers page 1"></button></div>
-      <div class="buyers-dots buyers-dots-mobile"><button data-i="0" class="buyers-dot buyers-dot-mobile is-active" aria-label="buyers mobile page 1"></button><button data-i="1" class="buyers-dot buyers-dot-mobile" aria-label="buyers mobile page 2"></button></div>
+      <div class="buyers-dots buyers-dots-desktop"></div>
+      <div class="buyers-dots buyers-dots-mobile"></div>
     </section>
     
     <section class="section" id="gift">
@@ -499,7 +509,7 @@ button{font-family:inherit;cursor:pointer}
     start();
   }
 
-  (async function(){
+  const p=(async function(){
     try{
       const res=await fetch('/api/public/hero',{cache:'no-store'});
       if(!res.ok) return initHero();
@@ -535,6 +545,7 @@ button{font-family:inherit;cursor:pointer}
       initHero();
     }
   })();
+  (window.__istoreBoot=window.__istoreBoot||[]).push(Promise.resolve(p).catch(()=>null));
 })();
 
 (function(){
@@ -628,6 +639,17 @@ button{font-family:inherit;cursor:pointer}
 
   window.addEventListener('resize',()=>{i=0;go(0)});
   go(0);
+
+  // Robust navigation: some environments end up with non-clickable anchors due to overlays.
+  root.addEventListener('click',(e)=>{
+    const t=e.target;
+    if(!(t instanceof Element)) return;
+    const a=t.closest('a.cat-card');
+    if(!a) return;
+    const href=a.getAttribute('href')||'';
+    if(!href) return;
+    window.location.href=href;
+  });
 })();
 
 (function(){
@@ -670,7 +692,6 @@ button{font-family:inherit;cursor:pointer}
           (p.subtitle?('<div class="product-sub">'+esc(p.subtitle)+'</div>'):'')+
           (chips?('<div class="product-meta">'+chips+'</div>'):'')+
           (dots?('<div class="color-dots">'+dots+'</div>'):'')+
-          '<div class="price">'+fmt(p.basePrice||0)+'</div>'+
         '</div>'+
       '</a>'
     );
@@ -710,7 +731,7 @@ button{font-family:inherit;cursor:pointer}
     go(0);
   }
 
-  (async function(){
+  const p=(async function(){
     try{
       const res=await fetch('/api/public/featured',{cache:'no-store'});
       if(!res.ok) return bind();
@@ -725,6 +746,7 @@ button{font-family:inherit;cursor:pointer}
       bind();
     }
   })();
+  (window.__istoreBoot=window.__istoreBoot||[]).push(Promise.resolve(p).catch(()=>null));
 })();
 
 (function(){
@@ -753,5 +775,24 @@ button{font-family:inherit;cursor:pointer}
   window.addEventListener('resize',()=>{i=0;go(0)});
   go(0);
   start();
+})();
+
+(function(){
+  // Delay page reveal until DB-driven blocks loaded (hero + featured).
+  const minMs=220;
+  const maxMs=1200;
+  const started=Date.now();
+  const tasks=(window.__istoreBoot||[]).slice(0);
+  function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
+  (async function(){
+    try{
+      await Promise.race([Promise.all(tasks), sleep(maxMs)]);
+    }catch(e){}
+    const left=minMs-(Date.now()-started);
+    if(left>0) await sleep(left);
+    document.body.classList.remove('is-booting');
+    const ov=document.getElementById('bootOverlay');
+    if(ov) ov.remove();
+  })();
 })();
 </script></body></html>

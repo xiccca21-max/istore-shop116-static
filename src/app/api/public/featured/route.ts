@@ -16,6 +16,7 @@ type ApiProduct = {
     storageGb: number;
     simType: string;
     colors: string[];
+    imageUrl: string | null;
     price: number;
     sku: string | null;
     inStock: boolean;
@@ -28,7 +29,7 @@ export async function GET() {
   const { data, error } = await sb
     .from("homepage_featured_products")
     .select(
-      "id,sort_order,is_active,product_id,products:product_id(id,slug,title,subtitle,category_id,base_price,image_urls,is_active,product_variants(id,storage_gb,sim_type,colors,price,sku,in_stock))",
+      "id,sort_order,is_active,product_id,products:product_id(id,slug,title,subtitle,category_id,base_price,image_urls,is_active,product_variants(id,storage_gb,sim_type,colors,image_url,price,sku,in_stock))",
     )
     .eq("is_active", true)
     .order("sort_order", { ascending: true });
@@ -50,6 +51,7 @@ export async function GET() {
         storage_gb: number;
         sim_type: string;
         colors: string[] | null;
+        image_url?: string | null;
         price: number;
         sku: string | null;
         in_stock: boolean;
@@ -75,6 +77,7 @@ export async function GET() {
         storageGb: v.storage_gb,
         simType: v.sim_type,
         colors: v.colors || [],
+        imageUrl: v.image_url ?? null,
         price: v.price,
         sku: v.sku,
         inStock: v.in_stock,

@@ -13,6 +13,9 @@ export default function AdminHome() {
           <a href="/admin/products">Товары</a>
         </li>
         <li>
+          <a href="/admin/raffle">Розыгрыш</a>
+        </li>
+        <li>
           <a href="/admin/orders">Заявки</a>
         </li>
       </ul>

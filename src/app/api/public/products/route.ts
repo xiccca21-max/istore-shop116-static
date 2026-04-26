@@ -18,6 +18,7 @@ type ApiProduct = {
     storageGb: number;
     simType: string;
     colors: string[];
+    imageUrl: string | null;
     price: number;
     sku: string | null;
     inStock: boolean;
@@ -85,7 +86,7 @@ export async function GET(req: Request) {
           `
           id,slug,title,subtitle,category_id,base_price,image_urls,is_active,
           categories:category_id ( slug,title ),
-          product_variants ( id, storage_gb, sim_type, colors, price, sku, in_stock )
+          product_variants ( id, storage_gb, sim_type, colors, image_url, price, sku, in_stock )
         `,
         )
         .eq("is_active", true)
@@ -125,6 +126,7 @@ export async function GET(req: Request) {
           storage_gb: number;
           sim_type: string;
           colors: string[] | null;
+          image_url?: string | null;
           price: number;
           sku: string | null;
           in_stock: boolean;
@@ -148,6 +150,7 @@ export async function GET(req: Request) {
           storageGb: v.storage_gb,
           simType: v.sim_type,
           colors: v.colors || [],
+          imageUrl: v.image_url ?? null,
           price: v.price,
           sku: v.sku,
           inStock: v.in_stock,
@@ -180,7 +183,7 @@ export async function GET(req: Request) {
       `
       id,slug,title,subtitle,category_id,base_price,image_urls,is_active,
       categories:category_id ( slug,title ),
-      product_variants ( id, storage_gb, sim_type, colors, price, sku, in_stock )
+      product_variants ( id, storage_gb, sim_type, colors, image_url, price, sku, in_stock )
     `,
     )
     .eq("is_active", true)
@@ -220,6 +223,7 @@ export async function GET(req: Request) {
       storage_gb: number;
       sim_type: string;
       colors: string[] | null;
+      image_url?: string | null;
       price: number;
       sku: string | null;
       in_stock: boolean;
@@ -243,6 +247,7 @@ export async function GET(req: Request) {
       storageGb: v.storage_gb,
       simType: v.sim_type,
       colors: v.colors || [],
+      imageUrl: v.image_url ?? null,
       price: v.price,
       sku: v.sku,
       inStock: v.in_stock,
