@@ -13,7 +13,8 @@ function titleFromSrc(src: string, fallback: string) {
 }
 
 export function readEtalonHeroSlidesFromWww(): EtalonHeroSlide[] {
-  const htmlPath = path.join(process.cwd(), "www", "index.html");
+  // Legacy name kept for compatibility: the current source of truth is `public/index.html`.
+  const htmlPath = path.join(process.cwd(), "public", "index.html");
   const html = fs.readFileSync(htmlPath, "utf8");
   const $ = cheerio.load(html);
   const slides: EtalonHeroSlide[] = [];

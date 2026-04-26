@@ -10,5 +10,3 @@ npm run dev
 ```
 
 Open `http://localhost:3000/`.
-
-> Note: `server.py` serves the legacy `www/` static dump. Do not use it for the current app.
