@@ -2,9 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { ADMIN_COOKIE_NAME, verifySessionToken } from "@/lib/adminAuth";
 import { z } from "zod";
 import crypto from "node:crypto";
-import fs from "node:fs";
-import path from "node:path";
-import * as cheerio from "cheerio";
 
 async function mustAuth(req: NextRequest) {
   const token = req.cookies.get(ADMIN_COOKIE_NAME)?.value;
@@ -44,28 +41,6 @@ async function categoriesRest(pathAndQuery: string, init: RequestInit = {}) {
   throw lastError instanceof Error ? lastError : new Error(String(lastError));
 }
 
-let catalogAllowSlugsCache: { at: number; slugs: Set<string> } | null = null;
-function getCatalogAllowSlugs(): Set<string> | null {
-  try {
-    const now = Date.now();
-    if (catalogAllowSlugsCache && now - catalogAllowSlugsCache.at < 60_000) return catalogAllowSlugsCache.slugs;
-    const htmlPath = path.join(process.cwd(), "public", "catalog", "index.html");
-    const html = fs.readFileSync(htmlPath, "utf8");
-    const $ = cheerio.load(html);
-    const slugs = new Set<string>();
-    $(".catalog-grid a.catalog-tile")
-      .each((_i, el) => {
-        const href = $(el).attr("href") || "";
-        const m = href.match(/\/catalog\/([^/]+)\/?/i);
-        if (m && m[1]) slugs.add(String(m[1]).trim());
-      });
-    catalogAllowSlugsCache = { at: now, slugs };
-    return slugs;
-  } catch {
-    return null;
-  }
-}
-
 export async function GET(req: NextRequest) {
   const auth = await mustAuth(req);
   if (auth) return auth;
@@ -84,12 +59,9 @@ export async function GET(req: NextRequest) {
     sort_order: number;
     is_hidden: boolean;
   }>;
-  const allow = getCatalogAllowSlugs();
   const filtered = rows.filter((c) => {
-    // Keep only catalog categories in admin UI (catalog is the source of truth).
-    // Additionally: keep only one iPhone category in admin UI: "iphone".
+    // Keep only one iPhone category in admin UI: "iphone".
     if (c.slug.startsWith("appleiphone")) return false;
-    if (allow) return allow.has(c.slug);
     return true;
   });
   const mapped = filtered.map((c) => ({

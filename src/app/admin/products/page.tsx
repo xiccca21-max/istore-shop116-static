@@ -43,6 +43,7 @@ export default function AdminProductsPage() {
   const [creating, setCreating] = useState(false);
   const [loadError, setLoadError] = useState("");
   const [uploading, setUploading] = useState<Record<string, boolean>>({});
+  const [cardColorDrafts, setCardColorDrafts] = useState<Record<string, string>>({});
 
   async function load() {
     setLoadError("");
@@ -68,6 +69,7 @@ export default function AdminProductsPage() {
       const pj = await pResult.value.json();
       const nextProducts = Array.isArray(pj.data) ? pj.data : [];
       setProducts(nextProducts);
+      setCardColorDrafts({});
     } else if (pResult.status === "fulfilled") {
       setLoadError(`Товары не загрузились (HTTP ${pResult.value.status})`);
     } else {
@@ -95,11 +97,19 @@ export default function AdminProductsPage() {
   }, [newTitle]);
 
   async function patchProduct(id: string, data: Partial<Product>) {
-    await fetch("/api/admin/products", {
+    const res = await fetch("/api/admin/products", {
       method: "PATCH",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ id, ...data }),
     });
+    if (res.status === 401) {
+      window.location.href = "/admin/login";
+      throw new Error("unauthorized");
+    }
+    if (!res.ok) {
+      const text = await res.text().catch(() => "");
+      throw new Error(text || `product_patch_failed_${res.status}`);
+    }
     await load();
   }
 
@@ -119,7 +129,11 @@ export default function AdminProductsPage() {
       window.location.href = "/admin/login";
       throw new Error("unauthorized");
     }
-    if (!res.ok) throw new Error("upload_failed");
+    if (!res.ok) {
+      const json = await res.json().catch(() => null);
+      const message = json?.error ? String(json.error) : `upload_failed_${res.status}`;
+      throw new Error(message);
+    }
     const json = await res.json();
     const url = json?.data?.url;
     if (!url || typeof url !== "string") throw new Error("upload_no_url");
@@ -132,6 +146,8 @@ export default function AdminProductsPage() {
     try {
       const url = await uploadImage(file, "products");
       await patchProduct(productId, { imageUrls: [url] });
+    } catch (error) {
+      setLoadError(`Картинка модели не загрузилась: ${error instanceof Error ? error.message : String(error)}`);
     } finally {
       setUploading((prev) => ({ ...prev, [key]: false }));
     }
@@ -143,6 +159,8 @@ export default function AdminProductsPage() {
     try {
       const url = await uploadImage(file, "variants");
       await patchVariant(variantId, { imageUrl: url } as any);
+    } catch (error) {
+      setLoadError(`Картинка варианта не загрузилась: ${error instanceof Error ? error.message : String(error)}`);
     } finally {
       setUploading((prev) => ({ ...prev, [key]: false }));
     }
@@ -196,11 +214,19 @@ export default function AdminProductsPage() {
   }
 
   async function patchVariant(id: string, data: Partial<Variant>) {
-    await fetch("/api/admin/variants", {
+    const res = await fetch("/api/admin/variants", {
       method: "PATCH",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ id, ...data }),
     });
+    if (res.status === 401) {
+      window.location.href = "/admin/login";
+      throw new Error("unauthorized");
+    }
+    if (!res.ok) {
+      const text = await res.text().catch(() => "");
+      throw new Error(text || `variant_patch_failed_${res.status}`);
+    }
     await load();
   }
 
@@ -282,6 +308,10 @@ export default function AdminProductsPage() {
 
   function updateProduct(id: string, patch: Partial<Product>) {
     setProducts((prev) => prev.map((x) => (x.id === id ? { ...x, ...patch } : x)));
+  }
+
+  function cardColorText(product: Product) {
+    return cardColorDrafts[product.id] ?? (product.cardColors || []).join(", ");
   }
 
   return (
@@ -393,10 +423,14 @@ export default function AdminProductsPage() {
                 <div>
                   <div style={lbl}>Цвета карточки модели</div>
                   <input
-                    value={(p.cardColors || []).join(", ")}
-                    onChange={(e) => updateProduct(p.id, { cardColors: parseColors(e.target.value) })}
+                    value={cardColorText(p)}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setCardColorDrafts((prev) => ({ ...prev, [p.id]: value }));
+                      updateProduct(p.id, { cardColors: parseColors(value) });
+                    }}
                     style={input}
-                    placeholder="orange, blue, silver или #ff6600"
+                    placeholder="orange, blue, silver или #ff6600 через запятую"
                   />
                   <div style={{ display: "flex", gap: 6, marginTop: 8, flexWrap: "wrap" }}>
                     {(p.cardColors || []).map((color, idx) => (
@@ -473,7 +507,7 @@ export default function AdminProductsPage() {
                         subtitle: p.subtitle,
                         categoryId: p.categoryId,
                         imageUrls: p.imageUrls,
-                        cardColors: p.cardColors || [],
+                        cardColors: parseColors(cardColorText(p)),
                         characteristicsText: p.characteristicsText || "",
                       })
                     }
