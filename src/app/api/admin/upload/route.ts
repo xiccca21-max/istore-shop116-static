@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "node:crypto";
 import { ADMIN_COOKIE_NAME, verifySessionToken } from "@/lib/adminAuth";
+import { supabaseService } from "@/lib/supabaseServer";
 
 async function mustAuth(req: NextRequest) {
   const token = req.cookies.get(ADMIN_COOKIE_NAME)?.value;
@@ -35,29 +36,6 @@ function encodePath(path: string) {
     .join("/");
 }
 
-async function waitForPublicObject(url: string) {
-  let lastStatus = 0;
-  for (let attempt = 0; attempt < 8; attempt += 1) {
-    try {
-      const response = await fetch(`${url}?ready=${Date.now()}-${attempt}`, {
-        headers: { range: "bytes=0-0" },
-        cache: "no-store",
-        signal: AbortSignal.timeout(8000),
-      });
-      lastStatus = response.status;
-      if (response.ok) {
-        const contentType = response.headers.get("content-type") || "";
-        const bytes = await response.arrayBuffer();
-        if (bytes.byteLength > 0 && contentType.toLowerCase().startsWith("image/")) return;
-      }
-    } catch {
-      // Supabase public URLs can briefly 404/timeout immediately after upload.
-    }
-    await new Promise((resolve) => setTimeout(resolve, 250 * (attempt + 1)));
-  }
-  throw new Error(`uploaded_file_not_ready_${lastStatus || "timeout"}`);
-}
-
 export async function POST(req: NextRequest) {
   const auth = await mustAuth(req);
   if (auth) return auth;
@@ -70,50 +48,21 @@ export async function POST(req: NextRequest) {
 
     const bucket = bucketName();
     const baseUrl = must("SUPABASE_URL").replace(/\/$/, "");
-    const serviceKey = must("SUPABASE_SERVICE_ROLE_KEY");
     const ext = safeExt(file.name || "");
     const objectPath = `${folder || "uploads"}/${crypto.randomUUID()}${ext}`;
     const storagePath = `${encodeURIComponent(bucket)}/${encodePath(objectPath)}`;
 
-    const bytes = new Uint8Array(await file.arrayBuffer());
-    let response: Response | null = null;
-    let lastError: unknown = null;
-    for (let attempt = 0; attempt < 3; attempt += 1) {
-      const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), 30000);
-      try {
-        response = await fetch(`${baseUrl}/storage/v1/object/${storagePath}`, {
-          method: "POST",
-          headers: {
-            apikey: serviceKey,
-            authorization: `Bearer ${serviceKey}`,
-            "cache-control": "60",
-            "content-type": file.type || "application/octet-stream",
-            "x-upsert": "true",
-          },
-          body: bytes,
-          signal: controller.signal,
-          cache: "no-store",
-        });
-        if (response.ok || response.status < 500) break;
-      } catch (error) {
-        lastError = error;
-      } finally {
-        clearTimeout(timer);
-      }
-      await new Promise((resolve) => setTimeout(resolve, 300 * (attempt + 1)));
-    }
-
-    if (!response) {
-      return NextResponse.json({ error: lastError instanceof Error ? lastError.message : String(lastError || "upload_failed") }, { status: 500 });
-    }
-    if (!response.ok) {
-      const text = await response.text();
-      return NextResponse.json({ error: text || `upload_failed_${response.status}`, bucket }, { status: 500 });
+    const uploadBody = new Blob([await file.arrayBuffer()], { type: file.type || "application/octet-stream" });
+    const { error } = await supabaseService().storage.from(bucket).upload(objectPath, uploadBody, {
+      cacheControl: "60",
+      contentType: file.type || "application/octet-stream",
+      upsert: true,
+    });
+    if (error) {
+      return NextResponse.json({ error: error.message || "upload_failed", bucket }, { status: 500 });
     }
 
     const publicUrl = `${baseUrl}/storage/v1/object/public/${storagePath}`;
-    await waitForPublicObject(publicUrl);
     const versionedUrl = `${publicUrl}?v=${Date.now()}`;
     return NextResponse.json(
       {

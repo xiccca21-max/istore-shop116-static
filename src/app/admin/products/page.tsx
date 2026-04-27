@@ -118,16 +118,11 @@ export default function AdminProductsPage() {
     const fd = new FormData();
     fd.set("file", file);
     fd.set("folder", folder);
-    const controller = new AbortController();
-    const timer = window.setTimeout(() => controller.abort("upload_timeout"), 180000);
     let res: Response;
     try {
-      res = await fetch("/api/admin/upload", { method: "POST", body: fd, signal: controller.signal, cache: "no-store" });
-    } catch (error) {
-      if (error instanceof DOMException && error.name === "AbortError") throw new Error("upload_timeout");
-      throw error;
-    } finally {
-      window.clearTimeout(timer);
+      res = await fetch("/api/admin/upload", { method: "POST", body: fd, cache: "no-store" });
+    } catch {
+      throw new Error("upload_network_failed");
     }
     if (res.status === 401) {
       window.location.href = "/admin/login";
@@ -141,7 +136,6 @@ export default function AdminProductsPage() {
     const json = await res.json();
     const url = json?.data?.url;
     if (!url || typeof url !== "string") throw new Error("upload_no_url");
-    await waitForImageReady(url);
     return url;
   }
 
@@ -792,41 +786,6 @@ function parseColors(value: string) {
         .filter(Boolean),
     ),
   ).slice(0, 64);
-}
-
-async function waitForImageReady(url: string) {
-  let lastError: unknown = null;
-  for (let attempt = 0; attempt < 6; attempt += 1) {
-    try {
-      await new Promise<void>((resolve, reject) => {
-        const img = new Image();
-        const timer = window.setTimeout(() => {
-          img.src = "";
-          reject(new Error("image_load_timeout"));
-        }, 10000);
-        img.onload = async () => {
-          try {
-            if (typeof img.decode === "function") await img.decode();
-            window.clearTimeout(timer);
-            resolve();
-          } catch (error) {
-            window.clearTimeout(timer);
-            reject(error);
-          }
-        };
-        img.onerror = () => {
-          window.clearTimeout(timer);
-          reject(new Error("image_load_failed"));
-        };
-        img.src = `${url}${url.includes("?") ? "&" : "?"}ready=${Date.now()}-${attempt}`;
-      });
-      return;
-    } catch (error) {
-      lastError = error;
-      await new Promise((resolve) => window.setTimeout(resolve, 300 * (attempt + 1)));
-    }
-  }
-  throw lastError instanceof Error ? lastError : new Error("image_not_ready");
 }
 
 function normalizeColor(value: string) {
