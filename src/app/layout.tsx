@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import "./promo-pages.css";
@@ -33,6 +34,7 @@ export default function RootLayout({
     <html lang="ru" className={`${geistSans.variable} ${geistMono.variable}`}>
       <body>
         <CartProvider>{children}</CartProvider>
+        <Script src="/assets/storefront.js?v=1777380000" strategy="afterInteractive" />
       </body>
     </html>
   );

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Категория — iStore Набережные Челны</title><meta name="description" content="Магазин техники Apple и аксессуаров в Набережных Челнах."><link rel="icon" type="image/png" href="/assets/header-logo.png"><script defer src="/assets/storefront.js?v=20260425-1"></script><style>
+<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Категория — iStore Набережные Челны</title><meta name="description" content="Магазин техники Apple и аксессуаров в Набережных Челнах."><link rel="icon" type="image/png" href="/assets/header-logo.png"><script defer src="/assets/storefront.js?v=1777312903"></script><style>
 :root{--bg:#1a1a1a;--panel:#222;--panel-2:#2a2a2a;--line:#323232;--text:#f2f2f2;--muted:#a8a8a8;--accent:#ff6600;--accent-2:#ff8533;--radius:24px;--shadow:0 12px 36px rgba(0,0,0,.35)}
 *{box-sizing:border-box}html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased}
 a{color:inherit;text-decoration:none}img{max-width:100%;display:block}
@@ -28,6 +28,21 @@ button{font-family:inherit;cursor:pointer}
 .nav a:hover{background:#252525;border-color:#3a3a3a}
 .nav a.active{background:var(--accent);border-color:var(--accent);color:#fff}
 .nav a.catalog-link{background:var(--accent);border-color:var(--accent);color:#fff}
+.mobile-menu-toggle{display:none;align-items:center;justify-content:center;gap:6px;height:40px;padding:0 12px;border-radius:999px;border:1px solid #343434;background:#181818;color:#f1f1f1;font-size:13px;font-weight:700}
+.mobile-menu-toggle .burger{position:relative;width:14px;height:10px;display:inline-block}
+.mobile-menu-toggle .burger::before,.mobile-menu-toggle .burger::after,.mobile-menu-toggle .burger span{content:"";position:absolute;left:0;width:100%;height:2px;background:currentColor;border-radius:2px;transition:transform .2s ease,opacity .2s ease}
+.mobile-menu-toggle .burger::before{top:0}
+.mobile-menu-toggle .burger span{top:4px}
+.mobile-menu-toggle .burger::after{top:8px}
+body.menu-open .mobile-menu-toggle .burger::before{transform:translateY(4px) rotate(45deg)}
+body.menu-open .mobile-menu-toggle .burger span{opacity:0}
+body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rotate(-45deg)}
+.mobile-menu-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:39}
+.mobile-menu{display:none;position:fixed;left:10px;right:10px;top:78px;background:rgba(25,25,25,.98);border:1px solid #2f2f2f;border-radius:18px;box-shadow:var(--shadow);padding:8px;z-index:40}
+.mobile-menu a{display:block;padding:12px 14px;border-radius:12px;color:#e6e6e6;font-size:15px}
+.mobile-menu a:hover{background:#232323}
+.mobile-cats{display:none}
+.mobile-strip-arrow{display:none}
 .section{margin-top:28px}
 .section-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:16px}
 .section-title{margin:0;font-size:32px;line-height:1.1;font-weight:800;letter-spacing:-.5px}
@@ -66,11 +81,28 @@ button{font-family:inherit;cursor:pointer}
 .footer a:hover{color:var(--accent)}
 .footer-copy{margin-top:10px;color:#888;font-size:12px}
 @media (max-width:760px){
-  /* Match etalon header behavior on mobile (logo does not shrink) */
-  .header-row{display:grid;grid-template-columns:1fr auto;padding-left:0}
+  .page{padding:0 10px 30px}
+  .header{top:6px;border-radius:22px;padding:8px 10px}
+  .header-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:8px;padding-left:0}
   .logo-slot{display:none}
-  .search{grid-column:1/-1;width:100%}
-  .nav{margin-left:0}
+  .mobile-menu-toggle{display:inline-flex;grid-column:2;grid-row:1;width:30px;height:30px;padding:0;border:0;border-radius:0;background:transparent;font-size:0}
+  .mobile-menu-toggle .burger{transform:scale(1.25);transform-origin:center}
+  .header-row .cart-link{grid-column:3;grid-row:1;justify-self:end;margin:0;width:30px;height:30px;border:0;border-radius:0;background:transparent}
+  .header-row .cart-link svg{width:26px;height:26px}
+  .search{grid-column:1;grid-row:1;justify-self:start;width:62%;min-width:200px;height:40px;padding:0 10px;gap:8px}
+  .search-icon{display:none}
+  .search-input{font-size:13px;text-align:center}
+  .search-btn{display:none}
+  .nav{display:none}
+  .mobile-cats-wrap{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:6px;margin:10px 2px 2px}
+  .mobile-cats{display:flex;gap:8px;overflow:auto;padding:0 2px 2px;scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-behavior:smooth}
+  .mobile-cats::-webkit-scrollbar{display:none}
+  .mobile-cats a{display:inline-flex;align-items:center;height:36px;padding:0 14px;border-radius:999px;background:#1b1b1b;border:1px solid #2d2d2d;color:#d9d9d9;font-size:13px;white-space:nowrap}
+  .mobile-cats a.active{background:var(--accent);border-color:var(--accent);color:#fff}
+  .mobile-strip-arrow{display:grid;place-items:center;align-self:center;width:28px;height:36px;border:0;background:transparent;color:#cfcfcf;font-size:20px;line-height:1;padding:0;vertical-align:middle}
+  body.menu-open{overflow:hidden}
+  body.menu-open .mobile-menu-backdrop{display:block}
+  body.menu-open .mobile-menu{display:block}
   .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .footer-grid{grid-template-columns:1fr}
 }
@@ -94,6 +126,7 @@ button{font-family:inherit;cursor:pointer}
   <header class="header">
     <div class="header-row">
       <div class="logo-slot" aria-label="logo"><img src="/assets/header-logo.png" alt="iStore logo"></div>
+      <button class="mobile-menu-toggle" type="button" aria-label="Меню" aria-expanded="false" aria-controls="mobile-menu" data-mobile-menu-toggle><span class="burger"><span></span></span></button>
       <form class="search" role="search" action="/catalog/" method="get" data-search>
         <span class="search-icon" aria-hidden="true"></span>
         <input class="search-input" name="q" placeholder="Поиск по каталогу" autocomplete="off">
@@ -121,6 +154,30 @@ button{font-family:inherit;cursor:pointer}
       <a class="" href="/catalog/aksessuary/">Аксессуары</a>
     </nav>
   </header>
+  <div class="mobile-menu-backdrop" data-mobile-menu-close></div>
+  <nav id="mobile-menu" class="mobile-menu" aria-label="Мобильное меню">
+    <a href="/installment/">Рассрочка</a>
+    <a href="/trade-in/">Trade-In</a>
+    <a href="/gifts/">Подарки</a>
+    <a href="/raffle/">Розыгрыш</a>
+    <a href="/#gift">Сертификат</a>
+    <a href="/iremont116/">Сервис</a>
+    <a href="/#contacts">Контакты</a>
+  </nav>
+  <div class="mobile-cats-wrap" data-mobile-switcher>
+  <button class="mobile-strip-arrow prev" type="button" aria-label="Предыдущие категории" data-mobile-strip-prev>‹</button>
+  <nav class="mobile-cats" aria-label="Категории" data-mobile-strip>
+    <a class="active" href="/catalog/">Каталог</a>
+    <a href="/catalog/iphone/">iPhone</a>
+    <a href="/catalog/air-pods/">AirPods</a>
+    <a href="/catalog/mac/">Mac</a>
+    <a href="/catalog/apple-watch/">Watch</a>
+    <a href="/catalog/ipad/">iPad</a>
+    <a href="/catalog/aksessuary/">Акс.</a>
+    <a href="/catalog/">Все</a>
+  </nav>
+  <button class="mobile-strip-arrow next" type="button" aria-label="Следующие категории" data-mobile-strip-next>›</button>
+  </div>
 
   <nav class="breadcrumbs"><a href="/">Главная</a><span class="sep">/</span><a href="/catalog/">Каталог</a><span class="sep">/</span><span data-cat-title>Категория</span></nav><section class="section"><div class="section-head"><h1 class="section-title" data-cat-h1>Категория</h1></div><div class="products-wrap is-loading" id="productsWrap"><div class="list-loading" id="productsLoading" aria-label="loading"><div style="display:flex;align-items:center;justify-content:center"><span class="boot-dot"></span><span class="boot-dot"></span><span class="boot-dot"></span></div></div><div class="grid" id="productsGrid"></div></div><div class="empty-state" id="emptyState" style="display:none">Скоро в наличии</div></section>
 
@@ -148,6 +205,34 @@ button{font-family:inherit;cursor:pointer}
 </div>
 
 <script>
+(function(){
+  var switchers=document.querySelectorAll('[data-mobile-switcher]');
+  switchers.forEach(function(root){
+    var strip=root.querySelector('[data-mobile-strip]');
+    var prev=root.querySelector('[data-mobile-strip-prev]');
+    var next=root.querySelector('[data-mobile-strip-next]');
+    if(!strip || !prev || !next) return;
+    prev.addEventListener('click',function(){ strip.scrollBy({left:-180,behavior:'smooth'}); });
+    next.addEventListener('click',function(){ strip.scrollBy({left:180,behavior:'smooth'}); });
+  });
+})();
+
+(function(){
+  var toggle=document.querySelector('[data-mobile-menu-toggle]');
+  var menu=document.getElementById('mobile-menu');
+  if(!toggle || !menu) return;
+  var closeTargets=document.querySelectorAll('[data-mobile-menu-close], #mobile-menu a');
+  function setOpen(open){
+    document.body.classList.toggle('menu-open',open);
+    toggle.setAttribute('aria-expanded',open?'true':'false');
+  }
+  toggle.addEventListener('click',function(){ setOpen(!document.body.classList.contains('menu-open')); });
+  closeTargets.forEach(function(el){ el.addEventListener('click',function(){ setOpen(false); }); });
+  document.addEventListener('keydown',function(event){
+    if(event.key==='Escape') setOpen(false);
+  });
+})();
+
 (function(){
   function getSlug(){
     var parts=location.pathname.split('/').filter(Boolean);

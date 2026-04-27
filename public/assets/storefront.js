@@ -31,7 +31,16 @@
     }
   }
 
+  function isReactHeader() {
+    // When the React <SiteHeader /> component is rendered, it manages the
+    // header (cart, burger, mobile categories) on its own. The legacy
+    // storefront.js DOM rebuild would fight React's virtual DOM and break
+    // event handlers, so we opt out completely.
+    return !!document.querySelector(".istoreHeader-root");
+  }
+
   function ensureCartUi() {
+    if (isReactHeader()) return;
     const headerRow = document.querySelector(".header-row");
     if (!headerRow) return;
     if (headerRow.querySelector(".cart-link")) return;
@@ -272,17 +281,352 @@
     }
   }
 
+  const ISTORE_NAV_LINKS = [
+    { href: "/catalog/", label: "Каталог", key: "catalog", catalog: true },
+    { href: "/catalog/iphone/", label: "iPhone", key: "iphone" },
+    { href: "/catalog/air-pods/", label: "AirPods", key: "air-pods" },
+    { href: "/catalog/mac/", label: "Mac", key: "mac" },
+    { href: "/catalog/apple-watch/", label: "Apple Watch", key: "apple-watch" },
+    { href: "/catalog/ipad/", label: "iPad", key: "ipad" },
+    { href: "/catalog/samsung/", label: "Samsung", key: "samsung" },
+    { href: "/catalog/dyson/", label: "Dyson", key: "dyson" },
+    { href: "/catalog/aksessuary/", label: "Аксессуары", key: "aksessuary" },
+  ];
+
+  const ISTORE_MENU_LINKS = [
+    { href: "/installment/", label: "Рассрочка" },
+    { href: "/trade-in/", label: "Trade-In" },
+    { href: "/gifts/", label: "Подарки" },
+    { href: "/raffle/", label: "Розыгрыш" },
+    { href: "/#gift", label: "Сертификат" },
+    { href: "/iremont116/", label: "Сервис" },
+    { href: "/#contacts", label: "Контакты" },
+  ];
+
+  function ensureUnifiedHeaderStyles() {
+    if (isReactHeader()) return;
+    const existing = document.getElementById("istore-unified-mobile-header-style");
+    if (existing) return;
+    const style = document.createElement("style");
+    style.id = "istore-unified-mobile-header-style";
+    style.textContent = `
+      .mobile-menu-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:39}
+      .mobile-menu{display:none;position:fixed;left:10px;right:10px;top:78px;background:rgba(25,25,25,.98);border:1px solid #2f2f2f;border-radius:18px;box-shadow:0 12px 36px rgba(0,0,0,.35);padding:8px;z-index:40}
+      .mobile-menu a{display:block;padding:12px 14px;border-radius:12px;color:#e6e6e6;font-size:15px;text-decoration:none}
+      .mobile-menu a:hover{background:#232323}
+      body.menu-open{overflow:hidden}
+      body.menu-open .mobile-menu-backdrop{display:block}
+      body.menu-open .mobile-menu{display:block}
+
+      @media (min-width:761px){
+        .mobile-menu-toggle,.mobile-strip-arrow,.nav-shell .mobile-strip-arrow{display:none !important}
+      }
+
+      @media (max-width:760px){
+        .topbar{display:none !important}
+        body > .topbar, .page > .topbar{display:none !important}
+
+        .header{position:sticky !important;top:6px !important;z-index:30 !important;background:rgba(30,30,30,.92) !important;backdrop-filter:blur(16px) !important;-webkit-backdrop-filter:blur(16px) !important;border:1px solid #323232 !important;border-radius:22px !important;padding:8px 10px !important;box-shadow:0 12px 36px rgba(0,0,0,.35) !important}
+        .header-row{display:grid !important;grid-template-columns:minmax(0,1fr) auto auto !important;align-items:center !important;gap:8px !important;padding:0 !important;margin:0 !important}
+        .header .logo-slot{display:none !important}
+        .mobile-cats,.mobile-cats-wrap,.nav-more-toggle,.nav-more-menu,.nav-more-backdrop{display:none !important}
+
+        .mobile-menu-toggle{display:inline-flex !important;align-items:center;justify-content:center;grid-column:2 !important;grid-row:1 !important;width:30px !important;height:30px !important;padding:0 !important;border:0 !important;border-radius:0 !important;background:transparent !important;color:#f1f1f1 !important;font-size:0 !important;cursor:pointer}
+        .mobile-menu-toggle .burger{position:relative;width:14px;height:10px;display:inline-block;transform:scale(1.25);transform-origin:center;color:#f1f1f1}
+        .mobile-menu-toggle .burger::before,.mobile-menu-toggle .burger::after,.mobile-menu-toggle .burger span{content:"";position:absolute;left:0;width:100%;height:2px;background:currentColor;border-radius:2px;transition:transform .2s ease,opacity .2s ease}
+        .mobile-menu-toggle .burger::before{top:0}
+        .mobile-menu-toggle .burger span{top:4px}
+        .mobile-menu-toggle .burger::after{top:8px}
+        body.menu-open .mobile-menu-toggle .burger::before{transform:translateY(4px) rotate(45deg)}
+        body.menu-open .mobile-menu-toggle .burger span{opacity:0}
+        body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rotate(-45deg)}
+
+        .header-row .cart-link{display:inline-flex !important;align-items:center;justify-content:center;grid-column:3 !important;grid-row:1 !important;justify-self:end !important;margin:0 !important;width:30px !important;height:30px !important;padding:0 !important;border:0 !important;border-radius:0 !important;background:transparent !important;position:relative}
+        .header-row .cart-link svg{width:26px !important;height:26px !important}
+        .header-row .cart-link .cart-badge{position:absolute;top:-4px;right:-4px;min-width:16px;height:16px;padding:0 4px;border-radius:999px;background:#ff6600;color:#fff;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;line-height:1}
+
+        .header-row .search{display:flex !important;align-items:center !important;grid-column:1 !important;grid-row:1 !important;justify-self:start !important;width:62% !important;min-width:200px !important;max-width:none !important;height:40px !important;padding:0 10px !important;gap:8px !important;border:1px solid #333 !important;background:#161616 !important;border-radius:999px !important;color:#7a7a7a !important;box-sizing:border-box}
+        .header-row .search .search-icon{display:none !important}
+        .header-row .search .search-input{flex:1 1 auto !important;min-width:0 !important;height:100% !important;border:0 !important;outline:0 !important;background:transparent !important;color:#ddd !important;font-size:13px !important;text-align:center !important}
+        .header-row .search .search-input::placeholder{color:#7a7a7a !important}
+        .header-row .search .search-btn{display:none !important}
+
+        .header .nav-shell{display:grid !important;grid-template-columns:auto minmax(0,1fr) auto !important;align-items:center !important;gap:6px !important;margin:8px 0 0 0 !important;padding:0 !important;position:static !important}
+        .header .nav-shell .nav{margin:0 !important;padding:0 0 2px 0 !important;gap:6px !important;display:flex !important;flex-wrap:nowrap !important;overflow-x:auto !important;overflow-y:hidden !important;-webkit-overflow-scrolling:touch !important;scroll-behavior:smooth !important;scrollbar-width:none !important}
+        .header .nav-shell .nav::-webkit-scrollbar{display:none !important}
+        .header .nav-shell .nav a{flex:0 0 auto !important;display:inline-flex !important;align-items:center !important;height:34px !important;padding:0 12px !important;border-radius:999px !important;background:#1b1b1b !important;border:1px solid #2d2d2d !important;color:#d9d9d9 !important;font-size:13px !important;white-space:nowrap !important;text-decoration:none !important}
+        .header .nav-shell .nav a.catalog-link,
+        .header .nav-shell .nav a.active{background:#ff6600 !important;border-color:#ff6600 !important;color:#fff !important}
+        .header .nav-shell .nav .label-short{display:none !important}
+        .header .nav-shell .nav .label-full{display:inline !important}
+        .header .nav-shell .mobile-strip-arrow{display:grid !important;place-items:center !important;align-self:center !important;width:28px !important;height:36px !important;border:0 !important;background:transparent !important;color:#cfcfcf !important;font-size:20px !important;line-height:1 !important;padding:0 !important;cursor:pointer}
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  function buildNavInnerHTML(activeKey, path) {
+    return ISTORE_NAV_LINKS
+      .map((link) => {
+        const isActive =
+          (link.catalog && (path === "/catalog" || path === "/catalog/")) ||
+          (!link.catalog && activeKey === link.key);
+        const classes = [
+          link.catalog ? "catalog-link" : "",
+          isActive ? "active" : "",
+        ]
+          .filter(Boolean)
+          .join(" ");
+        return `<a class="${classes}" href="${link.href}">${link.label}</a>`;
+      })
+      .join("");
+  }
+
+  function ensureUnifiedMobileHeader() {
+    if (isReactHeader()) return;
+    const header = document.querySelector(".header");
+    if (!header) return;
+
+    const path = window.location.pathname.replace(/\/+$/, "") || "/";
+    const catMatch = path.match(/^\/catalog\/([^/]+)$/);
+    const activeKey = catMatch ? catMatch[1] : (path === "/catalog" ? "catalog" : "");
+
+    // 1. Header row: must contain logo slot, search form, mobile burger, cart link.
+    let row = header.querySelector(".header-row");
+    if (!row) {
+      row = document.createElement("div");
+      row.className = "header-row";
+      header.insertBefore(row, header.firstChild);
+    }
+
+    // 1a. Search form
+    let search = row.querySelector(".search");
+    if (!search) {
+      search = document.createElement("form");
+      search.className = "search";
+      search.setAttribute("role", "search");
+      search.setAttribute("action", "/catalog/");
+      search.setAttribute("method", "get");
+      search.setAttribute("data-search", "");
+      search.innerHTML = `
+        <span class="search-icon" aria-hidden="true"></span>
+        <input class="search-input" name="q" placeholder="Поиск по каталогу" autocomplete="off">
+        <button class="search-btn" type="submit">Найти</button>
+      `;
+      row.appendChild(search);
+    } else if (!search.hasAttribute("data-search")) {
+      search.setAttribute("data-search", "");
+    }
+
+    // 1b. Burger toggle
+    let toggle = row.querySelector("[data-mobile-menu-toggle]");
+    if (!toggle) {
+      toggle = document.createElement("button");
+      toggle.className = "mobile-menu-toggle";
+      toggle.type = "button";
+      toggle.setAttribute("aria-label", "Меню");
+      toggle.setAttribute("aria-expanded", "false");
+      toggle.setAttribute("aria-controls", "mobile-menu");
+      toggle.setAttribute("data-mobile-menu-toggle", "");
+      toggle.innerHTML = '<span class="burger"><span></span></span>';
+      row.appendChild(toggle);
+    } else if (!toggle.querySelector(".burger")) {
+      toggle.innerHTML = '<span class="burger"><span></span></span>';
+    }
+
+    // 1c. Cart link (ensure exists, then place after toggle)
+    let cart = row.querySelector(".cart-link");
+    if (!cart) {
+      cart = document.createElement("a");
+      cart.className = "cart-link";
+      cart.href = "/checkout";
+      cart.setAttribute("aria-label", "Корзина");
+      cart.innerHTML = `
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M7 7h14l-2 8H8L7 7Z" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/>
+          <path d="M7 7 6.3 4.8A2 2 0 0 0 4.4 3.5H3" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M9.5 20.2a1.2 1.2 0 1 0 0-2.4 1.2 1.2 0 0 0 0 2.4Z" fill="#fff"/>
+          <path d="M18 20.2a1.2 1.2 0 1 0 0-2.4 1.2 1.2 0 0 0 0 2.4Z" fill="#fff"/>
+        </svg>
+        <span class="cart-badge" data-cart-badge style="display:none">0</span>
+      `;
+      row.appendChild(cart);
+    }
+
+    // Ensure DOM order in row: logo-slot (if any), search, toggle, cart.
+    const logoSlot = row.querySelector(".logo-slot");
+    if (logoSlot) row.insertBefore(logoSlot, row.firstChild);
+    row.appendChild(search);
+    row.appendChild(toggle);
+    row.appendChild(cart);
+
+    // 2. Remove any legacy mobile-only blocks that duplicate the strip.
+    document.querySelectorAll(".mobile-cats, .mobile-cats-wrap").forEach((el) => el.remove());
+
+    // 3. Nav shell: arrow + nav + arrow inside the header (sibling of header-row).
+    let shell = header.querySelector(".nav-shell");
+    let nav = header.querySelector(".nav");
+    if (!nav) {
+      nav = document.createElement("nav");
+      nav.className = "nav";
+    }
+    nav.innerHTML = buildNavInnerHTML(activeKey, path);
+    nav.setAttribute("data-mobile-strip", "");
+
+    if (!shell) {
+      shell = document.createElement("div");
+      shell.className = "nav-shell";
+      header.appendChild(shell);
+    }
+    shell.setAttribute("data-mobile-switcher", "");
+    if (nav.parentElement !== shell) shell.appendChild(nav);
+
+    let prev = shell.querySelector("[data-mobile-strip-prev]");
+    if (!prev) {
+      prev = document.createElement("button");
+      prev.className = "mobile-strip-arrow prev";
+      prev.type = "button";
+      prev.setAttribute("aria-label", "Предыдущие категории");
+      prev.setAttribute("data-mobile-strip-prev", "");
+      prev.textContent = "‹";
+    }
+    let next = shell.querySelector("[data-mobile-strip-next]");
+    if (!next) {
+      next = document.createElement("button");
+      next.className = "mobile-strip-arrow next";
+      next.type = "button";
+      next.setAttribute("aria-label", "Следующие категории");
+      next.setAttribute("data-mobile-strip-next", "");
+      next.textContent = "›";
+    }
+    shell.insertBefore(prev, nav);
+    shell.appendChild(next);
+
+    // Ensure shell is the LAST child of header (after the row).
+    if (header.lastElementChild !== shell) header.appendChild(shell);
+
+    // 4. Backdrop + mobile menu overlay (placed right after header).
+    let backdrop = document.querySelector(".mobile-menu-backdrop[data-mobile-menu-close]");
+    if (!backdrop) {
+      backdrop = document.createElement("div");
+      backdrop.className = "mobile-menu-backdrop";
+      backdrop.setAttribute("data-mobile-menu-close", "");
+      header.insertAdjacentElement("afterend", backdrop);
+    }
+    // Force base style so display toggle works regardless of page CSS.
+    backdrop.style.cssText = "display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1039";
+
+    let menu = document.getElementById("mobile-menu");
+    if (!menu) {
+      menu = document.createElement("nav");
+      menu.id = "mobile-menu";
+      menu.className = "mobile-menu";
+      menu.setAttribute("aria-label", "Мобильное меню");
+      backdrop.insertAdjacentElement("afterend", menu);
+    }
+    // Force base style so display toggle works regardless of page CSS.
+    menu.style.cssText = "display:none;position:fixed;left:10px;right:10px;top:78px;background:rgba(25,25,25,.98);border:1px solid #2f2f2f;border-radius:18px;box-shadow:0 12px 36px rgba(0,0,0,.35);padding:8px;z-index:1040";
+    menu.innerHTML = ISTORE_MENU_LINKS
+      .map((l) => `<a href="${l.href}" style="display:block;padding:12px 14px;border-radius:12px;color:#e6e6e6;font-size:15px;text-decoration:none">${l.label}</a>`)
+      .join("");
+
+    // 5. Wire interactions — use direct style.display so no CSS can block it.
+    const isMenuOpen = () => backdrop.style.display !== "none";
+
+    const setMenuOpen = (open) => {
+      backdrop.style.display = open ? "block" : "none";
+      menu.style.display = open ? "block" : "none";
+      document.body.style.overflow = open ? "hidden" : "";
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+    };
+
+    toggle.onclick = (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      setMenuOpen(!isMenuOpen());
+    };
+    backdrop.onclick = () => setMenuOpen(false);
+    menu.querySelectorAll("a").forEach((a) => {
+      a.onclick = () => setMenuOpen(false);
+    });
+
+    if (shell.getAttribute("data-bound-strip") !== "1") {
+      shell.setAttribute("data-bound-strip", "1");
+      prev.addEventListener("click", () => nav.scrollBy({ left: -180, behavior: "smooth" }));
+      next.addEventListener("click", () => nav.scrollBy({ left: 180, behavior: "smooth" }));
+    }
+
+    if (!document.body.dataset.mobileHeaderEscBound) {
+      document.body.dataset.mobileHeaderEscBound = "1";
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") setMenuOpen(false);
+      });
+    }
+  }
+
   function main() {
     ensureCartUi();
     ensureLogoLink();
+    ensureUnifiedHeaderStyles();
+    ensureUnifiedMobileHeader();
     initHeaderSearch();
     wireProductCards();
     renderBadge();
-    window.addEventListener("storage", renderBadge);
-    window.addEventListener("istore-cart-changed", renderBadge);
   }
 
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", main);
-  else main();
+  // Idempotent runner — safe to call multiple times.
+  function run() {
+    try {
+      main();
+    } catch (e) {
+      try { console.error("storefront main() failed", e); } catch (_) {}
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", run);
+  } else {
+    run();
+  }
+
+  // Re-run on Next.js client-side route changes. We watch the body for any
+  // header swap so the unified mobile header is rebuilt on every page.
+  if (!window.__istoreMainBound) {
+    window.__istoreMainBound = true;
+    window.addEventListener("storage", () => { try { renderBadge(); } catch (_) {} });
+    window.addEventListener("istore-cart-changed", () => { try { renderBadge(); } catch (_) {} });
+
+    let pending = false;
+    const schedule = () => {
+      if (pending) return;
+      pending = true;
+      requestAnimationFrame(() => {
+        pending = false;
+        run();
+      });
+    };
+
+    const observer = new MutationObserver((mutations) => {
+      for (const m of mutations) {
+        for (const node of m.addedNodes) {
+          if (!(node instanceof Element)) continue;
+          if (node.matches?.(".header") || node.querySelector?.(".header")) {
+            schedule();
+            return;
+          }
+        }
+      }
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    // Also re-run on URL changes (Next.js pushState).
+    const _push = history.pushState;
+    history.pushState = function () {
+      const ret = _push.apply(this, arguments);
+      schedule();
+      return ret;
+    };
+    window.addEventListener("popstate", schedule);
+  }
 })();
 

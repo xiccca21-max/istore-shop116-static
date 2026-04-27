@@ -1,11 +1,9 @@
-import Script from "next/script";
 import "./product-chrome.css";
 import "./product-pdp.css";
 
 export default function ProductRouteLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="istore-product-root">
-      <Script src="/assets/storefront.js?v=20260426-2" strategy="afterInteractive" />
       <div className="istore-page-shell">
         <div className="topbar">
           <div className="topbar-left">

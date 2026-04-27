@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>iStore Набережные Челны — техника Apple</title><meta name="description" content="Магазин техники Apple и аксессуаров в Набережных Челнах."><link rel="icon" type="image/png" href="/assets/header-logo.png"><script defer src="/assets/storefront.js?v=20260425-1"></script><style>
+<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>iStore Набережные Челны — техника Apple</title><meta name="description" content="Магазин техники Apple и аксессуаров в Набережных Челнах."><link rel="icon" type="image/png" href="/assets/header-logo.png"><script defer src="/assets/storefront.js?v=1777312903"></script><style>
 :root{--bg:#1a1a1a;--panel:#222;--panel-2:#2a2a2a;--line:#323232;--text:#f2f2f2;--muted:#a8a8a8;--accent:#ff6600;--accent-2:#ff8533;--radius:24px;--shadow:0 12px 36px rgba(0,0,0,.35)}
 *{box-sizing:border-box}html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased}
 a{color:inherit;text-decoration:none}img{max-width:100%;display:block}
@@ -26,6 +26,23 @@ button{font-family:inherit;cursor:pointer}
 .nav a:hover{background:#252525;border-color:#3a3a3a}
 .nav a.active{background:var(--accent);border-color:var(--accent);color:#fff}
 .nav a.catalog-link{background:var(--accent);border-color:var(--accent);color:#fff}
+.label-short{display:none}
+.nav-shell{position:relative}
+.mobile-strip-arrow{display:none}
+.nav-more-toggle,.nav-more-menu,.nav-more-backdrop{display:none}
+.mobile-menu-toggle{display:none;align-items:center;justify-content:center;gap:6px;height:40px;padding:0 12px;border-radius:999px;border:1px solid #343434;background:#181818;color:#f1f1f1;font-size:13px;font-weight:700}
+.mobile-menu-toggle .burger{position:relative;width:14px;height:10px;display:inline-block}
+.mobile-menu-toggle .burger::before,.mobile-menu-toggle .burger::after,.mobile-menu-toggle .burger span{content:"";position:absolute;left:0;width:100%;height:2px;background:currentColor;border-radius:2px;transition:transform .2s ease,opacity .2s ease}
+.mobile-menu-toggle .burger::before{top:0}
+.mobile-menu-toggle .burger span{top:4px}
+.mobile-menu-toggle .burger::after{top:8px}
+body.menu-open .mobile-menu-toggle .burger::before{transform:translateY(4px) rotate(45deg)}
+body.menu-open .mobile-menu-toggle .burger span{opacity:0}
+body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rotate(-45deg)}
+.mobile-menu-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:39}
+.mobile-menu{display:none;position:fixed;left:10px;right:10px;top:78px;background:rgba(25,25,25,.98);border:1px solid #2f2f2f;border-radius:18px;box-shadow:var(--shadow);padding:8px;z-index:40}
+.mobile-menu a{display:block;padding:12px 14px;border-radius:12px;color:#e6e6e6;font-size:15px}
+.mobile-menu a:hover{background:#232323}
 .section{margin-top:28px}
 .section-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:16px}
 .section-title{margin:0;font-size:32px;line-height:1.1;font-weight:800;letter-spacing:-.5px}
@@ -185,11 +202,36 @@ button{font-family:inherit;cursor:pointer}
   .hero-slide h2{font-size:46px}
 }
 @media (max-width:760px){
+  .page{padding:0 10px 30px}
   .topbar{display:none}
-  .header-row{display:grid;grid-template-columns:1fr auto}
+  .header{top:6px;border-radius:22px;padding:8px 10px}
+  .header-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:8px;padding-left:0}
   .logo-slot{display:none}
-  .search{grid-column:1/-1;width:100%}
-  .nav{margin-left:0}
+  .mobile-menu-toggle{display:inline-flex;grid-column:2;grid-row:1;width:30px;height:30px;padding:0;border:0;border-radius:0;background:transparent;font-size:0}
+  .mobile-menu-toggle .burger{transform:scale(1.25);transform-origin:center}
+  .header-row .cart-link{grid-column:3;grid-row:1;justify-self:end;margin:0;width:30px;height:30px;border:0;border-radius:0;background:transparent}
+  .header-row .cart-link svg{width:26px;height:26px}
+  .search{grid-column:1;grid-row:1;justify-self:start;width:62%;min-width:200px;height:40px;padding:0 10px;gap:8px}
+  .search-icon{display:none}
+  .search-input{font-size:13px;text-align:center}
+  .search-btn{display:none}
+  .nav-shell{margin-top:8px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:6px}
+  .nav{margin-left:0;padding-top:0;padding-bottom:2px;gap:6px;-webkit-overflow-scrolling:touch;padding-right:2px;overflow:auto;scroll-behavior:smooth}
+  .mobile-strip-arrow{display:grid;place-items:center;align-self:center;width:28px;height:36px;border:0;background:transparent;color:#cfcfcf;font-size:20px;line-height:1;padding:0;vertical-align:middle}
+  .nav a{padding:8px 12px;font-size:13px}
+  .nav a.nav-extra{display:none}
+  .nav .label-full{display:none}
+  .nav .label-short{display:inline}
+  .nav-more-toggle{display:inline-flex;align-items:center;justify-content:center;padding:8px 12px;border-radius:999px;border:1px solid #2d2d2d;background:#1b1b1b;color:#d9d9d9;font-size:13px;white-space:nowrap}
+  body.menu-open,body.nav-more-open{overflow:hidden}
+  body.menu-open .mobile-menu-backdrop{display:block}
+  body.menu-open .mobile-menu{display:block}
+  body.nav-more-open .nav-more-backdrop{display:block}
+  body.nav-more-open .nav-more-menu{display:grid}
+  .nav-more-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:37}
+  .nav-more-menu{position:fixed;left:10px;right:10px;bottom:10px;background:rgba(25,25,25,.98);border:1px solid #2f2f2f;border-radius:18px;box-shadow:var(--shadow);padding:8px;z-index:38;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+  .nav-more-menu a{display:block;padding:11px 12px;border-radius:12px;background:#1b1b1b;border:1px solid #2d2d2d;color:#e6e6e6;font-size:13px;text-align:center}
+  .nav-more-menu a:hover{background:#232323}
   .grid{grid-template-columns:1fr}
   .buyers-page-desktop{display:none}
   .buyers-page-mobile{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -251,14 +293,38 @@ button{font-family:inherit;cursor:pointer}
     <header class="header">
       <div class="header-row">
         <div class="logo-slot" aria-label="logo"><img src="/assets/header-logo.png" alt="iStore logo"></div>
+        <button class="mobile-menu-toggle" type="button" aria-label="Меню" aria-expanded="false" aria-controls="mobile-menu" data-mobile-menu-toggle><span class="burger"><span></span></span></button>
         <form class="search" role="search" action="/catalog/" method="get" data-search>
           <span class="search-icon" aria-hidden="true"></span>
           <input class="search-input" name="q" placeholder="Поиск по каталогу" autocomplete="off">
           <button class="search-btn" type="submit">Найти</button>
         </form>
       </div>
-      <nav class="nav"><a class="catalog-link " href="/catalog/">Каталог</a><a class="" href="/catalog/iphone/">iPhone</a><a class="" href="/catalog/air-pods/">AirPods</a><a class="" href="/catalog/mac/">Mac</a><a class="" href="/catalog/apple-watch/">Apple Watch</a><a class="" href="/catalog/ipad/">iPad</a><a class="" href="/catalog/samsung/">Samsung</a><a class="" href="/catalog/dyson/">Dyson</a><a class="" href="/catalog/aksessuary/">Аксессуары</a></nav>
+      <div class="nav-shell" data-mobile-switcher>
+        <button class="mobile-strip-arrow prev" type="button" aria-label="Предыдущие категории" data-mobile-strip-prev>‹</button>
+        <nav class="nav" data-mobile-strip><a class="catalog-link " href="/catalog/">Каталог</a><a class="" href="/catalog/iphone/">iPhone</a><a class="" href="/catalog/air-pods/">AirPods</a><a class="" href="/catalog/mac/">Mac</a><a class="" href="/catalog/apple-watch/"><span class="label-full">Apple Watch</span><span class="label-short">Watch</span></a><a class="nav-extra" href="/catalog/ipad/">iPad</a><a class="nav-extra" href="/catalog/samsung/">Samsung</a><a class="nav-extra" href="/catalog/dyson/">Dyson</a><a class="nav-extra" href="/catalog/aksessuary/"><span class="label-full">Аксессуары</span><span class="label-short">Акс.</span></a><button class="nav-more-toggle" type="button" data-nav-more-toggle aria-expanded="false" aria-controls="nav-more-menu">Еще</button></nav>
+        <button class="mobile-strip-arrow next" type="button" aria-label="Следующие категории" data-mobile-strip-next>›</button>
+      </div>
     </header>
+    <div class="mobile-menu-backdrop" data-mobile-menu-close></div>
+    <div class="nav-more-backdrop" data-nav-more-close></div>
+    <nav id="mobile-menu" class="mobile-menu" aria-label="Мобильное меню">
+      <a href="/installment/">Рассрочка</a>
+      <a href="/trade-in/">Trade-In</a>
+      <a href="/gifts/">Подарки</a>
+      <a href="/raffle/">Розыгрыш</a>
+      <a href="/#gift">Сертификат</a>
+      <a href="/iremont116/">Сервис</a>
+      <a href="/#contacts">Контакты</a>
+    </nav>
+    <nav id="nav-more-menu" class="nav-more-menu" aria-label="Дополнительные категории">
+      <a href="/catalog/ipad/">iPad</a>
+      <a href="/catalog/samsung/">Samsung</a>
+      <a href="/catalog/dyson/">Dyson</a>
+      <a href="/catalog/apple-watch/">Apple Watch</a>
+      <a href="/catalog/aksessuary/">Аксессуары</a>
+      <a href="/catalog/">Весь каталог</a>
+    </nav>
     
     <section class="section">
       <div class="hero" data-hero>
