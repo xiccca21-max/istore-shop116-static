@@ -40,6 +40,7 @@ async function waitForPublicObject(url: string) {
   for (let attempt = 0; attempt < 8; attempt += 1) {
     try {
       const response = await fetch(`${url}?ready=${Date.now()}-${attempt}`, {
+        headers: { range: "bytes=0-0" },
         cache: "no-store",
         signal: AbortSignal.timeout(8000),
       });

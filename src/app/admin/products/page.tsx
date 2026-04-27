@@ -43,6 +43,7 @@ export default function AdminProductsPage() {
   const [creating, setCreating] = useState(false);
   const [loadError, setLoadError] = useState("");
   const [uploading, setUploading] = useState<Record<string, boolean>>({});
+  const [uploadMessages, setUploadMessages] = useState<Record<string, string>>({});
   const [cardColorDrafts, setCardColorDrafts] = useState<Record<string, string>>({});
 
   async function load() {
@@ -118,10 +119,13 @@ export default function AdminProductsPage() {
     fd.set("file", file);
     fd.set("folder", folder);
     const controller = new AbortController();
-    const timer = window.setTimeout(() => controller.abort(), 30000);
+    const timer = window.setTimeout(() => controller.abort("upload_timeout"), 180000);
     let res: Response;
     try {
       res = await fetch("/api/admin/upload", { method: "POST", body: fd, signal: controller.signal, cache: "no-store" });
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") throw new Error("upload_timeout");
+      throw error;
     } finally {
       window.clearTimeout(timer);
     }
@@ -144,26 +148,42 @@ export default function AdminProductsPage() {
   async function uploadProductImage(productId: string, file: File) {
     const key = `product:${productId}`;
     setUploading((prev) => ({ ...prev, [key]: true }));
+    setLoadError("");
+    setUploadMessages((prev) => ({ ...prev, [key]: "Загружаю файл и проверяю картинку…" }));
     try {
       const url = await uploadImage(file, "products");
+      setUploadMessages((prev) => ({ ...prev, [key]: "Сохраняю ссылку в товар…" }));
       await patchProduct(productId, { imageUrls: [url] });
     } catch (error) {
       setLoadError(`Картинка модели не загрузилась: ${error instanceof Error ? error.message : String(error)}`);
     } finally {
       setUploading((prev) => ({ ...prev, [key]: false }));
+      setUploadMessages((prev) => {
+        const next = { ...prev };
+        delete next[key];
+        return next;
+      });
     }
   }
 
   async function uploadVariantImage(variantId: string, file: File) {
     const key = `variant:${variantId}`;
     setUploading((prev) => ({ ...prev, [key]: true }));
+    setLoadError("");
+    setUploadMessages((prev) => ({ ...prev, [key]: "Загружаю файл и проверяю картинку…" }));
     try {
       const url = await uploadImage(file, "variants");
+      setUploadMessages((prev) => ({ ...prev, [key]: "Сохраняю ссылку в вариант…" }));
       await patchVariant(variantId, { imageUrl: url } as any);
     } catch (error) {
       setLoadError(`Картинка варианта не загрузилась: ${error instanceof Error ? error.message : String(error)}`);
     } finally {
       setUploading((prev) => ({ ...prev, [key]: false }));
+      setUploadMessages((prev) => {
+        const next = { ...prev };
+        delete next[key];
+        return next;
+      });
     }
   }
 
@@ -481,21 +501,23 @@ export default function AdminProductsPage() {
                       {p.imageUrls && p.imageUrls[0] ? <img src={p.imageUrls[0]} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : <span style={{ opacity: 0.6, fontSize: 12 }}>нет</span>}
                       {uploading[`product:${p.id}`] ? <div style={uploadOverlay}>загрузка…</div> : null}
                     </div>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={async (e) => {
-                        const f = e.currentTarget.files && e.currentTarget.files[0];
-                        e.currentTarget.value = "";
-                        if (!f) return;
-                        try {
-                          await uploadProductImage(p.id, f);
-                        } catch {
-                          // ignore
-                        }
-                      }}
-                      style={{ maxWidth: 260 }}
-                    />
+                    <div style={{ display: "grid", gap: 6 }}>
+                      <UploadButton
+                        id={`product-image-${p.id}`}
+                        label={uploading[`product:${p.id}`] ? "Загружаю фото…" : "Загрузить фото модели"}
+                        disabled={Boolean(uploading[`product:${p.id}`])}
+                        onSelect={async (file) => {
+                          try {
+                            await uploadProductImage(p.id, file);
+                          } catch {
+                            // ignore
+                          }
+                        }}
+                      />
+                      <div style={{ fontSize: 12, opacity: 0.7 }}>
+                        {uploadMessages[`product:${p.id}`] || "PNG, JPG, WEBP. После выбора дождись завершения проверки."}
+                      </div>
+                    </div>
                   </div>
                 </div>
 
@@ -627,21 +649,21 @@ export default function AdminProductsPage() {
 
                       <div>
                         <div style={lbl}>Фото варианта</div>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={async (e) => {
-                            const f = e.currentTarget.files && e.currentTarget.files[0];
-                            e.currentTarget.value = "";
-                            if (!f) return;
+                        <UploadButton
+                          id={`variant-image-${v.id}`}
+                          label={uploading[`variant:${v.id}`] ? "Загружаю фото…" : "Загрузить фото варианта"}
+                          disabled={Boolean(uploading[`variant:${v.id}`])}
+                          onSelect={async (file) => {
                             try {
-                              await uploadVariantImage(v.id, f);
+                              await uploadVariantImage(v.id, file);
                             } catch {
                               // ignore
                             }
                           }}
-                          style={{ maxWidth: 260 }}
                         />
+                        <div style={{ fontSize: 12, opacity: 0.7, marginTop: 6 }}>
+                          {uploadMessages[`variant:${v.id}`] || "Кнопка загрузит файл, проверит картинку и сохранит URL."}
+                        </div>
                       </div>
 
                       <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
@@ -674,6 +696,55 @@ export default function AdminProductsPage() {
         {products.length === 0 ? <div style={{ opacity: 0.7 }}>Товаров пока нет.</div> : null}
       </div>
     </main>
+  );
+}
+
+function UploadButton(props: {
+  id: string;
+  label: string;
+  disabled?: boolean;
+  onSelect: (file: File) => Promise<void>;
+}) {
+  return (
+    <label
+      htmlFor={props.id}
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        minHeight: 42,
+        padding: "10px 16px",
+        borderRadius: 999,
+        border: "1px solid #ff6600",
+        background: props.disabled ? "#3a2a20" : "#ff6600",
+        color: "white",
+        fontWeight: 950,
+        cursor: props.disabled ? "wait" : "pointer",
+        opacity: props.disabled ? 0.75 : 1,
+        userSelect: "none",
+      }}
+    >
+      {props.label}
+      <input
+        id={props.id}
+        type="file"
+        accept="image/png,image/jpeg,image/webp,image/gif"
+        disabled={props.disabled}
+        onChange={async (event) => {
+          const file = event.currentTarget.files?.[0];
+          event.currentTarget.value = "";
+          if (!file || props.disabled) return;
+          await props.onSelect(file);
+        }}
+        style={{
+          position: "absolute",
+          width: 1,
+          height: 1,
+          opacity: 0,
+          pointerEvents: "none",
+        }}
+      />
+    </label>
   );
 }
 
