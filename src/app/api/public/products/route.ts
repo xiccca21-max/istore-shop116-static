@@ -27,6 +27,62 @@ type ApiProduct = {
 
 const cacheByCategory = new Map<string, { at: number; data: ApiProduct[] }>();
 
+function collapseIphoneModels(items: ApiProduct[]): ApiProduct[] {
+  const colorSuffixes = [
+    "sage",
+    "lavender",
+    "blue",
+    "black",
+    "white",
+    "pink",
+    "green",
+    "yellow",
+    "orange",
+    "silver",
+    "gold",
+    "purple",
+    "ultramarine",
+    "teal",
+    "starlight",
+    "midnight",
+    "natural",
+    "desert",
+  ];
+  const suffixRe = new RegExp(`\\s(?:${colorSuffixes.map((x) => x.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")})$`, "i");
+  const grouped = new Map<string, ApiProduct>();
+
+  for (const p of items) {
+    const normalizedTitle = p.title.replace(suffixRe, "").trim();
+    const normalizedSlug = p.slug.replace(/-(sage|lavender|blue|black|white|pink|green|yellow|orange|silver|gold|purple|ultramarine|teal|starlight|midnight|natural|desert)$/i, "");
+    const key = normalizedTitle.toLowerCase();
+    const existing = grouped.get(key);
+    if (!existing) {
+      grouped.set(key, {
+        ...p,
+        title: normalizedTitle || p.title,
+        slug: normalizedSlug || p.slug,
+        imageUrls: Array.isArray(p.imageUrls) ? [...p.imageUrls] : [],
+        variants: Array.isArray(p.variants) ? [...p.variants] : [],
+      });
+      continue;
+    }
+
+    existing.variants = [...existing.variants, ...(p.variants || [])];
+    existing.imageUrls = Array.from(new Set([...(existing.imageUrls || []), ...(p.imageUrls || [])]));
+    const minA = Number(existing.basePrice || 0);
+    const minB = Number(p.basePrice || 0);
+    if ((minA <= 0 && minB > 0) || (minB > 0 && minB < minA)) existing.basePrice = minB;
+  }
+
+  return Array.from(grouped.values()).map((p) => ({
+    ...p,
+    variants: (p.variants || [])
+      .slice()
+      .sort((a, b) => Number(a.price || 0) - Number(b.price || 0))
+      .filter((v, idx, arr) => arr.findIndex((x) => x.id === v.id) === idx),
+  }));
+}
+
 export async function GET(req: Request) {
   const url = new URL(req.url);
   const categorySlug = url.searchParams.get("category");
@@ -48,14 +104,27 @@ export async function GET(req: Request) {
     return rows.filter((p) => `${p.title} ${p.subtitle} ${p.slug}`.toLowerCase().includes(q));
   }
 
+  function staleOrEmpty(error: unknown) {
+    const cached = cacheByCategory.get(cacheKey);
+    if (cached) {
+      return NextResponse.json(
+        { data: cached.data, stale: true },
+        { headers: { "x-cache": "stale-if-error", "x-cache-age-ms": String(Date.now() - cached.at) } },
+      );
+    }
+    return NextResponse.json({ data: [], stale: true, error: error instanceof Error ? error.message : String(error) });
+  }
+
   let categoryId: string | null = null;
   if (categorySlug) {
     const normalizedCategorySlug = (() => {
       // Legacy storefront slugs → DB slugs (imported categories).
       // Keep this in sync with `public/catalog/_category.html` mapping.
       const m: Record<string, string> = {
-        "air-pods": "airpods",
-        "apple-watch": "applewatch",
+        "air-pods": "air-pods",
+        airpods: "air-pods",
+        "apple-watch": "apple-watch",
+        applewatch: "apple-watch",
         mac: "macbook",
       };
       return m[categorySlug] || categorySlug;
@@ -63,19 +132,15 @@ export async function GET(req: Request) {
 
     if (categorySlug === "iphone") {
       // Aggregator category: include all iPhone categories imported from the donor.
-      const { data: cats, error: catsErr } = await sb
-        .from("categories")
-        .select("id,slug")
-        .or("slug.eq.iphone,slug.ilike.appleiphone%");
+      let catsResult;
+      try {
+        catsResult = await sb.from("categories").select("id,slug").or("slug.eq.iphone,slug.ilike.appleiphone%").abortSignal(AbortSignal.timeout(8000));
+      } catch (error) {
+        return staleOrEmpty(error);
+      }
+      const { data: cats, error: catsErr } = catsResult;
       if (catsErr) {
-        const cached = cacheByCategory.get(cacheKey);
-        if (cached) {
-          return NextResponse.json(
-            { data: cached.data, stale: true },
-            { headers: { "x-cache": "stale-if-error", "x-cache-age-ms": String(Date.now() - cached.at) } },
-          );
-        }
-        return NextResponse.json({ error: catsErr.message }, { status: 500 });
+        return staleOrEmpty(catsErr);
       }
       const ids = (cats || []).map((c: { id: string }) => c.id).filter(Boolean);
       if (!ids.length) return NextResponse.json({ data: [] });
@@ -99,16 +164,15 @@ export async function GET(req: Request) {
       }
       if (limit) q = q.limit(limit);
 
-      const { data, error } = await q;
+      let result;
+      try {
+        result = await q.abortSignal(AbortSignal.timeout(8000));
+      } catch (error) {
+        return staleOrEmpty(error);
+      }
+      const { data, error } = result;
       if (error) {
-        const cached = cacheByCategory.get(cacheKey);
-        if (cached) {
-          return NextResponse.json(
-            { data: cached.data, stale: true },
-            { headers: { "x-cache": "stale-if-error", "x-cache-age-ms": String(Date.now() - cached.at) } },
-          );
-        }
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        return staleOrEmpty(error);
       }
 
       const rows = (data || []) as unknown as Array<{
@@ -157,21 +221,21 @@ export async function GET(req: Request) {
         })),
       }));
 
-      const filtered = applySearchFilter(mapped);
+      const collapsed = collapseIphoneModels(mapped);
+      const filtered = applySearchFilter(collapsed);
       cacheByCategory.set(cacheKey, { at: Date.now(), data: filtered });
       return NextResponse.json({ data: filtered });
     }
 
-    const { data: cat, error: catErr } = await sb.from("categories").select("id").eq("slug", normalizedCategorySlug).maybeSingle();
+    let catResult;
+    try {
+      catResult = await sb.from("categories").select("id").eq("slug", normalizedCategorySlug).abortSignal(AbortSignal.timeout(8000)).maybeSingle();
+    } catch (error) {
+      return staleOrEmpty(error);
+    }
+    const { data: cat, error: catErr } = catResult;
     if (catErr) {
-      const cached = cacheByCategory.get(cacheKey);
-      if (cached) {
-        return NextResponse.json(
-          { data: cached.data, stale: true },
-          { headers: { "x-cache": "stale-if-error", "x-cache-age-ms": String(Date.now() - cached.at) } },
-        );
-      }
-      return NextResponse.json({ error: catErr.message }, { status: 500 });
+      return staleOrEmpty(catErr);
     }
     categoryId = cat?.id ?? null;
     if (!categoryId) return NextResponse.json({ data: [] });
@@ -196,16 +260,15 @@ export async function GET(req: Request) {
   }
   if (limit) q = q.limit(limit);
 
-  const { data, error } = await q;
+  let result;
+  try {
+    result = await q.abortSignal(AbortSignal.timeout(8000));
+  } catch (error) {
+    return staleOrEmpty(error);
+  }
+  const { data, error } = result;
   if (error) {
-    const cached = cacheByCategory.get(cacheKey);
-    if (cached) {
-      return NextResponse.json(
-        { data: cached.data, stale: true },
-        { headers: { "x-cache": "stale-if-error", "x-cache-age-ms": String(Date.now() - cached.at) } },
-      );
-    }
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return staleOrEmpty(error);
   }
 
   const rows = (data || []) as unknown as Array<{

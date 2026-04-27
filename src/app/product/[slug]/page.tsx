@@ -46,66 +46,63 @@ export default async function ProductPage(props: { params: Promise<{ slug: strin
         <span style={{ opacity: 0.95 }}>{data.title}</span>
       </nav>
 
-      <div className="pdp-grid">
-        <section className="pdp-gallery" aria-label="Фото товара">
-          {heroImage ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={heroImage} alt={data.title} />
-          ) : (
-            <div className="pdp-gallery-empty">
-              Фото скоро появится
-              <div style={{ fontSize: 13, fontWeight: 600, marginTop: 8, opacity: 0.75 }}>Сейчас в базе может не быть картинки — можно загрузить в админке</div>
-            </div>
-          )}
-        </section>
-
-        <aside className="pdp-buy">
-          <div className="pdp-cat-pill">{categoryTitle || "Товар"}</div>
-          <h1 className="pdp-h1">{data.title}</h1>
-          {data.subtitle ? <div className="pdp-sub">{data.subtitle}</div> : null}
-
-          <div className="pdp-price-row">
-            <div className="pdp-price-label">от</div>
-            <div className="pdp-price-value">{Number(minPrice).toLocaleString("ru-RU")} ₽</div>
+      <section className="pdp-hero" aria-label="Фото товара">
+        {heroImage ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={heroImage} alt={data.title} />
+        ) : (
+          <div className="pdp-gallery-empty">
+            Фото скоро появится
+            <div style={{ fontSize: 13, fontWeight: 600, marginTop: 8, opacity: 0.75 }}>Сейчас в базе может не быть картинки — можно загрузить в админке</div>
           </div>
+        )}
+      </section>
 
-          {variants[0] ? (
-            <div className="pdp-meta">
-              <span className="pdp-chip">{simLabel(String(variants[0].sim_type || ""))}</span>
-            </div>
-          ) : null}
+      <section className="pdp-buy" style={{ marginTop: 14 }}>
+        <div className="pdp-cat-pill">{categoryTitle || "Товар"}</div>
+        <h1 className="pdp-h1">{data.title}</h1>
+        {data.subtitle ? <div className="pdp-sub">{data.subtitle}</div> : null}
 
-          <div style={{ marginTop: 14 }}>
-            <div style={{ fontSize: 12, fontWeight: 900, opacity: 0.75, marginBottom: 10, letterSpacing: 0.2 }}>Варианты</div>
-            <ProductVariantsGrid
-              productId={data.id}
-              title={data.title}
-              baseSubtitle={data.subtitle || ""}
-              fallbackImageUrl={heroImage}
-              variants={variants.map((v: Record<string, unknown>) => ({
-                id: String(v.id),
-                storageGb: Number(v.storage_gb),
-                simType: String(v.sim_type || ""),
-                colors: Array.isArray(v.colors) ? (v.colors as string[]) : [],
-                imageUrl: typeof (v as any).image_url === "string" ? String((v as any).image_url) : null,
-                price: Number(v.price ?? 0),
-                inStock: Boolean(v.in_stock),
-              }))}
-            />
+        <div className="pdp-price-row">
+          <div className="pdp-price-value">{Number(minPrice).toLocaleString("ru-RU")} ₽</div>
+        </div>
+
+        {variants[0] ? (
+          <div className="pdp-meta">
+            <span className="pdp-chip">{simLabel(String(variants[0].sim_type || ""))}</span>
           </div>
+        ) : null}
 
-          <div className="pdp-badges">
-            <a className="pdp-badge" href="/trade-in/">
-              <div className="pdp-badge-title">Trade-In</div>
-              <div className="pdp-badge-text">Обменяй старое устройство на новое</div>
-            </a>
-            <a className="pdp-badge" href="/installment/">
-              <div className="pdp-badge-title">Рассрочка</div>
-              <div className="pdp-badge-text">Уточним условия в магазине</div>
-            </a>
-          </div>
-        </aside>
-      </div>
+        <div style={{ marginTop: 16 }}>
+          <div style={{ fontSize: 13, fontWeight: 900, opacity: 0.85, marginBottom: 10, letterSpacing: 0.2 }}>Варианты</div>
+          <ProductVariantsGrid
+            productId={data.id}
+            title={data.title}
+            baseSubtitle={data.subtitle || ""}
+            fallbackImageUrl={heroImage}
+            variants={variants.map((v: Record<string, unknown>) => ({
+              id: String(v.id),
+              storageGb: Number(v.storage_gb),
+              simType: String(v.sim_type || ""),
+              colors: Array.isArray(v.colors) ? (v.colors as string[]) : [],
+              imageUrl: typeof (v as any).image_url === "string" ? String((v as any).image_url) : null,
+              price: Number(v.price ?? 0),
+              inStock: Boolean(v.in_stock),
+            }))}
+          />
+        </div>
+
+        <div className="pdp-badges">
+          <a className="pdp-badge" href="/trade-in/">
+            <div className="pdp-badge-title">Trade-In</div>
+            <div className="pdp-badge-text">Обменяй старое устройство на новое</div>
+          </a>
+          <a className="pdp-badge" href="/installment/">
+            <div className="pdp-badge-title">Рассрочка</div>
+            <div className="pdp-badge-text">Уточним условия в магазине</div>
+          </a>
+        </div>
+      </section>
     </main>
   );
 }

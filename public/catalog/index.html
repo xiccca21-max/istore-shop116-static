@@ -107,8 +107,8 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
 .buyers-dots-mobile{display:none}
 .product-card{background:var(--panel);border:1px solid #2d2d2d;border-radius:24px;overflow:hidden;box-shadow:var(--shadow);transition:border-color .2s}
 .product-card:hover{border-color:var(--accent)}
-.product-media{height:260px;background:#181818;padding:20px;display:flex;align-items:center;justify-content:center}
-.product-media img{height:100%;width:100%;object-fit:contain}
+.product-media{height:260px;background:#181818;padding:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.product-media img{height:100%;width:100%;object-fit:cover}
 .product-body{padding:16px 18px 20px}
 .product-title{font-size:20px;font-weight:700;margin-bottom:6px;line-height:1.2}
 .product-sub{font-size:13px;color:var(--muted);margin-bottom:14px}
@@ -393,6 +393,17 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
     function priceFmt(n){
       try{ return Number(n||0).toLocaleString("ru-RU")+" ₽" }catch(e){ return (n||0)+" ₽" }
     }
+    async function fetchJsonWithTimeout(url, timeoutMs){
+      var controller = new AbortController();
+      var timer = setTimeout(function(){ controller.abort(); }, timeoutMs || 8000);
+      try{
+        var res = await fetch(url,{cache:"no-store",signal:controller.signal});
+        if(!res.ok) throw new Error("HTTP "+res.status);
+        return await res.json();
+      }finally{
+        clearTimeout(timer);
+      }
+    }
     async function run(){
       const q=getQ().trim()
       const host=document.getElementById("searchResults")
@@ -411,14 +422,20 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
       if(loader) loader.style.display=""
       grid.style.opacity="0"
       try{
-        const res=await fetch("/api/public/products?q="+encodeURIComponent(q),{cache:"no-store"})
-        const json=await res.json()
+        const json=await fetchJsonWithTimeout("/api/public/products?q="+encodeURIComponent(q),10000)
         const items=(json&&Array.isArray(json.data))?json.data:[]
         if(!items.length){ empty.style.display="block"; return }
         grid.innerHTML = items.map(function(p){
+          var variants = Array.isArray(p.variants) ? p.variants : [];
+          var firstVariant = variants[0] || null;
+          var imageUrl = (Array.isArray(p.imageUrls) && p.imageUrls[0]) ? String(p.imageUrls[0]) : "";
+          if(!imageUrl && firstVariant && firstVariant.imageUrl) imageUrl = String(firstVariant.imageUrl);
+          var media = imageUrl
+            ? '<img src="'+esc(imageUrl)+'" alt="'+esc(p.title||"")+'" style="width:100%;height:100%;object-fit:cover" loading="lazy">'
+            : '<div style="opacity:.6;font-weight:900">Фото позже</div>';
           return (
             '<a class="product-card" href="/product/'+encodeURIComponent(p.slug)+'">'+
-              '<div class="product-media"><div style="opacity:.6;font-weight:900">Фото позже</div></div>'+
+              '<div class="product-media">'+media+'</div>'+
               '<div class="product-body">'+
                 '<div class="product-title">'+esc(p.title||"")+'</div>'+
                 '<div class="product-sub">'+esc(p.subtitle||"")+'</div>'+

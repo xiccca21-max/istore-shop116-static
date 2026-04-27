@@ -12,6 +12,37 @@ async function mustAuth(req: NextRequest) {
   return null;
 }
 
+function mustEnv(name: string) {
+  const value = process.env[name];
+  if (!value) throw new Error(`Missing env ${name}`);
+  return value;
+}
+
+async function heroRest(path: string, init: RequestInit) {
+  const baseUrl = mustEnv("SUPABASE_URL").replace(/\/$/, "");
+  const serviceKey = mustEnv("SUPABASE_SERVICE_ROLE_KEY");
+  let lastError: unknown;
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    try {
+      const response = await fetch(`${baseUrl}/rest/v1/hero_slides${path}`, {
+        ...init,
+        headers: {
+          apikey: serviceKey,
+          authorization: `Bearer ${serviceKey}`,
+          ...(init.headers || {}),
+        },
+        signal: AbortSignal.timeout(12000),
+      });
+      const text = await response.text();
+      if (!response.ok) throw new Error(text || `Supabase REST ${response.status}`);
+      return text;
+    } catch (error) {
+      lastError = error;
+    }
+  }
+  throw lastError instanceof Error ? lastError : new Error(String(lastError));
+}
+
 export async function GET(req: NextRequest) {
   const auth = await mustAuth(req);
   if (auth) return auth;
@@ -56,15 +87,40 @@ export async function POST(req: NextRequest) {
   if (auth) return auth;
   const payload = CreateSchema.parse(await req.json());
   const id = crypto.randomUUID();
-  const sb = supabaseService();
-  const { error } = await sb.from("hero_slides").insert({
+  const row: Record<string, unknown> = {
     id,
     title: payload.title,
-    image_url: payload.imageUrl,
     sort_order: payload.sortOrder,
     is_active: payload.isActive,
-  });
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  };
+  if (payload.imageUrl) row.image_url = payload.imageUrl;
+  try {
+    await heroRest("", {
+      method: "POST",
+      headers: { "content-type": "application/json", prefer: "return=minimal" },
+      body: JSON.stringify(row),
+    });
+  } catch (error) {
+    if (error instanceof Error && error.message.includes("23505") && error.message.includes(String(row.id))) {
+      return NextResponse.json({ data: { id } }, { status: 201 });
+    }
+    if (!("image_url" in row) || !(error instanceof Error) || !error.message.toLowerCase().includes("image_url")) {
+      return NextResponse.json({ error: error instanceof Error ? error.message : String(error) }, { status: 500 });
+    }
+    delete row.image_url;
+    try {
+      await heroRest("", {
+        method: "POST",
+        headers: { "content-type": "application/json", prefer: "return=minimal" },
+        body: JSON.stringify(row),
+      });
+    } catch (fallbackError) {
+      if (fallbackError instanceof Error && fallbackError.message.includes("23505") && fallbackError.message.includes(String(row.id))) {
+        return NextResponse.json({ data: { id } }, { status: 201 });
+      }
+      return NextResponse.json({ error: fallbackError instanceof Error ? fallbackError.message : String(fallbackError) }, { status: 500 });
+    }
+  }
   return NextResponse.json({ data: { id } }, { status: 201 });
 }
 
@@ -87,9 +143,28 @@ export async function PATCH(req: NextRequest) {
   if (payload.isActive !== undefined) patch.is_active = payload.isActive;
   if (!Object.keys(patch).length) return NextResponse.json({ error: "no_fields" }, { status: 400 });
 
-  const sb = supabaseService();
-  const { error } = await sb.from("hero_slides").update(patch).eq("id", payload.id);
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  try {
+    await heroRest(`?id=eq.${encodeURIComponent(payload.id)}`, {
+      method: "PATCH",
+      headers: { "content-type": "application/json", prefer: "return=minimal" },
+      body: JSON.stringify(patch),
+    });
+  } catch (error) {
+    if (!("image_url" in patch) || !(error instanceof Error) || !error.message.toLowerCase().includes("image_url")) {
+      return NextResponse.json({ error: error instanceof Error ? error.message : String(error) }, { status: 500 });
+    }
+    delete patch.image_url;
+    if (!Object.keys(patch).length) return NextResponse.json({ ok: true, ignored: ["imageUrl"] });
+    try {
+      await heroRest(`?id=eq.${encodeURIComponent(payload.id)}`, {
+        method: "PATCH",
+        headers: { "content-type": "application/json", prefer: "return=minimal" },
+        body: JSON.stringify(patch),
+      });
+    } catch (fallbackError) {
+      return NextResponse.json({ error: fallbackError instanceof Error ? fallbackError.message : String(fallbackError) }, { status: 500 });
+    }
+  }
   return NextResponse.json({ ok: true });
 }
 
@@ -99,9 +174,11 @@ export async function DELETE(req: NextRequest) {
   const url = new URL(req.url);
   const id = url.searchParams.get("id");
   if (!id) return NextResponse.json({ error: "id_required" }, { status: 400 });
-  const sb = supabaseService();
-  const { error } = await sb.from("hero_slides").delete().eq("id", id);
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  try {
+    await heroRest(`?id=eq.${encodeURIComponent(id)}`, { method: "DELETE" });
+  } catch (error) {
+    return NextResponse.json({ error: error instanceof Error ? error.message : String(error) }, { status: 500 });
+  }
   return NextResponse.json({ ok: true });
 }
 

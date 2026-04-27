@@ -55,8 +55,8 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
 .grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
 .product-card{background:var(--panel);border:1px solid #2d2d2d;border-radius:24px;overflow:hidden;box-shadow:var(--shadow);transition:border-color .2s;display:block}
 .product-card:hover{border-color:var(--accent)}
-.product-media{height:260px;background:#181818;padding:20px;display:flex;align-items:center;justify-content:center}
-.product-media img{height:100%;width:100%;object-fit:contain}
+.product-media{height:260px;background:#181818;padding:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.product-media img{height:100%;width:100%;object-fit:cover}
 .product-body{padding:16px 18px 20px}
 .product-title{font-size:20px;font-weight:700;margin-bottom:6px;line-height:1.2}
 .product-sub{font-size:13px;color:var(--muted);margin-bottom:14px}
@@ -246,8 +246,10 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
   var map={
     // iPhone is an aggregator: should include all iPhone categories.
     'iphone':'iphone',
-    'air-pods':'airpods',
-    'apple-watch':'applewatch',
+    'air-pods':'air-pods',
+    'airpods':'air-pods',
+    'apple-watch':'apple-watch',
+    'applewatch':'apple-watch',
     'mac':'macbook',
     'aksessuary':'aksessuary',
     'samsung':'samsung',
@@ -366,9 +368,16 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
     var colors = uniq(allColors).slice(0,8);
     var dots = colors.map(function(c){ return '<span class="color-dot" style="background:'+normalizeColor(c)+'" title="'+String(c).replace(/\"/g,'')+'"></span>'; }).join('');
 
+    var imageUrl = '';
+    if (Array.isArray(p.imageUrls) && p.imageUrls[0]) imageUrl = String(p.imageUrls[0]);
+    if (!imageUrl && v && v.imageUrl) imageUrl = String(v.imageUrl);
+    var media = imageUrl
+      ? ('<img src="'+escapeHtml(imageUrl)+'" alt="'+escapeHtml(p.title||'')+'" style="width:100%;height:100%;object-fit:cover" loading="lazy">')
+      : '<div style="opacity:.6;font-weight:900">Фото позже</div>';
+
     return (
       '<a class="product-card" href="/product/'+encodeURIComponent(p.slug)+'">'+
-        '<div class="product-media"><div style="opacity:.6;font-weight:900">Фото позже</div></div>'+
+        '<div class="product-media">'+media+'</div>'+
         '<div class="product-body">'+
           '<div class="product-title">'+escapeHtml(p.title||'')+'</div>'+
           '<div class="product-sub">'+escapeHtml(p.subtitle||'')+'</div>'+
@@ -383,7 +392,21 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
     return String(s||'').replace(/[&<>"]/g,function(ch){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[ch];});
   }
 
+  var activeLoadId = 0;
+  async function fetchJsonWithTimeout(url, timeoutMs){
+    var controller = new AbortController();
+    var timer = setTimeout(function(){ controller.abort(); }, timeoutMs || 8000);
+    try{
+      var res = await fetch(url, { cache: 'no-store', signal: controller.signal });
+      if(!res.ok) throw new Error('HTTP '+res.status);
+      return await res.json();
+    }finally{
+      clearTimeout(timer);
+    }
+  }
+
   async function load(){
+    var loadId = ++activeLoadId;
     var wrap = document.getElementById('productsWrap');
     var loader = document.getElementById('productsLoading');
     var grid = document.getElementById('productsGrid');
@@ -394,7 +417,8 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
     if(empty0) empty0.style.display = 'none';
     try{
       // Title from categories API if present
-      var cats = await fetch('/api/public/categories', { cache: 'no-store' }).then(function(r){return r.ok?r.json():null;});
+      var cats = await fetchJsonWithTimeout('/api/public/categories', 8000).catch(function(){ return null; });
+      if(loadId !== activeLoadId) return;
       if(cats && cats.data){
         var cat = cats.data.find(function(c){ return c.slug===querySlug; });
         if(!cat && map[slug]) cat = cats.data.find(function(c){ return c.slug===map[slug]; });
@@ -407,14 +431,13 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
 
       // no-store so it always loads immediately; retry once on transient network failure
       var url = '/api/public/products?category='+encodeURIComponent(querySlug);
-      var res;
+      var json;
       try{
-        res = await fetch(url, { cache: 'no-store' });
+        json = await fetchJsonWithTimeout(url, 10000);
       }catch(e1){
-        res = await fetch(url, { cache: 'no-store' });
+        json = await fetchJsonWithTimeout(url, 10000);
       }
-      if(!res.ok) throw new Error('HTTP '+res.status);
-      var json = await res.json();
+      if(loadId !== activeLoadId) return;
       var items = (json && json.data) ? json.data : [];
       var empty = document.getElementById('emptyState');
       if(!grid) return;
@@ -427,6 +450,7 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
       var empty = document.getElementById('emptyState');
       if(empty) empty.style.display='block';
     }finally{
+      if(loadId !== activeLoadId) return;
       if(wrap) wrap.classList.remove('is-loading');
       if(loader) loader.style.display = 'none';
       if(grid) grid.style.opacity = '';

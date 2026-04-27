@@ -39,40 +39,46 @@ export default function AdminProductsPage() {
   const [newSubtitle, setNewSubtitle] = useState("");
   const [newCategoryId, setNewCategoryId] = useState<string>("");
   const [creating, setCreating] = useState(false);
+  const [loadError, setLoadError] = useState("");
 
   async function load() {
-    const [pRes, cRes] = await Promise.all([fetch("/api/admin/products"), fetch("/api/admin/categories")]);
-    if (pRes.status === 401 || cRes.status === 401) {
+    setLoadError("");
+    const [pResult, cResult] = await Promise.allSettled([fetch("/api/admin/products", { cache: "no-store" }), fetch("/api/admin/categories", { cache: "no-store" })]);
+
+    if (pResult.status === "fulfilled" && pResult.value.status === 401) {
       window.location.href = "/admin/login";
       return;
     }
-    if (cRes.ok) {
-      const cj = await cRes.json();
-      setCats((cj.data || []).map((c: any) => ({ id: c.id, slug: c.slug, title: c.title })));
+    if (cResult.status === "fulfilled" && cResult.value.status === 401) {
+      window.location.href = "/admin/login";
+      return;
     }
-    if (pRes.ok) {
-      const pj = await pRes.json();
-      setProducts(pj.data || []);
+
+    if (cResult.status === "fulfilled" && cResult.value.ok) {
+      const cj = await cResult.value.json();
+      const nextCats = (cj.data || []).map((c: any) => ({ id: c.id, slug: c.slug, title: c.title })) as Category[];
+      setCats(nextCats);
+      if (!newCategoryId && nextCats.length) setNewCategoryId(nextCats[0].id);
+    }
+
+    if (pResult.status === "fulfilled" && pResult.value.ok) {
+      const pj = await pResult.value.json();
+      const nextProducts = Array.isArray(pj.data) ? pj.data : [];
+      setProducts(nextProducts);
+    } else if (pResult.status === "fulfilled") {
+      setLoadError(`Товары не загрузились (HTTP ${pResult.value.status})`);
+    } else {
+      setLoadError("Товары не загрузились (ошибка сети)");
     }
   }
 
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      const [pRes, cRes] = await Promise.all([fetch("/api/admin/products"), fetch("/api/admin/categories")]);
-      if (pRes.status === 401 || cRes.status === 401) {
-        window.location.href = "/admin/login";
-        return;
-      }
-      if (!cancelled && cRes.ok) {
-        const cj = await cRes.json();
-        const nextCats = (cj.data || []).map((c: any) => ({ id: c.id, slug: c.slug, title: c.title })) as Category[];
-        setCats(nextCats);
-        if (!newCategoryId && nextCats.length) setNewCategoryId(nextCats[0].id);
-      }
-      if (!cancelled && pRes.ok) {
-        const pj = await pRes.json();
-        setProducts(pj.data || []);
+      try {
+        await load();
+      } catch {
+        if (!cancelled) setLoadError("Ошибка загрузки админки");
       }
     })();
     return () => {
@@ -177,12 +183,35 @@ export default function AdminProductsPage() {
   }
 
   async function addVariant(productId: string) {
-    await fetch("/api/admin/variants", {
+    const res = await fetch("/api/admin/variants", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ productId, storageGb: 128, simType: "sim_esim", colors: [], imageUrl: null, price: 0, sku: null, inStock: true }),
     });
-    await load();
+    if (res.status === 401) {
+      window.location.href = "/admin/login";
+      return;
+    }
+    if (!res.ok) {
+      setLoadError(`Вариант не добавился (HTTP ${res.status})`);
+      return;
+    }
+    const json = await res.json();
+    const variant = json?.data as Variant | undefined;
+    if (!variant?.id) {
+      await load();
+      return;
+    }
+    setProducts((prev) =>
+      prev.map((p) =>
+        p.id === productId
+          ? {
+              ...p,
+              variants: [variant, ...p.variants.filter((v) => v.id !== variant.id)],
+            }
+          : p,
+      ),
+    );
   }
 
   async function delVariant(id: string) {
@@ -272,6 +301,14 @@ export default function AdminProductsPage() {
           {filtered.length} / {products.length}
         </div>
       </div>
+      {loadError ? (
+        <div style={{ marginBottom: 12, border: "1px solid #6b2b2b", borderRadius: 12, padding: 10, background: "#2a1616", color: "#ffd4d4", display: "flex", gap: 10, alignItems: "center", justifyContent: "space-between" }}>
+          <span style={{ fontSize: 13 }}>{loadError}</span>
+          <button onClick={() => void load()} style={btnChip("#3a1b1b")}>
+            Повторить
+          </button>
+        </div>
+      ) : null}
 
       <div style={{ display: "grid", gap: 12 }}>
         {filtered.map((p) => (
@@ -384,10 +421,10 @@ export default function AdminProductsPage() {
 
             <div style={{ border: "1px solid #333", borderRadius: 16, padding: 12, background: "#161616" }}>
               <div style={{ fontWeight: 900, marginBottom: 10 }}>Варианты</div>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 10 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 12 }}>
                 {p.variants.map((v) => (
-                  <div key={v.id} style={{ border: "1px solid #2d2d2d", borderRadius: 16, overflow: "hidden", background: "#111" }}>
-                    <div style={{ height: 140, background: "#101010", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <div key={v.id} style={{ border: "1px solid #2d2d2d", borderRadius: 24, overflow: "hidden", background: "#141414", boxShadow: "0 10px 30px rgba(0,0,0,.25)" }}>
+                    <div style={{ height: 180, background: "#101010", display: "flex", alignItems: "center", justifyContent: "center" }}>
                       {(v as any).imageUrl || (p.imageUrls && p.imageUrls[0]) ? (
                         <img
                           src={String((v as any).imageUrl || (p.imageUrls && p.imageUrls[0]) || "")}
@@ -399,7 +436,7 @@ export default function AdminProductsPage() {
                       )}
                     </div>
 
-                    <div style={{ padding: 10, display: "grid", gap: 8 }}>
+                    <div style={{ padding: 12, display: "grid", gap: 8 }}>
                       <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: 10, alignItems: "center" }}>
                         <div style={{ opacity: 0.85, fontSize: 12 }}>
                           {v.storageGb}GB · {v.simType} · {v.inStock ? "в наличии" : "нет"}

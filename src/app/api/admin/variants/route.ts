@@ -3,6 +3,7 @@ import { ADMIN_COOKIE_NAME, verifySessionToken } from "@/lib/adminAuth";
 import { z } from "zod";
 import crypto from "node:crypto";
 import { supabaseService } from "@/lib/supabaseServer";
+import { addAdminVariantToCache, patchAdminVariantCache, removeAdminVariantFromCache } from "@/lib/adminProductsData";
 
 async function mustAuth(req: NextRequest) {
   const token = req.cookies.get(ADMIN_COOKIE_NAME)?.value;
@@ -41,7 +42,19 @@ export async function POST(req: NextRequest) {
     in_stock: payload.inStock,
   });
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json({ data: { id } }, { status: 201 });
+  const variant = {
+    id,
+    productId: payload.productId,
+    storageGb: payload.storageGb,
+    simType: payload.simType,
+    colors: payload.colors,
+    imageUrl: payload.imageUrl,
+    price: payload.price,
+    sku: payload.sku,
+    inStock: payload.inStock,
+  };
+  addAdminVariantToCache(variant);
+  return NextResponse.json({ data: variant }, { status: 201 });
 }
 
 const PatchSchema = z.object({
@@ -73,6 +86,15 @@ export async function PATCH(req: NextRequest) {
   const sb = supabaseService();
   const { error } = await sb.from("product_variants").update(patch).eq("id", payload.id);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  patchAdminVariantCache(payload.id, {
+    ...(payload.storageGb !== undefined ? { storageGb: payload.storageGb } : {}),
+    ...(payload.simType !== undefined ? { simType: payload.simType } : {}),
+    ...(payload.colors !== undefined ? { colors: payload.colors } : {}),
+    ...(payload.imageUrl !== undefined ? { imageUrl: payload.imageUrl } : {}),
+    ...(payload.price !== undefined ? { price: payload.price } : {}),
+    ...(payload.sku !== undefined ? { sku: payload.sku } : {}),
+    ...(payload.inStock !== undefined ? { inStock: payload.inStock } : {}),
+  });
   return NextResponse.json({ ok: true });
 }
 
@@ -85,6 +107,7 @@ export async function DELETE(req: NextRequest) {
   const sb = supabaseService();
   const { error } = await sb.from("product_variants").delete().eq("id", id);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  removeAdminVariantFromCache(id);
   return NextResponse.json({ ok: true });
 }
 

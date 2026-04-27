@@ -3,6 +3,7 @@ import { ADMIN_COOKIE_NAME, verifySessionToken } from "@/lib/adminAuth";
 import { z } from "zod";
 import crypto from "node:crypto";
 import { supabaseService } from "@/lib/supabaseServer";
+import { addAdminProductToCache, getAdminProductsCache, loadAdminProductsFromDb, patchAdminProductCache, removeAdminProductFromCache } from "@/lib/adminProductsData";
 
 async function mustAuth(req: NextRequest) {
   const token = req.cookies.get(ADMIN_COOKIE_NAME)?.value;
@@ -14,74 +15,18 @@ async function mustAuth(req: NextRequest) {
 export async function GET(req: NextRequest) {
   const auth = await mustAuth(req);
   if (auth) return auth;
-  const sb = supabaseService();
+  let mapped;
+  let stale = false;
+  try {
+    mapped = await loadAdminProductsFromDb();
+  } catch (error) {
+    const cached = getAdminProductsCache();
+    if (!cached) return NextResponse.json({ error: error instanceof Error ? error.message : String(error) }, { status: 500 });
+    mapped = cached.data;
+    stale = true;
+  }
 
-  // Admin wants only one iPhone category; normalize all "appleiphone..." categories to "iphone".
-  const { data: iphoneCat, error: iphoneErr } = await sb.from("categories").select("id,slug,title").eq("slug", "iphone").maybeSingle();
-  if (iphoneErr) return NextResponse.json({ error: iphoneErr.message }, { status: 500 });
-
-  const { data, error } = await sb
-    .from("products")
-    .select(
-      `
-      id,slug,title,subtitle,category_id,base_price,image_urls,is_active,
-      categories:category_id ( slug,title ),
-      product_variants ( id, storage_gb, sim_type, colors, image_url, price, sku, in_stock )
-    `,
-    )
-    .order("base_price", { ascending: false });
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-
-  const rows = (data || []) as unknown as Array<{
-    id: string;
-    slug: string;
-    title: string;
-    subtitle: string;
-    category_id: string;
-    base_price: number;
-    image_urls: string[] | null;
-    is_active: boolean;
-    categories: { slug: string; title: string } | null;
-    product_variants: Array<{
-      id: string;
-      storage_gb: number;
-      sim_type: string;
-      colors: string[] | null;
-      price: number;
-      sku: string | null;
-      in_stock: boolean;
-    }> | null;
-  }>;
-  const mapped = rows.map((p) => {
-    const isIphoneFamily = !!p.categories?.slug && (p.categories.slug === "iphone" || p.categories.slug.startsWith("appleiphone"));
-    const normalizedCategoryId = isIphoneFamily && iphoneCat?.id ? iphoneCat.id : p.category_id;
-    const normalizedCategorySlug = isIphoneFamily ? "iphone" : p.categories?.slug;
-    const normalizedCategoryTitle = isIphoneFamily ? (iphoneCat?.title || "iPhone") : p.categories?.title;
-    return {
-    id: p.id,
-    slug: p.slug,
-    title: p.title,
-    subtitle: p.subtitle,
-    categoryId: normalizedCategoryId,
-    basePrice: p.base_price,
-    imageUrls: p.image_urls || [],
-    isActive: p.is_active,
-    categorySlug: normalizedCategorySlug,
-    categoryTitle: normalizedCategoryTitle,
-    variants: (p.product_variants || []).map((v) => ({
-      id: v.id,
-      productId: p.id,
-      storageGb: v.storage_gb,
-      simType: v.sim_type,
-      colors: v.colors || [],
-      price: v.price,
-      sku: v.sku,
-      inStock: v.in_stock,
-    })),
-    };
-  });
-
-  return NextResponse.json({ data: mapped });
+  return NextResponse.json({ data: mapped, stale });
 }
 
 const VariantSchema = z.object({
@@ -122,8 +67,7 @@ export async function POST(req: NextRequest) {
   });
   if (prodErr) return NextResponse.json({ error: prodErr.message }, { status: 500 });
 
-  if (payload.variants.length) {
-    const variants = payload.variants.map((v) => ({
+  const cachedVariants = payload.variants.map((v) => ({
       id: crypto.randomUUID(),
       product_id: id,
       storage_gb: v.storageGb,
@@ -133,10 +77,32 @@ export async function POST(req: NextRequest) {
       sku: v.sku,
       in_stock: v.inStock,
     }));
-    const { error: vErr } = await sb.from("product_variants").insert(variants);
+  if (cachedVariants.length) {
+    const { error: vErr } = await sb.from("product_variants").insert(cachedVariants);
     if (vErr) return NextResponse.json({ error: vErr.message }, { status: 500 });
   }
 
+  addAdminProductToCache({
+    id,
+    slug: payload.slug,
+    title: payload.title,
+    subtitle: payload.subtitle,
+    categoryId: payload.categoryId,
+    basePrice: payload.basePrice,
+    imageUrls: payload.imageUrls,
+    isActive: payload.isActive,
+    variants: cachedVariants.map((v) => ({
+      id: v.id,
+      productId: id,
+      storageGb: v.storage_gb,
+      simType: v.sim_type,
+      colors: v.colors,
+      imageUrl: null,
+      price: v.price,
+      sku: v.sku,
+      inStock: v.in_stock,
+    })),
+  });
   return NextResponse.json({ data: { id } }, { status: 201 });
 }
 
@@ -168,6 +134,15 @@ export async function PATCH(req: NextRequest) {
   const sb = supabaseService();
   const { error } = await sb.from("products").update(patch).eq("id", payload.id);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  patchAdminProductCache(payload.id, {
+    ...(payload.slug !== undefined ? { slug: payload.slug } : {}),
+    ...(payload.title !== undefined ? { title: payload.title } : {}),
+    ...(payload.subtitle !== undefined ? { subtitle: payload.subtitle } : {}),
+    ...(payload.categoryId !== undefined ? { categoryId: payload.categoryId } : {}),
+    ...(payload.basePrice !== undefined ? { basePrice: payload.basePrice } : {}),
+    ...(payload.imageUrls !== undefined ? { imageUrls: payload.imageUrls } : {}),
+    ...(payload.isActive !== undefined ? { isActive: payload.isActive } : {}),
+  });
   return NextResponse.json({ ok: true });
 }
 
@@ -180,6 +155,7 @@ export async function DELETE(req: NextRequest) {
   const sb = supabaseService();
   const { error } = await sb.from("products").delete().eq("id", id);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  removeAdminProductFromCache(id);
   return NextResponse.json({ ok: true });
 }
 
