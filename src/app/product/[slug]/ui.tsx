@@ -21,6 +21,7 @@ function colorLabel(colors: string[]) {
 
 export function ProductVariantsGrid(props: {
   productId: string;
+  productSlug: string;
   title: string;
   baseSubtitle: string;
   fallbackImageUrl: string | null;
@@ -60,15 +61,29 @@ export function ProductVariantsGrid(props: {
           gap: 12,
         }}
       >
-      {rows.map(({ v, subtitle, img, col }) => (
+      {rows.map(({ v, subtitle, img, col }) => {
+        const href = `/product/${encodeURIComponent(props.productSlug)}/${encodeURIComponent(v.id)}/`;
+        return (
         <div
           key={v.id}
+          role="link"
+          tabIndex={0}
+          onClick={() => {
+            window.location.href = href;
+          }}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              window.location.href = href;
+            }
+          }}
           style={{
             border: "1px solid #2d2d2d",
             borderRadius: 24,
             overflow: "hidden",
             background: "#232323",
             boxShadow: "0 12px 36px rgba(0,0,0,.35)",
+            cursor: "pointer",
           }}
         >
           <div
@@ -126,7 +141,7 @@ export function ProductVariantsGrid(props: {
               <div style={{ fontWeight: 950, fontSize: 24, color: "#ff6600", lineHeight: 1 }}>{Number(v.price || 0).toLocaleString("ru-RU")} ₽</div>
               <div style={{ fontSize: 11, opacity: 0.75 }}>{v.inStock ? "В наличии" : "Нет в наличии"}</div>
             </div>
-            <div style={{ marginTop: 10 }}>
+            <div style={{ marginTop: 10 }} onClick={(event) => event.stopPropagation()} onKeyDown={(event) => event.stopPropagation()}>
               <AddToCartButton
                 variantId={v.id}
                 productId={props.productId}
@@ -138,7 +153,8 @@ export function ProductVariantsGrid(props: {
             </div>
           </div>
         </div>
-      ))}
+        );
+      })}
       </div>
       <a className="pdp-checkout-link" href="/checkout/" style={{ marginTop: 6 }}>
         Перейти к оформлению →

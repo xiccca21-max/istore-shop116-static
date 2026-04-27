@@ -224,7 +224,11 @@
             const subtitle = (p && p.subtitle) ? String(p.subtitle) : "";
             const slug = (p && p.slug) ? String(p.slug) : "";
             const price = priceFmt(p && (p.basePrice ?? p.base_price));
-            const href = slug ? `/product/${encodeURIComponent(slug)}` : `/catalog/?q=${encodeURIComponent(q)}`;
+            const variants = p && Array.isArray(p.variants) ? p.variants : [];
+            const firstVariant = variants[0] || null;
+            const href = slug
+              ? `/product/${encodeURIComponent(slug)}${variants.length === 1 && firstVariant && firstVariant.id ? `/${encodeURIComponent(firstVariant.id)}` : ""}/`
+              : `/catalog/?q=${encodeURIComponent(q)}`;
             return `<a href="${href}"><div><div class="search-suggest-title">${title}</div>${subtitle ? `<div class="search-suggest-sub">${subtitle}</div>` : ""}</div><div class="search-suggest-price">${price}</div></a>`;
           })
           .join("");

@@ -3,6 +3,301 @@
   padding-bottom: 48px;
 }
 
+.istore-product-root .pdp-941-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(360px, 0.92fr);
+  gap: 22px;
+  align-items: start;
+  margin-top: 14px;
+}
+
+.istore-product-root .pdp-941-gallery,
+.istore-product-root .pdp-941-info,
+.istore-product-root .pdp-941-text-section {
+  border-radius: 28px;
+  border: 1px solid #2d2d2d;
+  background: #222;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.35);
+}
+
+.istore-product-root .pdp-941-gallery {
+  padding: 18px;
+}
+
+.istore-product-root .pdp-941-main-image {
+  min-height: 560px;
+  border-radius: 24px;
+  background: #181818;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.istore-product-root .pdp-941-main-image img {
+  width: 100%;
+  height: 100%;
+  max-height: 620px;
+  object-fit: cover;
+}
+
+.istore-product-root .pdp-941-thumbs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.istore-product-root .pdp-941-thumb {
+  aspect-ratio: 1;
+  border-radius: 16px;
+  border: 1px solid #323232;
+  background: #181818;
+  overflow: hidden;
+}
+
+.istore-product-root .pdp-941-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.istore-product-root .pdp-941-info {
+  padding: 22px;
+  position: sticky;
+  top: 96px;
+}
+
+.istore-product-root .pdp-941-top-badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.istore-product-root .pdp-941-top-badges span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: #1b1b1b;
+  border: 1px solid #333;
+  color: #ffb078;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.istore-product-root .pdp-941-brand {
+  color: #a8a8a8;
+  font-size: 13px;
+  font-weight: 900;
+  margin-bottom: 8px;
+}
+
+.istore-product-root .pdp-941-title {
+  margin: 0;
+  font-size: clamp(28px, 3.3vw, 46px);
+  line-height: 1.05;
+  letter-spacing: -0.8px;
+  font-weight: 950;
+}
+
+.istore-product-root .pdp-941-subtitle {
+  margin-top: 10px;
+  color: #cfcfcf;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.istore-product-root .pdp-941-price-card {
+  margin-top: 18px;
+  display: grid;
+  gap: 8px;
+  padding: 14px;
+  border-radius: 20px;
+  background: #181818;
+  border: 1px solid #303030;
+}
+
+.istore-product-root .pdp-941-price-single {
+  color: #ff6600;
+  font-size: clamp(30px, 3vw, 42px);
+  line-height: 1;
+  font-weight: 950;
+  letter-spacing: -0.6px;
+}
+
+.istore-product-root .pdp-941-price-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 14px;
+}
+
+.istore-product-root .pdp-941-price-row span {
+  color: #a8a8a8;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.istore-product-root .pdp-941-price-row b {
+  font-size: clamp(22px, 2.2vw, 30px);
+  line-height: 1;
+  font-weight: 950;
+}
+
+.istore-product-root .pdp-941-price-row.is-accent b {
+  color: #ff6600;
+}
+
+.istore-product-root .pdp-941-cashback {
+  color: #ffb078;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.istore-product-root .pdp-941-options {
+  display: grid;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.istore-product-root .pdp-941-option-title {
+  margin-bottom: 8px;
+  color: #dedede;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.istore-product-root .pdp-941-option-list {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.istore-product-root .pdp-941-option {
+  display: inline-flex;
+  align-items: center;
+  min-height: 38px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid #343434;
+  background: #1b1b1b;
+  color: #f2f2f2;
+  font-size: 13px;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.istore-product-root .pdp-941-option:hover,
+.istore-product-root .pdp-941-option.is-active {
+  background: #ff6600;
+  border-color: #ff6600;
+  color: #fff;
+}
+
+.istore-product-root .pdp-941-actions {
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  align-items: start;
+}
+
+.istore-product-root .pdp-941-actions > div {
+  margin-top: 0 !important;
+}
+
+.istore-product-root .pdp-941-secondary-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 999px;
+  border: 1px solid #333;
+  background: #1b1b1b;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.istore-product-root .pdp-941-service-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.istore-product-root .pdp-941-service {
+  border-radius: 18px;
+  border: 1px solid #333;
+  background: #1b1b1b;
+  padding: 12px;
+  text-decoration: none;
+  color: #fff;
+}
+
+.istore-product-root .pdp-941-service b,
+.istore-product-root .pdp-941-service span {
+  display: block;
+}
+
+.istore-product-root .pdp-941-service b {
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.istore-product-root .pdp-941-service span {
+  color: #bfbfbf;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.istore-product-root .pdp-941-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 18px;
+  padding: 8px;
+  border-radius: 999px;
+  background: #222;
+  border: 1px solid #2d2d2d;
+}
+
+.istore-product-root .pdp-941-tabs a {
+  padding: 9px 14px;
+  border-radius: 999px;
+  background: #1b1b1b;
+  border: 1px solid #333;
+  color: #f2f2f2;
+  font-size: 13px;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.istore-product-root .pdp-941-text-section {
+  margin-top: 14px;
+  padding: 24px;
+}
+
+.istore-product-root .pdp-941-text-section h2 {
+  margin: 0 0 12px;
+  font-size: clamp(22px, 2.2vw, 32px);
+  line-height: 1.12;
+  font-weight: 900;
+  letter-spacing: -0.4px;
+}
+
+.istore-product-root .pdp-941-text-section p {
+  margin: 0;
+  color: #d7d7d7;
+  line-height: 1.65;
+  font-size: 15px;
+}
+
 .istore-product-root .pdp-hero {
   position: relative;
   border-radius: 26px;
@@ -198,6 +493,28 @@
 }
 
 @media (max-width: 760px) {
+  .istore-product-root .pdp-941-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .istore-product-root .pdp-941-info {
+    position: static;
+    padding: 16px;
+  }
+
+  .istore-product-root .pdp-941-main-image {
+    min-height: 340px;
+  }
+
+  .istore-product-root .pdp-941-actions,
+  .istore-product-root .pdp-941-service-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .istore-product-root .pdp-941-tabs {
+    border-radius: 24px;
+  }
+
   .istore-product-root .pdp-hero {
     min-height: 320px;
     height: 54vh;

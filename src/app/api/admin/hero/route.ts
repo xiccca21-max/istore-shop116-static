@@ -3,7 +3,6 @@ import { ADMIN_COOKIE_NAME, verifySessionToken } from "@/lib/adminAuth";
 import { z } from "zod";
 import crypto from "node:crypto";
 import { supabaseService } from "@/lib/supabaseServer";
-import { readEtalonHeroSlidesFromWww } from "@/lib/heroEtalon";
 
 async function mustAuth(req: NextRequest) {
   const token = req.cookies.get(ADMIN_COOKIE_NAME)?.value;
@@ -57,18 +56,10 @@ export async function GET(req: NextRequest) {
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
   const rows = data as unknown as Array<{ id: string; title: string; image_url?: string | null; sort_order: number; is_active: boolean }>;
-  const etalonByTitle = (() => {
-    try {
-      const etalon = readEtalonHeroSlidesFromWww();
-      return new Map(etalon.map((s) => [s.title, s.imageUrl]));
-    } catch {
-      return new Map<string, string | null>();
-    }
-  })();
   const mapped = rows.map((s) => ({
     id: s.id,
     title: s.title,
-    imageUrl: (s.image_url ?? null) || (etalonByTitle.get(s.title) ?? null),
+    imageUrl: s.image_url ?? null,
     sortOrder: s.sort_order,
     isActive: s.is_active ? 1 : 0,
   }));

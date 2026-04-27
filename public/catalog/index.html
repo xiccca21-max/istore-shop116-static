@@ -327,7 +327,7 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
         <div class="empty-state" id="searchEmpty" style="display:none">Ничего не найдено</div>
         <div style="height:18px"></div>
       </div>
-      <div class="catalog-grid" id="catalogTiles"><a class="catalog-tile" href="/catalog/iphone/"><div class="catalog-tile-img"><img src="/assets/71075e37-9ee6-4009-862e-e0bf9c82514a" alt="iPhone" loading="lazy"></div><div class="catalog-tile-name">iPhone</div></a><a class="catalog-tile" href="/catalog/air-pods/"><div class="catalog-tile-img"><img src="/assets/975099b9-5a58-45bf-a38a-37ff983f8fe1" alt="AirPods" loading="lazy"></div><div class="catalog-tile-name">AirPods</div></a><a class="catalog-tile" href="/catalog/mac/"><div class="catalog-tile-img"><img src="/assets/f3ec2d64-21df-45ea-be75-1ace880cd186" alt="Mac" loading="lazy"></div><div class="catalog-tile-name">Mac</div></a><a class="catalog-tile" href="/catalog/apple-watch/"><div class="catalog-tile-img"><img src="/assets/41d5931d-6cc9-42b6-81f6-b2390a9f6a11" alt="Apple Watch" loading="lazy"></div><div class="catalog-tile-name">Apple Watch</div></a><a class="catalog-tile" href="/catalog/ipad/"><div class="catalog-tile-img"><img src="/assets/d810e2af-3cde-48ee-9c67-f30de1e86a9a" alt="iPad" loading="lazy"></div><div class="catalog-tile-name">iPad</div></a><a class="catalog-tile" href="/catalog/samsung/"><div class="catalog-tile-img"><img src="/assets/9d58180e-8bcd-47be-a7a8-7ef2e1ff2355" alt="Samsung" loading="lazy"></div><div class="catalog-tile-name">Samsung</div></a><a class="catalog-tile" href="/catalog/dyson/"><div class="catalog-tile-img"><img src="/assets/41dcc123-98c7-498d-bdf4-565418d37405" alt="Dyson" loading="lazy"></div><div class="catalog-tile-name">Dyson</div></a><a class="catalog-tile" href="/catalog/igrovye-pristavki/"><div class="catalog-tile-img"><img src="/assets/bbd91f35-88fe-4497-b634-d5c82c378ccb" alt="Игровые приставки" loading="lazy"></div><div class="catalog-tile-name">Игровые приставки</div></a><a class="catalog-tile" href="/catalog/aksessuary/"><div class="catalog-tile-img"><img src="/assets/cc4c8c05-7560-4cfd-a1be-edb5ad056ba1" alt="Аксессуары" loading="lazy"></div><div class="catalog-tile-name">Аксессуары</div></a><a class="catalog-tile" href="/catalog/google/"><div class="catalog-tile-img"><img src="/assets/192666e9-6396-4e65-9530-5245012cd0ac" alt="Google Pixel" loading="lazy"></div><div class="catalog-tile-name">Google Pixel</div></a><a class="catalog-tile" href="/catalog/tehnika-dlya-doma/"><div class="catalog-tile-img"><img src="/assets/08f6cc15-796a-47f5-a96b-46cfe4ce4548" alt="Техника для дома" loading="lazy"></div><div class="catalog-tile-name">Техника для дома</div></a><a class="catalog-tile" href="/catalog/akustika/"><div class="catalog-tile-img"><img src="/assets/6705b852-549c-4f20-a531-06f6e632ead5" alt="Акустика" loading="lazy"></div><div class="catalog-tile-name">Акустика</div></a><a class="catalog-tile" href="/catalog/fitnes-braslety/"><div class="catalog-tile-img"><img src="/assets/64fb5601-ccb8-4115-81e9-3e20d250c508" alt="Фитнес-браслеты" loading="lazy"></div><div class="catalog-tile-name">Фитнес-браслеты</div></a><a class="catalog-tile" href="/catalog/smartfony/"><div class="catalog-tile-img"><img src="/assets/185b5c27-19e8-4293-842f-7347919137b3" alt="Смартфоны" loading="lazy"></div><div class="catalog-tile-name">Смартфоны</div></a><a class="catalog-tile" href="/catalog/planshety/"><div class="catalog-tile-img"><img src="/assets/fdb2b58c-6fe4-40d6-a13c-c36dbc0d27f2" alt="Планшеты" loading="lazy"></div><div class="catalog-tile-name">Планшеты</div></a><a class="catalog-tile" href="/catalog/smart-chasy/"><div class="catalog-tile-img"><img src="/assets/5cb0475d-18d6-4b48-a7e4-cc210a5b58b0" alt="Смарт-часы" loading="lazy"></div><div class="catalog-tile-name">Смарт-часы</div></a><a class="catalog-tile" href="/catalog/noutbuki/"><div class="catalog-tile-img"><img src="/assets/73a0d3ce-5f49-49ea-8fe0-48ef8a88b034" alt="Ноутбуки" loading="lazy"></div><div class="catalog-tile-name">Ноутбуки</div></a><a class="catalog-tile" href="/catalog/fototehnika/"><div class="catalog-tile-img"><img src="/assets/d907fca0-57bc-48c9-a05d-ce00c55561ff" alt="Фототехника" loading="lazy"></div><div class="catalog-tile-name">Фототехника</div></a><a class="catalog-tile" href="/catalog/sistemy-virtualnoy-realnosti/"><div class="catalog-tile-img"><img src="/assets/b2e3c169-3978-442e-9e07-c39f939453c8" alt="Системы виртуальной реальности" loading="lazy"></div><div class="catalog-tile-name">Системы виртуальной реальности</div></a></div></section>
+      <div class="catalog-grid" id="catalogTiles"></div></section>
     <footer class="footer">
       <div class="footer-grid">
         <div>
@@ -404,7 +404,27 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
         clearTimeout(timer);
       }
     }
+    function renderCategoryTile(c){
+      var title=esc(c.title||c.slug||"Категория");
+      var image=c.image_url
+        ? '<img src="'+esc(c.image_url)+'" alt="'+title+'" loading="lazy">'
+        : '<div style="height:100%;display:flex;align-items:center;justify-content:center;color:#777;font-weight:900">Фото</div>';
+      return '<a class="catalog-tile" href="/catalog/'+encodeURIComponent(c.slug||'')+'/"><div class="catalog-tile-img">'+image+'</div><div class="catalog-tile-name">'+title+'</div></a>';
+    }
+    async function loadCatalogTiles(){
+      const tiles=document.getElementById("catalogTiles")
+      if(!tiles) return
+      tiles.innerHTML=""
+      try{
+        const json=await fetchJsonWithTimeout("/api/public/categories",10000)
+        const items=(json&&Array.isArray(json.data))?json.data:[]
+        tiles.innerHTML=items.map(renderCategoryTile).join("")
+      }catch(e){
+        tiles.innerHTML='<div class="empty-state" style="grid-column:1/-1">Категории не загрузились</div>'
+      }
+    }
     async function run(){
+      await loadCatalogTiles()
       const q=getQ().trim()
       const host=document.getElementById("searchResults")
       const grid=document.getElementById("searchGrid")
@@ -441,8 +461,11 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
           var media = imageUrl
             ? '<img src="'+esc(imageUrl)+'" alt="'+esc(p.title||"")+'" style="width:100%;height:100%;object-fit:cover" loading="lazy">'
             : '<div style="opacity:.6;font-weight:900">Фото позже</div>';
+          var href = "/product/"+encodeURIComponent(p.slug);
+          if(variants.length === 1 && firstVariant && firstVariant.id) href += "/"+encodeURIComponent(firstVariant.id);
+          href += "/";
           return (
-            '<a class="product-card" href="/product/'+encodeURIComponent(p.slug)+'">'+
+            '<a class="product-card" href="'+href+'">'+
               '<div class="product-media">'+media+'</div>'+
               '<div class="product-body">'+
                 '<div class="product-title">'+esc(p.title||"")+'</div>'+
