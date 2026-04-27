@@ -35,6 +35,28 @@ function encodePath(path: string) {
     .join("/");
 }
 
+async function waitForPublicObject(url: string) {
+  let lastStatus = 0;
+  for (let attempt = 0; attempt < 8; attempt += 1) {
+    try {
+      const response = await fetch(`${url}?ready=${Date.now()}-${attempt}`, {
+        cache: "no-store",
+        signal: AbortSignal.timeout(8000),
+      });
+      lastStatus = response.status;
+      if (response.ok) {
+        const contentType = response.headers.get("content-type") || "";
+        const bytes = await response.arrayBuffer();
+        if (bytes.byteLength > 0 && contentType.toLowerCase().startsWith("image/")) return;
+      }
+    } catch {
+      // Supabase public URLs can briefly 404/timeout immediately after upload.
+    }
+    await new Promise((resolve) => setTimeout(resolve, 250 * (attempt + 1)));
+  }
+  throw new Error(`uploaded_file_not_ready_${lastStatus || "timeout"}`);
+}
+
 export async function POST(req: NextRequest) {
   const auth = await mustAuth(req);
   if (auth) return auth;
@@ -64,7 +86,7 @@ export async function POST(req: NextRequest) {
           headers: {
             apikey: serviceKey,
             authorization: `Bearer ${serviceKey}`,
-            "cache-control": "3600",
+            "cache-control": "60",
             "content-type": file.type || "application/octet-stream",
             "x-upsert": "true",
           },
@@ -90,6 +112,7 @@ export async function POST(req: NextRequest) {
     }
 
     const publicUrl = `${baseUrl}/storage/v1/object/public/${storagePath}`;
+    await waitForPublicObject(publicUrl);
     const versionedUrl = `${publicUrl}?v=${Date.now()}`;
     return NextResponse.json(
       {
