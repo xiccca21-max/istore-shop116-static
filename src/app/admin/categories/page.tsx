@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { uploadAdminImage } from "@/lib/adminImageUpload";
 
 type Category = {
   id: string;
@@ -76,14 +77,8 @@ export default function AdminCategoriesPage() {
   async function uploadCategoryImage(categoryId: string, file: File) {
     setUploadingId(categoryId);
     try {
-      const fd = new FormData();
-      fd.set("folder", "categories");
-      fd.set("file", file);
-      const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
-      const json = await res.json();
-      if (!res.ok) return;
-      const url = json?.data?.url as string | undefined;
-      if (url) await patch(categoryId, { imageUrl: url });
+      const url = await uploadAdminImage(file, "categories");
+      await patch(categoryId, { imageUrl: url });
     } finally {
       setUploadingId(null);
     }

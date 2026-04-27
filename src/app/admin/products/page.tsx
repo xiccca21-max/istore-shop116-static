@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { uploadAdminImage, uploadSizeText } from "@/lib/adminImageUpload";
 
 type Variant = {
   id: string;
@@ -114,38 +115,13 @@ export default function AdminProductsPage() {
     await load();
   }
 
-  async function uploadImage(file: File, folder: string): Promise<string> {
-    const fd = new FormData();
-    fd.set("file", file);
-    fd.set("folder", folder);
-    let res: Response;
-    try {
-      res = await fetch("/api/admin/upload", { method: "POST", body: fd, cache: "no-store" });
-    } catch {
-      throw new Error("upload_network_failed");
-    }
-    if (res.status === 401) {
-      window.location.href = "/admin/login";
-      throw new Error("unauthorized");
-    }
-    if (!res.ok) {
-      const json = await res.json().catch(() => null);
-      const message = json?.error ? String(json.error) : `upload_failed_${res.status}`;
-      throw new Error(message);
-    }
-    const json = await res.json();
-    const url = json?.data?.url;
-    if (!url || typeof url !== "string") throw new Error("upload_no_url");
-    return url;
-  }
-
   async function uploadProductImage(productId: string, file: File) {
     const key = `product:${productId}`;
     setUploading((prev) => ({ ...prev, [key]: true }));
     setLoadError("");
-    setUploadMessages((prev) => ({ ...prev, [key]: "Загружаю файл и проверяю картинку…" }));
+    setUploadMessages((prev) => ({ ...prev, [key]: `Готовлю картинку (${uploadSizeText(file)})…` }));
     try {
-      const url = await uploadImage(file, "products");
+      const url = await uploadAdminImage(file, "products");
       setUploadMessages((prev) => ({ ...prev, [key]: "Сохраняю ссылку в товар…" }));
       await patchProduct(productId, { imageUrls: [url] });
     } catch (error) {
@@ -164,9 +140,9 @@ export default function AdminProductsPage() {
     const key = `variant:${variantId}`;
     setUploading((prev) => ({ ...prev, [key]: true }));
     setLoadError("");
-    setUploadMessages((prev) => ({ ...prev, [key]: "Загружаю файл и проверяю картинку…" }));
+    setUploadMessages((prev) => ({ ...prev, [key]: `Готовлю картинку (${uploadSizeText(file)})…` }));
     try {
-      const url = await uploadImage(file, "variants");
+      const url = await uploadAdminImage(file, "variants");
       setUploadMessages((prev) => ({ ...prev, [key]: "Сохраняю ссылку в вариант…" }));
       await patchVariant(variantId, { imageUrl: url } as any);
     } catch (error) {

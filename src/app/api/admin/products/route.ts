@@ -12,6 +12,32 @@ async function mustAuth(req: NextRequest) {
   return null;
 }
 
+function must(name: string) {
+  const value = process.env[name];
+  if (!value) throw new Error(`Missing env ${name}`);
+  return value;
+}
+
+async function restWrite(path: string, init: RequestInit) {
+  const baseUrl = must("SUPABASE_URL").replace(/\/$/, "");
+  const serviceKey = must("SUPABASE_SERVICE_ROLE_KEY");
+  const response = await fetch(`${baseUrl}/rest/v1/${path}`, {
+    ...init,
+    headers: {
+      apikey: serviceKey,
+      authorization: `Bearer ${serviceKey}`,
+      "content-type": "application/json",
+      prefer: "return=minimal",
+      ...(init.headers || {}),
+    },
+    cache: "no-store",
+  });
+  if (!response.ok) {
+    const text = await response.text().catch(() => "");
+    throw new Error(text || `Supabase REST ${response.status}`);
+  }
+}
+
 export async function GET(req: NextRequest) {
   const auth = await mustAuth(req);
   if (auth) return auth;
@@ -141,9 +167,14 @@ export async function PATCH(req: NextRequest) {
   if (payload.isActive !== undefined) patch.is_active = payload.isActive;
   if (!Object.keys(patch).length) return NextResponse.json({ error: "no_fields" }, { status: 400 });
 
-  const sb = supabaseService();
-  const { error } = await sb.from("products").update(patch).eq("id", payload.id);
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  try {
+    await restWrite(`products?id=eq.${encodeURIComponent(payload.id)}`, {
+      method: "PATCH",
+      body: JSON.stringify(patch),
+    });
+  } catch (error) {
+    return NextResponse.json({ error: error instanceof Error ? error.message : String(error) }, { status: 500 });
+  }
   patchAdminProductCache(payload.id, {
     ...(payload.slug !== undefined ? { slug: payload.slug } : {}),
     ...(payload.title !== undefined ? { title: payload.title } : {}),
@@ -164,9 +195,11 @@ export async function DELETE(req: NextRequest) {
   const url = new URL(req.url);
   const id = url.searchParams.get("id");
   if (!id) return NextResponse.json({ error: "id_required" }, { status: 400 });
-  const sb = supabaseService();
-  const { error } = await sb.from("products").delete().eq("id", id);
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  try {
+    await restWrite(`products?id=eq.${encodeURIComponent(id)}`, { method: "DELETE" });
+  } catch (error) {
+    return NextResponse.json({ error: error instanceof Error ? error.message : String(error) }, { status: 500 });
+  }
   removeAdminProductFromCache(id);
   return NextResponse.json({ ok: true });
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { uploadAdminImage } from "@/lib/adminImageUpload";
 
 type Slide = { id: string; title: string; imageUrl?: string | null; sortOrder: number; isActive: number };
 type FeaturedRow = {
@@ -78,14 +79,7 @@ export default function AdminHomePage() {
   async function uploadSlideImage(slideId: string, file: File) {
     setUploadingId(slideId);
     try {
-      const fd = new FormData();
-      fd.set("folder", "hero");
-      fd.set("file", file);
-      const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
-      const json = await res.json();
-      if (!res.ok) return;
-      const url = json?.data?.url as string | undefined;
-      if (!url) return;
+      const url = await uploadAdminImage(file, "hero");
       await fetch("/api/admin/hero", {
         method: "PATCH",
         headers: { "content-type": "application/json" },

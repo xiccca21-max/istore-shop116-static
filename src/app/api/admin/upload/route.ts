@@ -3,6 +3,8 @@ import crypto from "node:crypto";
 import { ADMIN_COOKIE_NAME, verifySessionToken } from "@/lib/adminAuth";
 import { supabaseService } from "@/lib/supabaseServer";
 
+const MAX_UPLOAD_BYTES = 4 * 1024 * 1024;
+
 async function mustAuth(req: NextRequest) {
   const token = req.cookies.get(ADMIN_COOKIE_NAME)?.value;
   const ok = await verifySessionToken(token);
@@ -45,6 +47,7 @@ export async function POST(req: NextRequest) {
     const file = form.get("file");
     const folder = String(form.get("folder") || "uploads").replace(/[^a-z0-9/_-]/gi, "").replace(/^\/+/, "").replace(/\/+$/, "");
     if (!file || !(file instanceof File)) return NextResponse.json({ error: "file_required" }, { status: 400 });
+    if (file.size > MAX_UPLOAD_BYTES) return NextResponse.json({ error: "file_too_large", maxBytes: MAX_UPLOAD_BYTES }, { status: 413 });
 
     const bucket = bucketName();
     const baseUrl = must("SUPABASE_URL").replace(/\/$/, "");
