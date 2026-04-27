@@ -428,6 +428,14 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
         grid.innerHTML = items.map(function(p){
           var variants = Array.isArray(p.variants) ? p.variants : [];
           var firstVariant = variants[0] || null;
+          var cardColors = Array.isArray(p.cardColors) ? p.cardColors : [];
+          var seenColors = {};
+          var dots = cardColors.filter(function(c){
+            c = String(c || "").trim();
+            if(!c || seenColors[c]) return false;
+            seenColors[c] = true;
+            return true;
+          }).slice(0,8).map(function(c){ return '<span class="color-dot" style="background:'+esc(c)+'"></span>'; }).join("");
           var imageUrl = (Array.isArray(p.imageUrls) && p.imageUrls[0]) ? String(p.imageUrls[0]) : "";
           if(!imageUrl && firstVariant && firstVariant.imageUrl) imageUrl = String(firstVariant.imageUrl);
           var media = imageUrl
@@ -439,6 +447,7 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
               '<div class="product-body">'+
                 '<div class="product-title">'+esc(p.title||"")+'</div>'+
                 '<div class="product-sub">'+esc(p.subtitle||"")+'</div>'+
+                (dots ? '<div class="color-dots">'+dots+'</div>' : '')+
               '</div>'+
             '</a>'
           );

@@ -117,8 +117,8 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
 .buyers-dots-mobile{display:none}
 .product-card{background:var(--panel);border:1px solid #2d2d2d;border-radius:24px;overflow:hidden;box-shadow:var(--shadow);transition:border-color .2s}
 .product-card:hover{border-color:var(--accent)}
-.product-media{height:260px;background:#181818;padding:20px;display:flex;align-items:center;justify-content:center}
-.product-media img{height:100%;width:100%;object-fit:contain}
+.product-media{height:260px;background:#181818;padding:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.product-media img{height:100%;width:100%;object-fit:cover}
 .product-body{padding:16px 18px 20px}
 .product-title{font-size:20px;font-weight:700;margin-bottom:6px;line-height:1.2}
 .product-sub{font-size:13px;color:var(--muted);margin-bottom:14px}
@@ -681,6 +681,7 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
     viewport.addEventListener('pointerdown',(e)=>{
       if(!(e && typeof e.clientX==='number')) return;
       if(e.pointerType==='mouse' && e.button!==0) return;
+      if(e.target instanceof Element && e.target.closest('a.cat-card')) return;
       onStart(e.clientX,e.clientY);
       try{ viewport.setPointerCapture(e.pointerId); }catch(_e){}
     });
@@ -714,8 +715,9 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
     if(!a) return;
     const href=a.getAttribute('href')||'';
     if(!href) return;
+    e.preventDefault();
     window.location.href=href;
-  });
+  }, true);
 })();
 
 (function(){
@@ -742,21 +744,14 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
   }
   function renderCard(p){
     const img=(Array.isArray(p.imageUrls)&&p.imageUrls[0])?String(p.imageUrls[0]):'/assets/hero-banner-full.png';
-    const variants=Array.isArray(p.variants)?p.variants:[];
-    const stor=uniq(variants.map(v=>v&&v.storageGb?String(v.storageGb):'')).slice(0,2);
-    const sim=uniq(variants.map(v=>v&&v.simType?String(v.simType).toUpperCase():'')) .slice(0,1);
-    const dots=colorsFromVariants(variants).map(c=>'<span class="color-dot" style="background:'+esc(c)+'"></span>').join('');
-    const chips=[
-      stor[0]?('<span class="meta-chip">'+esc(stor[0])+' ГБ</span>'):'',
-      sim[0]?('<span class="meta-chip">'+esc(sim[0].replaceAll('_','+'))+'</span>'):''
-    ].filter(Boolean).join('');
+    const cardColors=Array.isArray(p.cardColors)?p.cardColors:[];
+    const dots=uniq(cardColors).slice(0,8).map(c=>'<span class="color-dot" style="background:'+esc(c)+'"></span>').join('');
     return (
       '<a class="product-card" href="/product/'+encodeURIComponent(p.slug)+'/">'+
         '<div class="product-media"><img src="'+esc(img)+'" alt="'+esc(p.title||'')+'" loading="lazy"></div>'+
         '<div class="product-body">'+
           '<div class="product-title">'+esc(p.title||'')+'</div>'+
           (p.subtitle?('<div class="product-sub">'+esc(p.subtitle)+'</div>'):'')+
-          (chips?('<div class="product-meta">'+chips+'</div>'):'')+
           (dots?('<div class="color-dots">'+dots+'</div>'):'')+
         '</div>'+
       '</a>'

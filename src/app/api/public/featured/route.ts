@@ -9,6 +9,8 @@ type ApiProduct = {
   categoryId: string;
   basePrice: number;
   imageUrls: string[];
+  cardColors: string[];
+  characteristicsText: string;
   isActive: boolean;
   variants: Array<{
     id: string;
@@ -26,13 +28,16 @@ type ApiProduct = {
 export async function GET() {
   const sb = supabaseAnon();
 
-  const { data, error } = await sb
-    .from("homepage_featured_products")
-    .select(
-      "id,sort_order,is_active,product_id,products:product_id(id,slug,title,subtitle,category_id,base_price,image_urls,is_active,product_variants(id,storage_gb,sim_type,colors,image_url,price,sku,in_stock))",
-    )
-    .eq("is_active", true)
-    .order("sort_order", { ascending: true });
+  const fullSelect =
+    "id,sort_order,is_active,product_id,products:product_id(id,slug,title,subtitle,category_id,base_price,image_urls,card_colors,characteristics_text,is_active,product_variants(id,storage_gb,sim_type,colors,image_url,price,sku,in_stock))";
+  const legacySelect =
+    "id,sort_order,is_active,product_id,products:product_id(id,slug,title,subtitle,category_id,base_price,image_urls,is_active,product_variants(id,storage_gb,sim_type,colors,image_url,price,sku,in_stock))";
+  let result: any = await sb.from("homepage_featured_products").select(fullSelect).eq("is_active", true).order("sort_order", { ascending: true });
+  if (result.error && (result.error.message.includes("card_colors") || result.error.message.includes("characteristics_text"))) {
+    result = await sb.from("homepage_featured_products").select(legacySelect).eq("is_active", true).order("sort_order", { ascending: true });
+  }
+
+  const { data, error } = result;
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
@@ -45,6 +50,8 @@ export async function GET() {
       category_id: string;
       base_price: number;
       image_urls: string[] | null;
+      card_colors?: string[] | null;
+      characteristics_text?: string | null;
       is_active: boolean;
       product_variants: Array<{
         id: string;
@@ -70,6 +77,8 @@ export async function GET() {
       categoryId: p!.category_id,
       basePrice: p!.base_price,
       imageUrls: p!.image_urls || [],
+      cardColors: Array.isArray(p!.card_colors) ? p!.card_colors : [],
+      characteristicsText: p!.characteristics_text || "",
       isActive: p!.is_active,
       variants: (p!.product_variants || []).map((v) => ({
         id: v.id,

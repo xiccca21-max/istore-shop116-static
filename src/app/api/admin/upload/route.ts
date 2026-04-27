@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "node:crypto";
 import { ADMIN_COOKIE_NAME, verifySessionToken } from "@/lib/adminAuth";
-import { supabaseService } from "@/lib/supabaseServer";
 
 async function mustAuth(req: NextRequest) {
   const token = req.cookies.get(ADMIN_COOKIE_NAME)?.value;
@@ -34,18 +33,50 @@ export async function POST(req: NextRequest) {
   if (!file || !(file instanceof File)) return NextResponse.json({ error: "file_required" }, { status: 400 });
 
   const bucket = must("SUPABASE_BUCKET");
+  const baseUrl = must("SUPABASE_URL").replace(/\/$/, "");
+  const serviceKey = must("SUPABASE_SERVICE_ROLE_KEY");
   const ext = safeExt(file.name || "");
   const objectPath = `${folder}/${crypto.randomUUID()}${ext}`;
 
   const bytes = new Uint8Array(await file.arrayBuffer());
-  const sb = supabaseService();
-  const { error: upErr } = await sb.storage.from(bucket).upload(objectPath, bytes, {
-    contentType: file.type || "application/octet-stream",
-    upsert: true,
-  });
-  if (upErr) return NextResponse.json({ error: upErr.message }, { status: 500 });
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 30000);
+  let response: Response;
+  try {
+    response = await fetch(`${baseUrl}/storage/v1/object/${encodeURIComponent(bucket)}/${objectPath}`, {
+      method: "POST",
+      headers: {
+        apikey: serviceKey,
+        authorization: `Bearer ${serviceKey}`,
+        "cache-control": "3600",
+        "content-type": file.type || "application/octet-stream",
+        "x-upsert": "true",
+      },
+      body: bytes,
+      signal: controller.signal,
+      cache: "no-store",
+    });
+  } catch (error) {
+    return NextResponse.json({ error: error instanceof Error ? error.message : String(error) }, { status: 500 });
+  } finally {
+    clearTimeout(timer);
+  }
 
-  const { data } = sb.storage.from(bucket).getPublicUrl(objectPath);
-  return NextResponse.json({ data: { url: data.publicUrl, path: objectPath } }, { status: 201 });
+  if (!response.ok) {
+    const text = await response.text();
+    return NextResponse.json({ error: text || `upload_failed_${response.status}` }, { status: 500 });
+  }
+
+  const publicUrl = `${baseUrl}/storage/v1/object/public/${encodeURIComponent(bucket)}/${objectPath}`;
+  const versionedUrl = `${publicUrl}?v=${Date.now()}`;
+  return NextResponse.json({
+    data: {
+      url: versionedUrl,
+      rawUrl: publicUrl,
+      path: objectPath,
+    },
+  }, {
+    status: 201,
+  });
 }
 

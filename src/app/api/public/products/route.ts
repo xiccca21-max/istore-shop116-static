@@ -9,6 +9,8 @@ type ApiProduct = {
   categoryId: string;
   basePrice: number;
   imageUrls: string[];
+  cardColors: string[];
+  characteristicsText: string;
   isActive: boolean;
   categorySlug?: string;
   categoryTitle?: string;
@@ -62,6 +64,7 @@ function collapseIphoneModels(items: ApiProduct[]): ApiProduct[] {
         title: normalizedTitle || p.title,
         slug: normalizedSlug || p.slug,
         imageUrls: Array.isArray(p.imageUrls) ? [...p.imageUrls] : [],
+        cardColors: Array.isArray(p.cardColors) ? [...p.cardColors] : [],
         variants: Array.isArray(p.variants) ? [...p.variants] : [],
       });
       continue;
@@ -69,6 +72,7 @@ function collapseIphoneModels(items: ApiProduct[]): ApiProduct[] {
 
     existing.variants = [...existing.variants, ...(p.variants || [])];
     existing.imageUrls = Array.from(new Set([...(existing.imageUrls || []), ...(p.imageUrls || [])]));
+    existing.cardColors = Array.from(new Set([...(existing.cardColors || []), ...(p.cardColors || [])]));
     const minA = Number(existing.basePrice || 0);
     const minB = Number(p.basePrice || 0);
     if ((minA <= 0 && minB > 0) || (minB > 0 && minB < minA)) existing.basePrice = minB;
@@ -115,6 +119,22 @@ export async function GET(req: Request) {
     return NextResponse.json({ data: [], stale: true, error: error instanceof Error ? error.message : String(error) });
   }
 
+  function isMissingProductSettingsColumn(error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    return message.includes("card_colors") || message.includes("characteristics_text");
+  }
+
+  const fullProductSelect = `
+          id,slug,title,subtitle,category_id,base_price,image_urls,card_colors,characteristics_text,is_active,
+          categories:category_id ( slug,title ),
+          product_variants ( id, storage_gb, sim_type, colors, image_url, price, sku, in_stock )
+        `;
+  const legacyProductSelect = `
+          id,slug,title,subtitle,category_id,base_price,image_urls,is_active,
+          categories:category_id ( slug,title ),
+          product_variants ( id, storage_gb, sim_type, colors, image_url, price, sku, in_stock )
+        `;
+
   let categoryId: string | null = null;
   if (categorySlug) {
     const normalizedCategorySlug = (() => {
@@ -145,15 +165,9 @@ export async function GET(req: Request) {
       const ids = (cats || []).map((c: { id: string }) => c.id).filter(Boolean);
       if (!ids.length) return NextResponse.json({ data: [] });
 
-      let q = sb
+      let q: any = sb
         .from("products")
-        .select(
-          `
-          id,slug,title,subtitle,category_id,base_price,image_urls,is_active,
-          categories:category_id ( slug,title ),
-          product_variants ( id, storage_gb, sim_type, colors, image_url, price, sku, in_stock )
-        `,
-        )
+        .select(fullProductSelect)
         .eq("is_active", true)
         .in("category_id", ids)
         .order("base_price", { ascending: false });
@@ -168,7 +182,36 @@ export async function GET(req: Request) {
       try {
         result = await q.abortSignal(AbortSignal.timeout(8000));
       } catch (error) {
-        return staleOrEmpty(error);
+        if (isMissingProductSettingsColumn(error)) {
+          q = sb
+            .from("products")
+            .select(legacyProductSelect)
+            .eq("is_active", true)
+            .in("category_id", ids)
+            .order("base_price", { ascending: false });
+          if (searchQ) {
+            const like = `%${escLike(searchQ)}%`;
+            q = q.or(`title.ilike.${like},slug.ilike.${like},subtitle.ilike.${like}`);
+          }
+          if (limit) q = q.limit(limit);
+          result = await q.abortSignal(AbortSignal.timeout(8000));
+        } else {
+          return staleOrEmpty(error);
+        }
+      }
+      if (result?.error && isMissingProductSettingsColumn(result.error)) {
+        q = sb
+          .from("products")
+          .select(legacyProductSelect)
+          .eq("is_active", true)
+          .in("category_id", ids)
+          .order("base_price", { ascending: false });
+        if (searchQ) {
+          const like = `%${escLike(searchQ)}%`;
+          q = q.or(`title.ilike.${like},slug.ilike.${like},subtitle.ilike.${like}`);
+        }
+        if (limit) q = q.limit(limit);
+        result = await q.abortSignal(AbortSignal.timeout(8000));
       }
       const { data, error } = result;
       if (error) {
@@ -183,6 +226,8 @@ export async function GET(req: Request) {
         category_id: string;
         base_price: number;
         image_urls: string[] | null;
+        card_colors?: string[] | null;
+        characteristics_text?: string | null;
         is_active: boolean;
         categories: { slug: string; title: string } | null;
         product_variants: Array<{
@@ -205,6 +250,8 @@ export async function GET(req: Request) {
         categoryId: p.category_id,
         basePrice: p.base_price,
         imageUrls: p.image_urls || [],
+        cardColors: Array.isArray(p.card_colors) ? p.card_colors : [],
+        characteristicsText: p.characteristics_text || "",
         isActive: p.is_active,
         categorySlug: p.categories?.slug,
         categoryTitle: p.categories?.title,
@@ -241,15 +288,9 @@ export async function GET(req: Request) {
     if (!categoryId) return NextResponse.json({ data: [] });
   }
 
-  let q = sb
+  let q: any = sb
     .from("products")
-    .select(
-      `
-      id,slug,title,subtitle,category_id,base_price,image_urls,is_active,
-      categories:category_id ( slug,title ),
-      product_variants ( id, storage_gb, sim_type, colors, image_url, price, sku, in_stock )
-    `,
-    )
+    .select(fullProductSelect)
     .eq("is_active", true)
     .order("base_price", { ascending: false });
 
@@ -264,7 +305,32 @@ export async function GET(req: Request) {
   try {
     result = await q.abortSignal(AbortSignal.timeout(8000));
   } catch (error) {
-    return staleOrEmpty(error);
+    if (isMissingProductSettingsColumn(error)) {
+      q = sb
+        .from("products")
+        .select(legacyProductSelect)
+        .eq("is_active", true)
+        .order("base_price", { ascending: false });
+      if (categoryId) q = q.eq("category_id", categoryId);
+      if (searchQ) {
+        const like = `%${escLike(searchQ)}%`;
+        q = q.or(`title.ilike.${like},slug.ilike.${like},subtitle.ilike.${like}`);
+      }
+      if (limit) q = q.limit(limit);
+      result = await q.abortSignal(AbortSignal.timeout(8000));
+    } else {
+      return staleOrEmpty(error);
+    }
+  }
+  if (result?.error && isMissingProductSettingsColumn(result.error)) {
+    q = sb.from("products").select(legacyProductSelect).eq("is_active", true).order("base_price", { ascending: false });
+    if (categoryId) q = q.eq("category_id", categoryId);
+    if (searchQ) {
+      const like = `%${escLike(searchQ)}%`;
+      q = q.or(`title.ilike.${like},slug.ilike.${like},subtitle.ilike.${like}`);
+    }
+    if (limit) q = q.limit(limit);
+    result = await q.abortSignal(AbortSignal.timeout(8000));
   }
   const { data, error } = result;
   if (error) {
@@ -279,6 +345,8 @@ export async function GET(req: Request) {
     category_id: string;
     base_price: number;
     image_urls: string[] | null;
+    card_colors?: string[] | null;
+    characteristics_text?: string | null;
     is_active: boolean;
     categories: { slug: string; title: string } | null;
     product_variants: Array<{
@@ -301,6 +369,8 @@ export async function GET(req: Request) {
     categoryId: p.category_id,
     basePrice: p.base_price,
     imageUrls: p.image_urls || [],
+    cardColors: Array.isArray(p.card_colors) ? p.card_colors : [],
+    characteristicsText: p.characteristics_text || "",
     isActive: p.is_active,
     categorySlug: p.categories?.slug,
     categoryTitle: p.categories?.title,

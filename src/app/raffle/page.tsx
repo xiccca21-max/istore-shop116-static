@@ -21,8 +21,7 @@ async function getPrizes(): Promise<string[]> {
 export default async function RafflePage() {
   const prizes =
     (await getPrizes()) || [];
-  const fallback = ["Apple iPad", "Apple Watch", "Apple AirPods Pro 3", "Apple AirPods 4", "Сертификат на 10 000 рублей"];
-  const list = prizes.length ? prizes : fallback;
+  const list = prizes;
   return (
     <div className="page promoPage">
       <SiteHeader />
@@ -85,14 +84,20 @@ export default async function RafflePage() {
       <section className="section">
         <div className="raffleBannerInfo" aria-label="Информация о призах">
           <div className="raffleBannerInfoTitle">Розыгрыш призов</div>
-          <div className="raffleBannerInfoGrid" role="list">
-            {list.slice(0, 9).map((t, idx) => (
-              <div key={idx} className="raffleBannerInfoItem" role="listitem">
-                <span className="raffleBannerInfoNum">{idx + 1}</span>
-                <span className="raffleBannerInfoText">{t}</span>
-              </div>
-            ))}
-          </div>
+          {list.length ? (
+            <div className="raffleBannerInfoGrid" role="list">
+              {list.slice(0, 9).map((t, idx) => (
+                <div key={idx} className="raffleBannerInfoItem" role="listitem">
+                  <span className="raffleBannerInfoNum">{idx + 1}</span>
+                  <span className="raffleBannerInfoText">{t}</span>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="empty-state" style={{ marginTop: 12 }}>
+              Призы скоро появятся
+            </div>
+          )}
           <div className="cta" style={{ marginTop: 12, justifyContent: "center" }}>
             <a className="btn primary" href="https://t.me/iStore116" target="_blank" rel="noopener">
               Telegram‑канал iStore116
@@ -107,15 +112,19 @@ export default async function RafflePage() {
       <section className="section">
         <div className="tradeInInfo rafflePrizesInfo">
           <div className="tradeInFactors">
-            <h2>Призы: {list.length}</h2>
-            <ul className="tradeInCheck">
-              {list.map((t, idx) => (
-                <li key={idx}>
-                  <span className="cb" aria-hidden="true" />
-                  <span>{t}</span>
-                </li>
-              ))}
-            </ul>
+            <h2>{list.length ? `Призы: ${list.length}` : "Призы скоро появятся"}</h2>
+            {list.length ? (
+              <ul className="tradeInCheck">
+                {list.map((t, idx) => (
+                  <li key={idx}>
+                    <span className="cb" aria-hidden="true" />
+                    <span>{t}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p style={{ color: "#d7d7d7", lineHeight: 1.6, margin: 0 }}>Список призов подтянется из админки, когда появятся активные позиции.</p>
+            )}
 
             <div className="cta" style={{ marginTop: 12 }}>
               <a className="btn" href="/catalog/">

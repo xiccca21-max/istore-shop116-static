@@ -337,35 +337,12 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
     return Array.from(s);
   }
 
-  function simLabel(simType){
-    if(simType==='esim') return 'ESIM';
-    if(simType==='sim') return 'NANO SIM';
-    if(simType==='sim_esim') return 'NANO SIM+ESIM';
-    return '';
-  }
-
   function renderCard(p){
     var variants = Array.isArray(p.variants)?p.variants:[];
     variants = variants.slice().sort(function(a,b){ return (a.price||0)-(b.price||0); });
     var v = variants[0] || null;
 
-    var chips='';
-    if(v && v.storageGb){
-      chips += '<span class="meta-chip">'+String(v.storageGb)+' ГБ</span>';
-    }
-    var s = v ? simLabel(v.simType) : '';
-    if(s){
-      chips += '<span class="meta-chip">'+s+'</span>';
-    }
-    chips = chips ? ('<div class="product-meta">'+chips+'</div>') : '';
-
-    // Avoid Array.prototype.flatMap for wider browser support.
-    var allColors = [];
-    for (var ii = 0; ii < variants.length; ii++) {
-      var cc = variants[ii] && Array.isArray(variants[ii].colors) ? variants[ii].colors : [];
-      for (var jj = 0; jj < cc.length; jj++) allColors.push(cc[jj]);
-    }
-    var colors = uniq(allColors).slice(0,8);
+    var colors = uniq(Array.isArray(p.cardColors) ? p.cardColors : []).slice(0,8);
     var dots = colors.map(function(c){ return '<span class="color-dot" style="background:'+normalizeColor(c)+'" title="'+String(c).replace(/\"/g,'')+'"></span>'; }).join('');
 
     var imageUrl = '';
@@ -381,7 +358,6 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
         '<div class="product-body">'+
           '<div class="product-title">'+escapeHtml(p.title||'')+'</div>'+
           '<div class="product-sub">'+escapeHtml(p.subtitle||'')+'</div>'+
-          chips+
           (dots?('<div class="color-dots">'+dots+'</div>'):'<div style="height:10px"></div>')+
         '</div>'+
       '</a>'

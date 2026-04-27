@@ -19,40 +19,6 @@ function colorLabel(colors: string[]) {
   return c;
 }
 
-function isHexColor(s: string) {
-  return /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(s.trim());
-}
-
-function normalizeColor(input: string) {
-  const c = String(input || "").trim().toLowerCase();
-  if (!c) return "#777";
-  if (isHexColor(c)) return c;
-  const m: Record<string, string> = {
-    black: "#171717",
-    white: "#f2f2f2",
-    silver: "#cfd3d8",
-    gray: "#8f9499",
-    grey: "#8f9499",
-    graphite: "#4e5257",
-    blue: "#3d5fa8",
-    orange: "#f28d35",
-    red: "#cc2f2f",
-    green: "#4f8f4f",
-    pink: "#f2b5c4",
-    purple: "#7d5ab5",
-    yellow: "#cdb85b",
-    starlight: "#efe7cd",
-    midnight: "#243042",
-    natural: "#d7d0c3",
-    ultramarine: "#4c5fd0",
-    teal: "#56b8b4",
-    lavender: "#a999d6",
-    sage: "#9db188",
-    desert: "#b99173",
-  };
-  return m[c] || "#777";
-}
-
 export function ProductVariantsGrid(props: {
   productId: string;
   title: string;
@@ -152,17 +118,8 @@ export function ProductVariantsGrid(props: {
                 ))}
             </div>
             {col ? (
-              <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 2 }}>
-                <span
-                  style={{
-                    width: 10,
-                    height: 10,
-                    borderRadius: "50%",
-                    border: "1px solid rgba(255,255,255,.18)",
-                    background: normalizeColor(col),
-                    display: "inline-block",
-                  }}
-                />
+              <div style={{ marginTop: 2, fontSize: 13, fontWeight: 800, opacity: 0.88 }}>
+                Цвет: {col}
               </div>
             ) : null}
             <div style={{ marginTop: 8, display: "flex", alignItems: "baseline", gap: 8, flexWrap: "wrap" }}>

@@ -18,6 +18,8 @@ create table if not exists public.products (
   category_id uuid not null references public.categories(id) on delete restrict,
   base_price integer not null default 0,
   image_urls jsonb not null default '[]'::jsonb,
+  card_colors jsonb not null default '[]'::jsonb,
+  characteristics_text text not null default '',
   is_active boolean not null default true,
   created_at timestamptz not null default now()
 );

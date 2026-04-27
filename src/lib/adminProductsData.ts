@@ -9,6 +9,8 @@ export type AdminProduct = {
   isActive: boolean;
   categorySlug?: string;
   categoryTitle?: string;
+  cardColors: string[];
+  characteristicsText: string;
   variants: Array<{
     id: string;
     productId: string;
@@ -133,22 +135,40 @@ async function restJson<T>(path: string): Promise<T> {
   return JSON.parse(text) as T;
 }
 
+function isMissingProductSettingsColumn(error: unknown) {
+  const message = error instanceof Error ? error.message : String(error);
+  return message.includes("card_colors") || message.includes("characteristics_text");
+}
+
+async function loadProductRows() {
+  type ProductRow = {
+    id: string;
+    slug: string;
+    title: string;
+    subtitle: string;
+    category_id: string;
+    base_price: number;
+    image_urls: string[] | null;
+    card_colors?: string[] | null;
+    characteristics_text?: string | null;
+    is_active: boolean;
+    categories: { slug: string; title: string } | null;
+  };
+
+  const baseSelect = "id,slug,title,subtitle,category_id,base_price,image_urls,is_active,categories:category_id(slug,title)";
+  const fullSelect = "id,slug,title,subtitle,category_id,base_price,image_urls,card_colors,characteristics_text,is_active,categories:category_id(slug,title)";
+  try {
+    return await restJson<ProductRow[]>(`products?select=${fullSelect}&order=base_price.desc`);
+  } catch (error) {
+    if (!isMissingProductSettingsColumn(error)) throw error;
+    return restJson<ProductRow[]>(`products?select=${baseSelect}&order=base_price.desc`);
+  }
+}
+
 export async function loadAdminProductsFromDb(): Promise<AdminProduct[]> {
   const [iphoneCats, data, variantsData] = await Promise.all([
     restJson<Array<{ id: string; slug: string; title: string }>>("categories?select=id,slug,title&slug=eq.iphone&limit=1"),
-    restJson<
-      Array<{
-        id: string;
-        slug: string;
-        title: string;
-        subtitle: string;
-        category_id: string;
-        base_price: number;
-        image_urls: string[] | null;
-        is_active: boolean;
-        categories: { slug: string; title: string } | null;
-      }>
-    >("products?select=id,slug,title,subtitle,category_id,base_price,image_urls,is_active,categories:category_id(slug,title)&order=base_price.desc"),
+    loadProductRows(),
     restJson<
       Array<{
         id: string;
@@ -197,6 +217,8 @@ export async function loadAdminProductsFromDb(): Promise<AdminProduct[]> {
     category_id: string;
     base_price: number;
     image_urls: string[] | null;
+    card_colors?: string[] | null;
+    characteristics_text?: string | null;
     is_active: boolean;
     categories: { slug: string; title: string } | null;
   }>;
@@ -215,6 +237,8 @@ export async function loadAdminProductsFromDb(): Promise<AdminProduct[]> {
       categoryId: normalizedCategoryId,
       basePrice: p.base_price,
       imageUrls: p.image_urls || [],
+      cardColors: Array.isArray(p.card_colors) ? p.card_colors : [],
+      characteristicsText: p.characteristics_text || "",
       isActive: p.is_active,
       categorySlug: normalizedCategorySlug,
       categoryTitle: normalizedCategoryTitle,

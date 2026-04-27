@@ -24,6 +24,8 @@ type Product = {
   categoryTitle?: string;
   basePrice: number;
   imageUrls: string[];
+  cardColors: string[];
+  characteristicsText: string;
   isActive: boolean;
   variants: Variant[];
 };
@@ -40,6 +42,7 @@ export default function AdminProductsPage() {
   const [newCategoryId, setNewCategoryId] = useState<string>("");
   const [creating, setCreating] = useState(false);
   const [loadError, setLoadError] = useState("");
+  const [uploading, setUploading] = useState<Record<string, boolean>>({});
 
   async function load() {
     setLoadError("");
@@ -104,7 +107,14 @@ export default function AdminProductsPage() {
     const fd = new FormData();
     fd.set("file", file);
     fd.set("folder", folder);
-    const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
+    const controller = new AbortController();
+    const timer = window.setTimeout(() => controller.abort(), 30000);
+    let res: Response;
+    try {
+      res = await fetch("/api/admin/upload", { method: "POST", body: fd, signal: controller.signal, cache: "no-store" });
+    } finally {
+      window.clearTimeout(timer);
+    }
     if (res.status === 401) {
       window.location.href = "/admin/login";
       throw new Error("unauthorized");
@@ -117,15 +127,25 @@ export default function AdminProductsPage() {
   }
 
   async function uploadProductImage(productId: string, file: File) {
-    const url = await uploadImage(file, "products");
-    // Save immediately (no URL input in UI).
-    await patchProduct(productId, { imageUrls: [url] });
+    const key = `product:${productId}`;
+    setUploading((prev) => ({ ...prev, [key]: true }));
+    try {
+      const url = await uploadImage(file, "products");
+      await patchProduct(productId, { imageUrls: [url] });
+    } finally {
+      setUploading((prev) => ({ ...prev, [key]: false }));
+    }
   }
 
   async function uploadVariantImage(variantId: string, file: File) {
-    const url = await uploadImage(file, "variants");
-    // Save immediately (no URL input in UI).
-    await patchVariant(variantId, { imageUrl: url } as any);
+    const key = `variant:${variantId}`;
+    setUploading((prev) => ({ ...prev, [key]: true }));
+    try {
+      const url = await uploadImage(file, "variants");
+      await patchVariant(variantId, { imageUrl: url } as any);
+    } finally {
+      setUploading((prev) => ({ ...prev, [key]: false }));
+    }
   }
 
   async function createProduct() {
@@ -145,6 +165,8 @@ export default function AdminProductsPage() {
           categoryId: newCategoryId,
           basePrice: 0,
           imageUrls: [],
+          cardColors: [],
+          characteristicsText: "",
           isActive: true,
           variants: [],
         }),
@@ -258,6 +280,10 @@ export default function AdminProductsPage() {
     return products.filter((p) => `${p.title} ${p.slug} ${p.categoryTitle || ""}`.toLowerCase().includes(s));
   }, [products, q]);
 
+  function updateProduct(id: string, patch: Partial<Product>) {
+    setProducts((prev) => prev.map((x) => (x.id === id ? { ...x, ...patch } : x)));
+  }
+
   return (
     <main style={{ padding: 16, maxWidth: 1200, margin: "0 auto" }}>
       <h1 style={{ margin: "12px 0 12px" }}>Товары</h1>
@@ -365,6 +391,42 @@ export default function AdminProductsPage() {
                 </div>
 
                 <div>
+                  <div style={lbl}>Цвета карточки модели</div>
+                  <input
+                    value={(p.cardColors || []).join(", ")}
+                    onChange={(e) => updateProduct(p.id, { cardColors: parseColors(e.target.value) })}
+                    style={input}
+                    placeholder="orange, blue, silver или #ff6600"
+                  />
+                  <div style={{ display: "flex", gap: 6, marginTop: 8, flexWrap: "wrap" }}>
+                    {(p.cardColors || []).map((color, idx) => (
+                      <span
+                        key={`${p.id}-card-color-${idx}-${color}`}
+                        title={color}
+                        style={{
+                          width: 16,
+                          height: 16,
+                          borderRadius: 999,
+                          border: "1px solid rgba(255,255,255,.28)",
+                          background: normalizeColor(color),
+                          display: "inline-block",
+                        }}
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <div style={lbl}>Характеристики</div>
+                  <textarea
+                    value={p.characteristicsText || ""}
+                    onChange={(e) => updateProduct(p.id, { characteristicsText: e.target.value })}
+                    style={{ ...input, minHeight: 120, resize: "vertical" }}
+                    placeholder={"Например:\nДисплей: 6.3\nПроцессор: A19 Pro\nКамера: 48 МП"}
+                  />
+                </div>
+
+                <div>
                   <div style={lbl}>Фото модели</div>
                   <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
                     <div
@@ -378,9 +440,11 @@ export default function AdminProductsPage() {
                         alignItems: "center",
                         justifyContent: "center",
                         overflow: "hidden",
+                        position: "relative",
                       }}
                     >
-                      {p.imageUrls && p.imageUrls[0] ? <img src={p.imageUrls[0]} alt="" style={{ width: "100%", height: "100%", objectFit: "contain" }} /> : <span style={{ opacity: 0.6, fontSize: 12 }}>нет</span>}
+                      {p.imageUrls && p.imageUrls[0] ? <img src={p.imageUrls[0]} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : <span style={{ opacity: 0.6, fontSize: 12 }}>нет</span>}
+                      {uploading[`product:${p.id}`] ? <div style={uploadOverlay}>загрузка…</div> : null}
                     </div>
                     <input
                       type="file"
@@ -403,7 +467,15 @@ export default function AdminProductsPage() {
                 <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                   <button
                     onClick={() =>
-                      patchProduct(p.id, { slug: p.slug, title: p.title, subtitle: p.subtitle, categoryId: p.categoryId, imageUrls: p.imageUrls })
+                      patchProduct(p.id, {
+                        slug: p.slug,
+                        title: p.title,
+                        subtitle: p.subtitle,
+                        categoryId: p.categoryId,
+                        imageUrls: p.imageUrls,
+                        cardColors: p.cardColors || [],
+                        characteristicsText: p.characteristicsText || "",
+                      })
                     }
                     style={btnPrimary}
                   >
@@ -424,16 +496,17 @@ export default function AdminProductsPage() {
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 12 }}>
                 {p.variants.map((v) => (
                   <div key={v.id} style={{ border: "1px solid #2d2d2d", borderRadius: 24, overflow: "hidden", background: "#141414", boxShadow: "0 10px 30px rgba(0,0,0,.25)" }}>
-                    <div style={{ height: 180, background: "#101010", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <div style={{ height: 180, background: "#101010", display: "flex", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden" }}>
                       {(v as any).imageUrl || (p.imageUrls && p.imageUrls[0]) ? (
                         <img
                           src={String((v as any).imageUrl || (p.imageUrls && p.imageUrls[0]) || "")}
                           alt=""
-                          style={{ width: "100%", height: "100%", objectFit: "contain" }}
+                          style={{ width: "100%", height: "100%", objectFit: "cover" }}
                         />
                       ) : (
                         <span style={{ opacity: 0.6, fontSize: 12 }}>нет фото</span>
                       )}
+                      {uploading[`variant:${v.id}`] ? <div style={uploadOverlay}>загрузка…</div> : null}
                     </div>
 
                     <div style={{ padding: 12, display: "grid", gap: 8 }}>
@@ -583,6 +656,17 @@ const btnPrimarySmall: React.CSSProperties = { padding: "8px 12px", borderRadius
 const btnDanger: React.CSSProperties = { padding: "8px 12px", borderRadius: 999, border: "1px solid #333", background: "transparent", color: "#ff8533", fontWeight: 900, fontSize: 12 };
 const btnChip = (bg: string): React.CSSProperties => ({ padding: "8px 12px", borderRadius: 999, border: "1px solid #333", background: bg, color: "white", fontWeight: 900, fontSize: 12 });
 const btnLink: React.CSSProperties = { padding: "8px 12px", borderRadius: 999, border: "1px solid #333", background: "#1b1b1b", color: "white", fontWeight: 900, fontSize: 12, textDecoration: "none" };
+const uploadOverlay: React.CSSProperties = {
+  position: "absolute",
+  inset: 0,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  background: "rgba(0,0,0,.62)",
+  color: "white",
+  fontSize: 12,
+  fontWeight: 900,
+};
 
 function slugify(s: string) {
   return (s || "")
@@ -591,5 +675,40 @@ function slugify(s: string) {
     .replaceAll("ё", "e")
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
+}
+
+function parseColors(value: string) {
+  return Array.from(
+    new Set(
+      String(value || "")
+        .split(/[,;\n]/)
+        .map((x) => x.trim())
+        .filter(Boolean),
+    ),
+  ).slice(0, 64);
+}
+
+function normalizeColor(value: string) {
+  const raw = String(value || "").trim();
+  if (/^#([0-9a-f]{3}|[0-9a-f]{6}|[0-9a-f]{8})$/i.test(raw)) return raw;
+  const dict: Record<string, string> = {
+    black: "#111",
+    white: "#f7f7f7",
+    silver: "#c9c9c9",
+    blue: "#3f6fd8",
+    pink: "#f0a6c1",
+    green: "#6fa56f",
+    yellow: "#e4c347",
+    orange: "#ff7a1a",
+    purple: "#8d62c9",
+    gold: "#d6b46a",
+    natural: "#b7b0a6",
+    graphite: "#3a3a3a",
+    midnight: "#1f2530",
+    starlight: "#e7dfcf",
+    lavender: "#b9a7df",
+    sage: "#7b8f7a",
+  };
+  return dict[raw.toLowerCase()] || raw || "#777";
 }
 

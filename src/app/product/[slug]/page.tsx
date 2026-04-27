@@ -2,39 +2,40 @@ import { notFound } from "next/navigation";
 import { supabaseService } from "@/lib/supabaseServer";
 import { ProductVariantsGrid } from "./ui";
 
-function simLabel(t: string) {
-  const m: Record<string, string> = { sim_esim: "SIM + eSIM", esim: "eSIM", sim: "SIM" };
-  return m[t] || t;
-}
-
 export default async function ProductPage(props: { params: Promise<{ slug: string }> }) {
   const { slug } = await props.params;
   const sb = supabaseService();
 
-  const { data, error } = await sb
-    .from("products")
-    .select(
-      `
+  const fullSelect = `
+      id,slug,title,subtitle,base_price,image_urls,characteristics_text,
+      categories:category_id ( slug,title ),
+      product_variants ( id, storage_gb, sim_type, colors, image_url, price, sku, in_stock )
+    `;
+  const legacySelect = `
       id,slug,title,subtitle,base_price,image_urls,
       categories:category_id ( slug,title ),
       product_variants ( id, storage_gb, sim_type, colors, image_url, price, sku, in_stock )
-    `,
-    )
+    `;
+
+  let result = await sb
+    .from("products")
+    .select(fullSelect)
     .eq("slug", slug)
     .limit(1)
     .maybeSingle();
+  if (result.error && result.error.message.includes("characteristics_text")) {
+    result = await sb.from("products").select(legacySelect).eq("slug", slug).limit(1).maybeSingle();
+  }
+  const { data, error } = result;
 
   if (error || !data) return notFound();
 
-  const row = data as typeof data & { categories?: { title?: string } | null };
-  const categoryTitle = row.categories && typeof row.categories === "object" && "title" in row.categories ? row.categories.title : null;
-
   const variants = (data.product_variants || []).slice().sort((a: { price?: number }, b: { price?: number }) => (a.price ?? 0) - (b.price ?? 0));
-  const minPrice = variants.length ? Math.min(...variants.map((v: { price?: number }) => v.price ?? data.base_price ?? 0)) : data.base_price ?? 0;
 
-  const rawUrls = data.image_urls;
-  const imageUrls: string[] = Array.isArray(rawUrls) ? (rawUrls as string[]).filter(Boolean) : [];
-  const heroImage = imageUrls[0] ?? null;
+  // PDP hero is configured separately from product model images.
+  // Do not bind hero to admin model `image_urls`.
+  const heroImage: string | null = null;
+  const characteristicsText = typeof (data as { characteristics_text?: unknown }).characteristics_text === "string" ? (data as { characteristics_text: string }).characteristics_text.trim() : "";
 
   return (
     <main className="pdp-main">
@@ -52,34 +53,22 @@ export default async function ProductPage(props: { params: Promise<{ slug: strin
           <img src={heroImage} alt={data.title} />
         ) : (
           <div className="pdp-gallery-empty">
-            Фото скоро появится
-            <div style={{ fontSize: 13, fontWeight: 600, marginTop: 8, opacity: 0.75 }}>Сейчас в базе может не быть картинки — можно загрузить в админке</div>
+            Хиро баннер будет настроен отдельно
           </div>
         )}
+        <div className="pdp-hero-title">
+          <h1 className="pdp-h1">{data.title}</h1>
+        </div>
       </section>
 
       <section className="pdp-buy" style={{ marginTop: 14 }}>
-        <div className="pdp-cat-pill">{categoryTitle || "Товар"}</div>
-        <h1 className="pdp-h1">{data.title}</h1>
-        {data.subtitle ? <div className="pdp-sub">{data.subtitle}</div> : null}
-
-        <div className="pdp-price-row">
-          <div className="pdp-price-value">{Number(minPrice).toLocaleString("ru-RU")} ₽</div>
-        </div>
-
-        {variants[0] ? (
-          <div className="pdp-meta">
-            <span className="pdp-chip">{simLabel(String(variants[0].sim_type || ""))}</span>
-          </div>
-        ) : null}
-
-        <div style={{ marginTop: 16 }}>
+        <div>
           <div style={{ fontSize: 13, fontWeight: 900, opacity: 0.85, marginBottom: 10, letterSpacing: 0.2 }}>Варианты</div>
           <ProductVariantsGrid
             productId={data.id}
             title={data.title}
             baseSubtitle={data.subtitle || ""}
-            fallbackImageUrl={heroImage}
+            fallbackImageUrl={null}
             variants={variants.map((v: Record<string, unknown>) => ({
               id: String(v.id),
               storageGb: Number(v.storage_gb),
@@ -103,6 +92,13 @@ export default async function ProductPage(props: { params: Promise<{ slug: strin
           </a>
         </div>
       </section>
+
+      {characteristicsText ? (
+        <section className="pdp-characteristics" aria-label="Характеристики товара">
+          <h2>Характеристики</h2>
+          <div className="pdp-characteristics-text">{characteristicsText}</div>
+        </section>
+      ) : null}
     </main>
   );
 }

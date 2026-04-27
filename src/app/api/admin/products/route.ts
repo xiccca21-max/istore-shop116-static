@@ -45,6 +45,8 @@ const CreateSchema = z.object({
   categoryId: z.string().min(1),
   basePrice: z.number().int().nonnegative().default(0),
   imageUrls: z.array(z.string()).default([]),
+  cardColors: z.array(z.string().trim().min(1)).max(64).default([]),
+  characteristicsText: z.string().optional().default(""),
   isActive: z.boolean().default(true),
   variants: z.array(VariantSchema).default([]),
 });
@@ -63,6 +65,8 @@ export async function POST(req: NextRequest) {
     category_id: payload.categoryId,
     base_price: payload.basePrice,
     image_urls: payload.imageUrls,
+    card_colors: payload.cardColors,
+    characteristics_text: payload.characteristicsText,
     is_active: payload.isActive,
   });
   if (prodErr) return NextResponse.json({ error: prodErr.message }, { status: 500 });
@@ -90,6 +94,8 @@ export async function POST(req: NextRequest) {
     categoryId: payload.categoryId,
     basePrice: payload.basePrice,
     imageUrls: payload.imageUrls,
+    cardColors: payload.cardColors,
+    characteristicsText: payload.characteristicsText,
     isActive: payload.isActive,
     variants: cachedVariants.map((v) => ({
       id: v.id,
@@ -114,6 +120,8 @@ const PatchSchema = z.object({
   categoryId: z.string().min(1).optional(),
   basePrice: z.number().int().nonnegative().optional(),
   imageUrls: z.array(z.string()).optional(),
+  cardColors: z.array(z.string().trim().min(1)).max(64).optional(),
+  characteristicsText: z.string().optional(),
   isActive: z.boolean().optional(),
 });
 
@@ -128,6 +136,8 @@ export async function PATCH(req: NextRequest) {
   if (payload.categoryId !== undefined) patch.category_id = payload.categoryId;
   if (payload.basePrice !== undefined) patch.base_price = payload.basePrice;
   if (payload.imageUrls !== undefined) patch.image_urls = payload.imageUrls;
+  if (payload.cardColors !== undefined) patch.card_colors = payload.cardColors;
+  if (payload.characteristicsText !== undefined) patch.characteristics_text = payload.characteristicsText;
   if (payload.isActive !== undefined) patch.is_active = payload.isActive;
   if (!Object.keys(patch).length) return NextResponse.json({ error: "no_fields" }, { status: 400 });
 
@@ -141,6 +151,8 @@ export async function PATCH(req: NextRequest) {
     ...(payload.categoryId !== undefined ? { categoryId: payload.categoryId } : {}),
     ...(payload.basePrice !== undefined ? { basePrice: payload.basePrice } : {}),
     ...(payload.imageUrls !== undefined ? { imageUrls: payload.imageUrls } : {}),
+    ...(payload.cardColors !== undefined ? { cardColors: payload.cardColors } : {}),
+    ...(payload.characteristicsText !== undefined ? { characteristicsText: payload.characteristicsText } : {}),
     ...(payload.isActive !== undefined ? { isActive: payload.isActive } : {}),
   });
   return NextResponse.json({ ok: true });
