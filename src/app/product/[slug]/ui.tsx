@@ -100,7 +100,7 @@ export function ProductVariantsGrid(props: {
           >
             {img ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={img} alt={props.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              <img src={img} alt={props.title} style={{ width: "100%", height: "100%", objectFit: "cover", transform: "scale(1.42)" }} />
             ) : (
               <div style={{ fontSize: 12, opacity: 0.7 }}>Фото</div>
             )}

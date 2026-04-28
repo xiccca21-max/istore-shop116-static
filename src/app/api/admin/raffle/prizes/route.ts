@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { ADMIN_COOKIE_NAME, verifySessionToken } from "@/lib/adminAuth";
 import { z } from "zod";
 import crypto from "node:crypto";
-import { supabaseService } from "@/lib/supabaseServer";
 
 async function mustAuth(req: NextRequest) {
   const token = req.cookies.get(ADMIN_COOKIE_NAME)?.value;
@@ -17,11 +16,11 @@ function mustEnv(name: string) {
   return value;
 }
 
-async function raffleRest(path: string, init: RequestInit) {
+async function raffleRest(path: string, init: RequestInit = {}) {
   const baseUrl = mustEnv("SUPABASE_URL").replace(/\/$/, "");
   const serviceKey = mustEnv("SUPABASE_SERVICE_ROLE_KEY");
   let lastError: unknown;
-  for (let attempt = 0; attempt < 2; attempt += 1) {
+  for (let attempt = 0; attempt < 3; attempt += 1) {
     try {
       const response = await fetch(`${baseUrl}/rest/v1/raffle_prizes${path}`, {
         ...init,
@@ -30,13 +29,14 @@ async function raffleRest(path: string, init: RequestInit) {
           authorization: `Bearer ${serviceKey}`,
           ...(init.headers || {}),
         },
-        signal: AbortSignal.timeout(12000),
+        signal: AbortSignal.timeout(5000),
       });
       const text = await response.text();
       if (!response.ok) throw new Error(text || `Supabase REST ${response.status}`);
       return text;
     } catch (error) {
       lastError = error;
+      if (attempt < 2) await new Promise((resolve) => setTimeout(resolve, 350 * (attempt + 1)));
     }
   }
   throw lastError instanceof Error ? lastError : new Error(String(lastError));
@@ -46,13 +46,13 @@ export async function GET(req: NextRequest) {
   const auth = await mustAuth(req);
   if (auth) return auth;
 
-  const sb = supabaseService();
-  const { data, error } = await sb
-    .from("raffle_prizes")
-    .select("id,title,product_id,sort_order,is_active,created_at,products:product_id(id,slug,title)")
-    .order("sort_order", { ascending: true })
-    .order("created_at", { ascending: true });
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  let data: unknown[] = [];
+  try {
+    const text = await raffleRest("?select=id,title,product_id,sort_order,is_active,created_at,products:product_id(id,slug,title)&order=sort_order.asc,created_at.asc");
+    data = JSON.parse(text || "[]") as unknown[];
+  } catch (error) {
+    return NextResponse.json({ error: error instanceof Error ? error.message : String(error) }, { status: 500 });
+  }
 
   const rows = (data || []) as unknown as Array<{
     id: string;

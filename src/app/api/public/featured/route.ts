@@ -1,5 +1,38 @@
 import { NextResponse } from "next/server";
-import { supabaseAnon } from "@/lib/supabaseServer";
+
+const REST_TIMEOUT_MS = 5_000;
+const REST_RETRIES = 3;
+
+function must(name: string) {
+  const value = process.env[name];
+  if (!value) throw new Error(`Missing env ${name}`);
+  return value;
+}
+
+async function featuredRest(path: string) {
+  const baseUrl = must("SUPABASE_URL").replace(/\/$/, "");
+  const anonKey = must("SUPABASE_ANON_KEY");
+  let lastError: unknown;
+  for (let attempt = 0; attempt < REST_RETRIES; attempt += 1) {
+    try {
+      const response = await fetch(`${baseUrl}/rest/v1/homepage_featured_products${path}`, {
+        headers: {
+          apikey: anonKey,
+          authorization: `Bearer ${anonKey}`,
+        },
+        cache: "no-store",
+        signal: AbortSignal.timeout(REST_TIMEOUT_MS),
+      });
+      const text = await response.text();
+      if (!response.ok) throw new Error(text || `Supabase REST ${response.status}`);
+      return text;
+    } catch (error) {
+      lastError = error;
+      if (attempt < REST_RETRIES - 1) await new Promise((resolve) => setTimeout(resolve, 350 * (attempt + 1)));
+    }
+  }
+  throw lastError instanceof Error ? lastError : new Error(String(lastError));
+}
 
 type ApiProduct = {
   id: string;
@@ -10,6 +43,9 @@ type ApiProduct = {
   basePrice: number;
   imageUrls: string[];
   cardColors: string[];
+  cardImageScale: number;
+  cardImagePositionX: number;
+  cardImagePositionY: number;
   characteristicsText: string;
   isActive: boolean;
   variants: Array<{
@@ -26,20 +62,26 @@ type ApiProduct = {
 };
 
 export async function GET() {
-  const sb = supabaseAnon();
-
   const fullSelect =
-    "id,sort_order,is_active,product_id,products:product_id(id,slug,title,subtitle,category_id,base_price,image_urls,card_colors,characteristics_text,is_active,product_variants(id,storage_gb,sim_type,colors,image_url,price,sku,in_stock))";
+    "id,sort_order,is_active,product_id,products:product_id(id,slug,title,subtitle,category_id,base_price,image_urls,card_colors,card_image_scale::text,card_image_position_x,card_image_position_y,characteristics_text,is_active,product_variants(id,storage_gb,sim_type,colors,image_url,price,sku,in_stock))";
   const legacySelect =
     "id,sort_order,is_active,product_id,products:product_id(id,slug,title,subtitle,category_id,base_price,image_urls,is_active,product_variants(id,storage_gb,sim_type,colors,image_url,price,sku,in_stock))";
-  let result: any = await sb.from("homepage_featured_products").select(fullSelect).eq("is_active", true).order("sort_order", { ascending: true });
-  if (result.error && (result.error.message.includes("card_colors") || result.error.message.includes("characteristics_text"))) {
-    result = await sb.from("homepage_featured_products").select(legacySelect).eq("is_active", true).order("sort_order", { ascending: true });
+  let data: unknown[] = [];
+  try {
+    const text = await featuredRest(`?select=${encodeURIComponent(fullSelect)}&is_active=eq.true&order=sort_order.asc`);
+    data = JSON.parse(text || "[]") as unknown[];
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    if (!message.includes("card_colors") && !message.includes("characteristics_text") && !message.includes("card_image_scale") && !message.includes("card_image_position")) {
+      return NextResponse.json({ error: message }, { status: 500 });
+    }
+    try {
+      const text = await featuredRest(`?select=${encodeURIComponent(legacySelect)}&is_active=eq.true&order=sort_order.asc`);
+      data = JSON.parse(text || "[]") as unknown[];
+    } catch (fallbackError) {
+      return NextResponse.json({ error: fallbackError instanceof Error ? fallbackError.message : String(fallbackError) }, { status: 500 });
+    }
   }
-
-  const { data, error } = result;
-
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
   const rows = (data || []) as unknown as Array<{
     products: {
@@ -51,6 +93,9 @@ export async function GET() {
       base_price: number;
       image_urls: string[] | null;
       card_colors?: string[] | null;
+      card_image_scale?: number | null;
+      card_image_position_x?: number | null;
+      card_image_position_y?: number | null;
       characteristics_text?: string | null;
       is_active: boolean;
       product_variants: Array<{
@@ -78,6 +123,9 @@ export async function GET() {
       basePrice: p!.base_price,
       imageUrls: p!.image_urls || [],
       cardColors: Array.isArray(p!.card_colors) ? p!.card_colors : [],
+      cardImageScale: Number(p!.card_image_scale || 1.42),
+      cardImagePositionX: Number(p!.card_image_position_x ?? 50),
+      cardImagePositionY: Number(p!.card_image_position_y ?? 50),
       characteristicsText: p!.characteristics_text || "",
       isActive: p!.is_active,
       variants: (p!.product_variants || []).map((v) => ({

@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { ADMIN_COOKIE_NAME, verifySessionToken } from "@/lib/adminAuth";
 import { z } from "zod";
 import crypto from "node:crypto";
-import { supabaseService } from "@/lib/supabaseServer";
 
 async function mustAuth(req: NextRequest) {
   const token = req.cookies.get(ADMIN_COOKIE_NAME)?.value;
@@ -17,11 +16,11 @@ function mustEnv(name: string) {
   return value;
 }
 
-async function heroRest(path: string, init: RequestInit) {
+async function heroRest(path: string, init: RequestInit = {}) {
   const baseUrl = mustEnv("SUPABASE_URL").replace(/\/$/, "");
   const serviceKey = mustEnv("SUPABASE_SERVICE_ROLE_KEY");
   let lastError: unknown;
-  for (let attempt = 0; attempt < 2; attempt += 1) {
+  for (let attempt = 0; attempt < 3; attempt += 1) {
     try {
       const response = await fetch(`${baseUrl}/rest/v1/hero_slides${path}`, {
         ...init,
@@ -30,13 +29,15 @@ async function heroRest(path: string, init: RequestInit) {
           authorization: `Bearer ${serviceKey}`,
           ...(init.headers || {}),
         },
-        signal: AbortSignal.timeout(12000),
+        cache: "no-store",
+        signal: AbortSignal.timeout(5000),
       });
       const text = await response.text();
       if (!response.ok) throw new Error(text || `Supabase REST ${response.status}`);
       return text;
     } catch (error) {
       lastError = error;
+      if (attempt < 2) await new Promise((resolve) => setTimeout(resolve, 350 * (attempt + 1)));
     }
   }
   throw lastError instanceof Error ? lastError : new Error(String(lastError));
@@ -45,15 +46,21 @@ async function heroRest(path: string, init: RequestInit) {
 export async function GET(req: NextRequest) {
   const auth = await mustAuth(req);
   if (auth) return auth;
-  const sb = supabaseService();
-  const withImage = await sb.from("hero_slides").select("id,title,image_url,sort_order,is_active").order("sort_order", { ascending: true });
-  const fallback =
-    withImage.error && withImage.error.message.toLowerCase().includes("image_url")
-      ? await sb.from("hero_slides").select("id,title,sort_order,is_active").order("sort_order", { ascending: true })
-      : null;
-  const data = (fallback ? fallback.data : withImage.data) || [];
-  const error = fallback ? fallback.error : withImage.error;
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  let data: unknown[] = [];
+  try {
+    const text = await heroRest("?select=id,title,image_url,sort_order,is_active&order=sort_order.asc");
+    data = JSON.parse(text || "[]") as unknown[];
+  } catch (error) {
+    if (!(error instanceof Error) || !error.message.toLowerCase().includes("image_url")) {
+      return NextResponse.json({ error: error instanceof Error ? error.message : String(error) }, { status: 500 });
+    }
+    try {
+      const text = await heroRest("?select=id,title,sort_order,is_active&order=sort_order.asc");
+      data = JSON.parse(text || "[]") as unknown[];
+    } catch (fallbackError) {
+      return NextResponse.json({ error: fallbackError instanceof Error ? fallbackError.message : String(fallbackError) }, { status: 500 });
+    }
+  }
 
   const rows = data as unknown as Array<{ id: string; title: string; image_url?: string | null; sort_order: number; is_active: boolean }>;
   const mapped = rows.map((s) => ({

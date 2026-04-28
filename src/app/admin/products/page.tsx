@@ -26,6 +26,9 @@ type Product = {
   basePrice: number;
   imageUrls: string[];
   cardColors: string[];
+  cardImageScale: number;
+  cardImagePositionX: number;
+  cardImagePositionY: number;
   characteristicsText: string;
   isActive: boolean;
   variants: Variant[];
@@ -69,7 +72,7 @@ export default function AdminProductsPage() {
 
     if (pResult.status === "fulfilled" && pResult.value.ok) {
       const pj = await pResult.value.json();
-      const nextProducts = Array.isArray(pj.data) ? pj.data : [];
+      const nextProducts = normalizeProducts(Array.isArray(pj.data) ? pj.data : []);
       setProducts(nextProducts);
       setCardColorDrafts({});
     } else if (pResult.status === "fulfilled") {
@@ -175,6 +178,9 @@ export default function AdminProductsPage() {
           basePrice: 0,
           imageUrls: [],
           cardColors: [],
+          cardImageScale: 1.42,
+          cardImagePositionX: 50,
+          cardImagePositionY: 50,
           characteristicsText: "",
           isActive: true,
           variants: [],
@@ -301,8 +307,22 @@ export default function AdminProductsPage() {
     setProducts((prev) => prev.map((x) => (x.id === id ? { ...x, ...patch } : x)));
   }
 
+  function updateVariantLocal(id: string, patch: Partial<Variant>) {
+    setProducts((prev) => prev.map((p) => ({ ...p, variants: p.variants.map((v) => (v.id === id ? { ...v, ...patch } : v)) })));
+  }
+
   function cardColorText(product: Product) {
     return cardColorDrafts[product.id] ?? (product.cardColors || []).join(", ");
+  }
+
+  function cardImageStyle(product: Product): React.CSSProperties {
+    return {
+      width: "100%",
+      height: "100%",
+      objectFit: "cover",
+      objectPosition: `${Number(product.cardImagePositionX ?? 50)}% ${Number(product.cardImagePositionY ?? 50)}%`,
+      transform: `scale(${Number(product.cardImageScale || 1.42)})`,
+    };
   }
 
   return (
@@ -442,6 +462,89 @@ export default function AdminProductsPage() {
                 </div>
 
                 <div>
+                  <div style={lbl}>Обрезка картинки в карточках</div>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}>
+                    <div style={{ display: "grid", gap: 6 }}>
+                      <label style={{ fontSize: 12, opacity: 0.85 }}>Зум</label>
+                      <input
+                        type="range"
+                        min="1"
+                        max="3"
+                        step="0.01"
+                        value={Number(p.cardImageScale || 1.42)}
+                        onChange={(e) => updateProduct(p.id, { cardImageScale: Number(e.target.value) })}
+                      />
+                      <input
+                        type="number"
+                        min="1"
+                        max="3"
+                        step="0.01"
+                        value={Number(p.cardImageScale || 1.42)}
+                        onChange={(e) => updateProduct(p.id, { cardImageScale: Number(e.target.value) })}
+                        style={input}
+                      />
+                    </div>
+                    <div style={{ display: "grid", gap: 6 }}>
+                      <label style={{ fontSize: 12, opacity: 0.85 }}>X (%)</label>
+                      <input
+                        type="range"
+                        min="0"
+                        max="100"
+                        step="1"
+                        value={Number(p.cardImagePositionX ?? 50)}
+                        onChange={(e) => updateProduct(p.id, { cardImagePositionX: Number(e.target.value) })}
+                      />
+                      <input
+                        type="number"
+                        min="0"
+                        max="100"
+                        step="1"
+                        value={Number(p.cardImagePositionX ?? 50)}
+                        onChange={(e) => updateProduct(p.id, { cardImagePositionX: Number(e.target.value) })}
+                        style={input}
+                      />
+                    </div>
+                    <div style={{ display: "grid", gap: 6 }}>
+                      <label style={{ fontSize: 12, opacity: 0.85 }}>Y (%)</label>
+                      <input
+                        type="range"
+                        min="0"
+                        max="100"
+                        step="1"
+                        value={Number(p.cardImagePositionY ?? 50)}
+                        onChange={(e) => updateProduct(p.id, { cardImagePositionY: Number(e.target.value) })}
+                      />
+                      <input
+                        type="number"
+                        min="0"
+                        max="100"
+                        step="1"
+                        value={Number(p.cardImagePositionY ?? 50)}
+                        onChange={(e) => updateProduct(p.id, { cardImagePositionY: Number(e.target.value) })}
+                        style={input}
+                      />
+                    </div>
+                  </div>
+                  <div style={{ display: "flex", gap: 8, marginTop: 8, flexWrap: "wrap" }}>
+                    <button onClick={() => updateProduct(p.id, { cardImageScale: 1.42, cardImagePositionX: 50, cardImagePositionY: 50 })} style={btnChip("#1b1b1b")}>
+                      Сбросить
+                    </button>
+                    <button
+                      onClick={() =>
+                        patchProduct(p.id, {
+                          cardImageScale: Number(p.cardImageScale || 1.42),
+                          cardImagePositionX: Number(p.cardImagePositionX ?? 50),
+                          cardImagePositionY: Number(p.cardImagePositionY ?? 50),
+                        })
+                      }
+                      style={btnChip("#1b1b1b")}
+                    >
+                      Сохранить обрезку
+                    </button>
+                  </div>
+                </div>
+
+                <div>
                   <div style={lbl}>Характеристики</div>
                   <textarea
                     value={p.characteristicsText || ""}
@@ -468,10 +571,19 @@ export default function AdminProductsPage() {
                         position: "relative",
                       }}
                     >
-                      {p.imageUrls && p.imageUrls[0] ? <img src={p.imageUrls[0]} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : <span style={{ opacity: 0.6, fontSize: 12 }}>нет</span>}
+                      {p.imageUrls && p.imageUrls[0] ? <img src={p.imageUrls[0]} alt="" style={cardImageStyle(p)} /> : <span style={{ opacity: 0.6, fontSize: 12 }}>нет</span>}
                       {uploading[`product:${p.id}`] ? <div style={uploadOverlay}>загрузка…</div> : null}
                     </div>
                     <div style={{ display: "grid", gap: 6 }}>
+                      <input
+                        value={(p.imageUrls && p.imageUrls[0]) || ""}
+                        onChange={(e) => updateProduct(p.id, { imageUrls: e.target.value.trim() ? [e.target.value] : [] })}
+                        style={input}
+                        placeholder="Или вставь URL картинки модели"
+                      />
+                      <button onClick={() => patchProduct(p.id, { imageUrls: p.imageUrls || [] })} style={btnChip("#1b1b1b")}>
+                        Сохранить URL
+                      </button>
                       <UploadButton
                         id={`product-image-${p.id}`}
                         label={uploading[`product:${p.id}`] ? "Загружаю фото…" : "Загрузить фото модели"}
@@ -501,6 +613,9 @@ export default function AdminProductsPage() {
                         categoryId: p.categoryId,
                         imageUrls: p.imageUrls,
                         cardColors: parseColors(cardColorText(p)),
+                        cardImageScale: Number(p.cardImageScale || 1.42),
+                        cardImagePositionX: Number(p.cardImagePositionX ?? 50),
+                        cardImagePositionY: Number(p.cardImagePositionY ?? 50),
                         characteristicsText: p.characteristicsText || "",
                       })
                     }
@@ -528,7 +643,7 @@ export default function AdminProductsPage() {
                         <img
                           src={String((v as any).imageUrl || (p.imageUrls && p.imageUrls[0]) || "")}
                           alt=""
-                          style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                          style={cardImageStyle(p)}
                         />
                       ) : (
                         <span style={{ opacity: 0.6, fontSize: 12 }}>нет фото</span>
@@ -619,6 +734,17 @@ export default function AdminProductsPage() {
 
                       <div>
                         <div style={lbl}>Фото варианта</div>
+                        <div style={{ display: "grid", gap: 6, marginBottom: 8 }}>
+                          <input
+                            value={String((v as any).imageUrl || "")}
+                            onChange={(e) => updateVariantLocal(v.id, { imageUrl: e.target.value.trim() || null } as any)}
+                            style={input}
+                            placeholder="Или вставь URL картинки варианта"
+                          />
+                          <button onClick={() => patchVariant(v.id, { imageUrl: (v as any).imageUrl || null } as any)} style={btnChip("#1b1b1b")}>
+                            Сохранить URL
+                          </button>
+                        </div>
                         <UploadButton
                           id={`variant-image-${v.id}`}
                           label={uploading[`variant:${v.id}`] ? "Загружаю фото…" : "Загрузить фото варианта"}
@@ -762,6 +888,29 @@ function parseColors(value: string) {
         .filter(Boolean),
     ),
   ).slice(0, 64);
+}
+
+function normalizeProducts(value: any[]): Product[] {
+  const seenProducts = new Set<string>();
+  const products: Product[] = [];
+
+  for (const item of value) {
+    const id = String(item?.id || "");
+    if (!id || seenProducts.has(id)) continue;
+    seenProducts.add(id);
+
+    const seenVariants = new Set<string>();
+    const variants = (Array.isArray(item?.variants) ? item.variants : []).filter((variant: any) => {
+      const variantId = String(variant?.id || "");
+      if (!variantId || seenVariants.has(variantId)) return false;
+      seenVariants.add(variantId);
+      return true;
+    });
+
+    products.push({ ...item, variants });
+  }
+
+  return products;
 }
 
 function normalizeColor(value: string) {

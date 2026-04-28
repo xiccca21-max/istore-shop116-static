@@ -10,6 +10,9 @@ type ApiProduct = {
   basePrice: number;
   imageUrls: string[];
   cardColors: string[];
+  cardImageScale: number;
+  cardImagePositionX: number;
+  cardImagePositionY: number;
   characteristicsText: string;
   isActive: boolean;
   categorySlug?: string;
@@ -121,11 +124,11 @@ export async function GET(req: Request) {
 
   function isMissingProductSettingsColumn(error: unknown) {
     const message = error instanceof Error ? error.message : String(error);
-    return message.includes("card_colors") || message.includes("characteristics_text");
+    return message.includes("card_colors") || message.includes("characteristics_text") || message.includes("card_image_scale") || message.includes("card_image_position");
   }
 
   const fullProductSelect = `
-          id,slug,title,subtitle,category_id,base_price,image_urls,card_colors,characteristics_text,is_active,
+          id,slug,title,subtitle,category_id,base_price,image_urls,card_colors,card_image_scale,card_image_position_x,card_image_position_y,characteristics_text,is_active,
           categories:category_id ( slug,title ),
           product_variants ( id, storage_gb, sim_type, colors, image_url, price, sku, in_stock )
         `;
@@ -227,6 +230,9 @@ export async function GET(req: Request) {
         base_price: number;
         image_urls: string[] | null;
         card_colors?: string[] | null;
+        card_image_scale?: number | null;
+        card_image_position_x?: number | null;
+        card_image_position_y?: number | null;
         characteristics_text?: string | null;
         is_active: boolean;
         categories: { slug: string; title: string } | null;
@@ -251,6 +257,9 @@ export async function GET(req: Request) {
         basePrice: p.base_price,
         imageUrls: p.image_urls || [],
         cardColors: Array.isArray(p.card_colors) ? p.card_colors : [],
+        cardImageScale: Number(p.card_image_scale || 1.42),
+        cardImagePositionX: Number(p.card_image_position_x ?? 50),
+        cardImagePositionY: Number(p.card_image_position_y ?? 50),
         characteristicsText: p.characteristics_text || "",
         isActive: p.is_active,
         categorySlug: p.categories?.slug,
@@ -346,6 +355,9 @@ export async function GET(req: Request) {
     base_price: number;
     image_urls: string[] | null;
     card_colors?: string[] | null;
+    card_image_scale?: number | null;
+    card_image_position_x?: number | null;
+    card_image_position_y?: number | null;
     characteristics_text?: string | null;
     is_active: boolean;
     categories: { slug: string; title: string } | null;
@@ -370,6 +382,9 @@ export async function GET(req: Request) {
     basePrice: p.base_price,
     imageUrls: p.image_urls || [],
     cardColors: Array.isArray(p.card_colors) ? p.card_colors : [],
+    cardImageScale: Number(p.card_image_scale || 1.42),
+    cardImagePositionX: Number(p.card_image_position_x ?? 50),
+    cardImagePositionY: Number(p.card_image_position_y ?? 50),
     characteristicsText: p.characteristics_text || "",
     isActive: p.is_active,
     categorySlug: p.categories?.slug,

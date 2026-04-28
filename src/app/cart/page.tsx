@@ -72,7 +72,7 @@ export default function CartPage() {
               >
                 {it.imageUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={it.imageUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+                  <img src={it.imageUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", transform: "scale(1.42)" }} />
                 ) : null}
               </div>
               <div>

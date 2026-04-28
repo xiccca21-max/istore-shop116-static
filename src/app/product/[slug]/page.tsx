@@ -1,34 +1,11 @@
 import { notFound } from "next/navigation";
-import { supabaseService } from "@/lib/supabaseServer";
+import { loadProductDetailBySlug } from "@/lib/productDetailData";
 import { ProductDetail941 } from "./details";
 
 export default async function ProductPage(props: { params: Promise<{ slug: string }> }) {
   const { slug } = await props.params;
-  const sb = supabaseService();
-
-  const fullSelect = `
-      id,slug,title,subtitle,base_price,image_urls,characteristics_text,
-      categories:category_id ( slug,title ),
-      product_variants ( id, storage_gb, sim_type, colors, image_url, price, sku, in_stock )
-    `;
-  const legacySelect = `
-      id,slug,title,subtitle,base_price,image_urls,
-      categories:category_id ( slug,title ),
-      product_variants ( id, storage_gb, sim_type, colors, image_url, price, sku, in_stock )
-    `;
-
-  let result = await sb
-    .from("products")
-    .select(fullSelect)
-    .eq("slug", slug)
-    .limit(1)
-    .maybeSingle();
-  if (result.error && result.error.message.includes("characteristics_text")) {
-    result = await sb.from("products").select(legacySelect).eq("slug", slug).limit(1).maybeSingle();
-  }
-  const { data, error } = result;
-
-  if (error || !data) return notFound();
+  const data = await loadProductDetailBySlug(slug);
+  if (!data) return notFound();
 
   const variants = (data.product_variants || []).slice().sort((a: { price?: number }, b: { price?: number }) => (a.price ?? 0) - (b.price ?? 0));
   const characteristicsText = typeof (data as { characteristics_text?: unknown }).characteristics_text === "string" ? (data as { characteristics_text: string }).characteristics_text.trim() : "";
@@ -50,6 +27,9 @@ export default async function ProductPage(props: { params: Promise<{ slug: strin
           subtitle: data.subtitle || "",
           categoryTitle: (data.categories as { title?: string } | null)?.title,
           imageUrls: Array.isArray(data.image_urls) ? data.image_urls : [],
+          cardImageScale: Number((data as { card_image_scale?: unknown }).card_image_scale || 1.42),
+          cardImagePositionX: Number((data as { card_image_position_x?: unknown }).card_image_position_x ?? 50),
+          cardImagePositionY: Number((data as { card_image_position_y?: unknown }).card_image_position_y ?? 50),
           characteristicsText,
         }}
         variants={variants.map((v: Record<string, unknown>) => ({

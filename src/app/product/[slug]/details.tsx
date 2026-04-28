@@ -1,4 +1,5 @@
 import { AddToCartButton } from "@/components/products/AddToCartButton";
+import type { CSSProperties } from "react";
 
 export type ProductDetailVariant = {
   id: string;
@@ -17,6 +18,9 @@ export type ProductDetailProduct = {
   subtitle: string;
   categoryTitle?: string;
   imageUrls: string[];
+  cardImageScale: number;
+  cardImagePositionX: number;
+  cardImagePositionY: number;
   characteristicsText: string;
 };
 
@@ -136,6 +140,11 @@ export function ProductDetail941(props: {
   const mainImage = images[0] || null;
   const showSim = shouldShowSim(props.product, variants);
   const groups = optionGroups(variants, selected, showSim);
+  const imageStyle = {
+    "--pdp-card-image-scale": String(Number(props.product.cardImageScale || 1.42)),
+    "--pdp-card-image-x": `${Number(props.product.cardImagePositionX ?? 50)}%`,
+    "--pdp-card-image-y": `${Number(props.product.cardImagePositionY ?? 50)}%`,
+  } as CSSProperties;
 
   return (
     <>
@@ -144,7 +153,7 @@ export function ProductDetail941(props: {
           <div className="pdp-941-main-image">
             {mainImage ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={mainImage} alt={title} />
+              <img src={mainImage} alt={title} style={imageStyle} />
             ) : (
               <div className="pdp-gallery-empty">Фото товара</div>
             )}
@@ -154,7 +163,7 @@ export function ProductDetail941(props: {
               {images.slice(0, 8).map((src, index) => (
                 <div className="pdp-941-thumb" key={`${src}-${index}`}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={src} alt="" />
+                  <img src={src} alt="" style={imageStyle} />
                 </div>
               ))}
             </div>

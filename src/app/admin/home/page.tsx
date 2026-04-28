@@ -298,7 +298,7 @@ export default function AdminHomePage() {
               >
                 <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                   <div style={thumbSmall}>
-                    {f.product.imageUrls?.[0] ? <img src={f.product.imageUrls[0]} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : null}
+                    {f.product.imageUrls?.[0] ? <img src={f.product.imageUrls[0]} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", transform: "scale(1.42)" }} /> : null}
                   </div>
                   <div>
                     <div style={{ fontWeight: 900 }}>{f.product.title}</div>

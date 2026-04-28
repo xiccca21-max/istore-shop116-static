@@ -108,7 +108,7 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
 .product-card{background:var(--panel);border:1px solid #2d2d2d;border-radius:24px;overflow:hidden;box-shadow:var(--shadow);transition:border-color .2s}
 .product-card:hover{border-color:var(--accent)}
 .product-media{height:260px;background:#181818;padding:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.product-media img{height:100%;width:100%;object-fit:cover}
+.product-media img{height:100%;width:100%;object-fit:cover;transform:scale(1.42)}
 .product-body{padding:16px 18px 20px}
 .product-title{font-size:20px;font-weight:700;margin-bottom:6px;line-height:1.2}
 .product-sub{font-size:13px;color:var(--muted);margin-bottom:14px}
@@ -124,6 +124,12 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
 .catalog-tile-img{height:160px;width:100%;display:flex;align-items:center;justify-content:center}
 .catalog-tile-img img{max-height:100%;max-width:100%;object-fit:contain}
 .catalog-tile-name{font-size:22px;font-weight:700;text-align:center}
+.catalog-loading-card{position:relative;overflow:hidden;background:var(--panel);border:1px solid #2d2d2d;border-radius:26px;min-height:260px;padding:28px 20px;box-shadow:var(--shadow)}
+.catalog-loading-card::after{content:"";position:absolute;inset:0;transform:translateX(-100%);background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent);animation:catalogShimmer 1.15s infinite}
+.catalog-loading-img,.catalog-loading-line{background:#2b2b2b;border-radius:18px}
+.catalog-loading-img{height:160px;width:100%;margin-bottom:20px}
+.catalog-loading-line{height:22px;width:68%;margin:0 auto}
+@keyframes catalogShimmer{100%{transform:translateX(100%)}}
 .empty-state{background:var(--panel);border:1px dashed #3a3a3a;border-radius:24px;padding:60px 24px;text-align:center;color:var(--muted);font-size:18px}
 .products-wrap{position:relative;min-height:240px}
 .list-loading{display:none;position:absolute;inset:0;align-items:center;justify-content:center}
@@ -411,10 +417,23 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
         : '<div style="height:100%;display:flex;align-items:center;justify-content:center;color:#777;font-weight:900">Фото</div>';
       return '<a class="catalog-tile" href="/catalog/'+encodeURIComponent(c.slug||'')+'/"><div class="catalog-tile-img">'+image+'</div><div class="catalog-tile-name">'+title+'</div></a>';
     }
+    function renderCatalogLoading(){
+      var html="";
+      for(var i=0;i<8;i++){
+        html+='<div class="catalog-loading-card" aria-hidden="true"><div class="catalog-loading-img"></div><div class="catalog-loading-line"></div></div>';
+      }
+      return html;
+    }
+    function cardImageStyle(p){
+      var scale=Math.max(1,Math.min(3,Number(p&&p.cardImageScale)||1.42));
+      var x=Math.max(0,Math.min(100,Number(p&&p.cardImagePositionX)));
+      var y=Math.max(0,Math.min(100,Number(p&&p.cardImagePositionY)));
+      return 'width:100%;height:100%;object-fit:cover;object-position:'+(isFinite(x)?x:50)+'% '+(isFinite(y)?y:50)+'%;transform:scale('+scale+')';
+    }
     async function loadCatalogTiles(){
       const tiles=document.getElementById("catalogTiles")
       if(!tiles) return
-      tiles.innerHTML=""
+      tiles.innerHTML=renderCatalogLoading()
       try{
         const json=await fetchJsonWithTimeout("/api/public/categories",10000)
         const items=(json&&Array.isArray(json.data))?json.data:[]
@@ -459,7 +478,7 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
           var imageUrl = (Array.isArray(p.imageUrls) && p.imageUrls[0]) ? String(p.imageUrls[0]) : "";
           if(!imageUrl && firstVariant && firstVariant.imageUrl) imageUrl = String(firstVariant.imageUrl);
           var media = imageUrl
-            ? '<img src="'+esc(imageUrl)+'" alt="'+esc(p.title||"")+'" style="width:100%;height:100%;object-fit:cover" loading="lazy">'
+            ? '<img src="'+esc(imageUrl)+'" alt="'+esc(p.title||"")+'" style="'+cardImageStyle(p)+'" loading="lazy">'
             : '<div style="opacity:.6;font-weight:900">Фото позже</div>';
           var href = "/product/"+encodeURIComponent(p.slug);
           if(variants.length === 1 && firstVariant && firstVariant.id) href += "/"+encodeURIComponent(firstVariant.id);
