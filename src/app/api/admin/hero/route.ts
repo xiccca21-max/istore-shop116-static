@@ -74,18 +74,23 @@ export async function GET(req: NextRequest) {
 }
 
 async function loadHeroRowsWithAvailableColumns(message: string) {
-  const canTryImage = !message.includes("image_url");
-  if (canTryImage) {
+  const selects = [
+    "id,title,image_url,link_url,sort_order,is_active",
+    "id,title,link_url,sort_order,is_active",
+    "id,title,image_url,sort_order,is_active",
+    "id,title,sort_order,is_active",
+  ];
+  let fallbackMessage = message;
+  for (const select of selects) {
     try {
-      const text = await heroRest("?select=id,title,image_url,sort_order,is_active&order=sort_order.asc");
+      const text = await heroRest(`?select=${select}&order=sort_order.asc`);
       return JSON.parse(text || "[]") as unknown[];
     } catch (error) {
-      const fallbackMessage = error instanceof Error ? error.message.toLowerCase() : String(error).toLowerCase();
-      if (!fallbackMessage.includes("image_url")) throw error;
+      fallbackMessage = error instanceof Error ? error.message.toLowerCase() : String(error).toLowerCase();
+      if (!fallbackMessage.includes("image_url") && !fallbackMessage.includes("link_url")) throw error;
     }
   }
-  const text = await heroRest("?select=id,title,sort_order,is_active&order=sort_order.asc");
-  return JSON.parse(text || "[]") as unknown[];
+  throw new Error(fallbackMessage);
 }
 
 const CreateSchema = z.object({
@@ -123,7 +128,18 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: error instanceof Error ? error.message : String(error) }, { status: 500 });
     }
     const message = error.message.toLowerCase();
-    if (message.includes("link_url")) delete row.link_url;
+    if (message.includes("link_url")) {
+      if (payload.linkUrl) {
+        return NextResponse.json(
+          {
+            error: "hero_link_url_column_missing",
+            message: "Hero link cannot be saved: apply migration that adds hero_slides.link_url",
+          },
+          { status: 409 },
+        );
+      }
+      delete row.link_url;
+    }
     if (message.includes("image_url")) delete row.image_url;
     if (!message.includes("link_url") && !message.includes("image_url")) {
       return NextResponse.json({ error: error.message }, { status: 500 });
@@ -182,8 +198,13 @@ export async function PATCH(req: NextRequest) {
       ignored.push("imageUrl");
     }
     if (message.includes("link_url") && "link_url" in patch) {
-      delete patch.link_url;
-      ignored.push("linkUrl");
+      return NextResponse.json(
+        {
+          error: "hero_link_url_column_missing",
+          message: "Hero link cannot be saved: apply migration that adds hero_slides.link_url",
+        },
+        { status: 409 },
+      );
     }
     if (!ignored.length) {
       return NextResponse.json({ error: error.message }, { status: 500 });

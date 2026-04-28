@@ -57,17 +57,22 @@ export async function GET() {
 }
 
 async function loadHeroRowsWithAvailableColumns(message: string) {
-  const canTryImage = !message.includes("image_url");
-  if (canTryImage) {
+  const selects = [
+    "id,title,image_url,link_url,sort_order,is_active",
+    "id,title,link_url,sort_order,is_active",
+    "id,title,image_url,sort_order,is_active",
+    "id,title,sort_order,is_active",
+  ];
+  let fallbackMessage = message;
+  for (const select of selects) {
     try {
-      const text = await heroRest("?select=id,title,image_url,sort_order,is_active&is_active=eq.true&order=sort_order.asc");
+      const text = await heroRest(`?select=${select}&is_active=eq.true&order=sort_order.asc`);
       return JSON.parse(text || "[]") as unknown[];
     } catch (error) {
-      const fallbackMessage = error instanceof Error ? error.message.toLowerCase() : String(error).toLowerCase();
-      if (!fallbackMessage.includes("image_url")) throw error;
+      fallbackMessage = error instanceof Error ? error.message.toLowerCase() : String(error).toLowerCase();
+      if (!fallbackMessage.includes("image_url") && !fallbackMessage.includes("link_url")) throw error;
     }
   }
-  const text = await heroRest("?select=id,title,sort_order,is_active&is_active=eq.true&order=sort_order.asc");
-  return JSON.parse(text || "[]") as unknown[];
+  throw new Error(fallbackMessage);
 }
 

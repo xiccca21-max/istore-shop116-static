@@ -17,6 +17,7 @@ export default function AdminHomePage() {
   const [slides, setSlides] = useState<Slide[]>([]);
   const [title, setTitle] = useState("");
   const [uploadingId, setUploadingId] = useState<string | null>(null);
+  const [heroNotice, setHeroNotice] = useState<string>("");
 
   const [featured, setFeatured] = useState<FeaturedRow[]>([]);
   const [q, setQ] = useState("");
@@ -92,6 +93,7 @@ export default function AdminHomePage() {
   }
 
   async function patchSlide(id: string, patch: Partial<Pick<Slide, "title" | "imageUrl" | "linkUrl" | "sortOrder">> & { isActive?: boolean }) {
+    setHeroNotice("");
     const res = await fetch("/api/admin/hero", {
       method: "PATCH",
       headers: { "content-type": "application/json" },
@@ -99,6 +101,16 @@ export default function AdminHomePage() {
     });
     if (res.status === 401) {
       window.location.href = "/admin/login";
+      return;
+    }
+    if (!res.ok) {
+      const json = await res.json().catch(() => null);
+      const message =
+        json?.message ||
+        (res.status === 409
+          ? "Ссылки для hero пока не сохраняются: в базе не применена миграция hero_slides.link_url."
+          : "Не удалось сохранить изменения hero-баннера.");
+      setHeroNotice(message);
       return;
     }
     await loadHero();
@@ -186,6 +198,11 @@ export default function AdminHomePage() {
         </div>
 
         <div style={{ display: "grid", gap: 10 }}>
+          {heroNotice ? (
+            <div style={{ border: "1px solid #5b2f2f", borderRadius: 12, padding: "10px 12px", background: "#2a1717", color: "#ffd7d7" }}>
+              {heroNotice}
+            </div>
+          ) : null}
           {slides.map((s) => (
             <div
               key={s.id}
