@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { uploadAdminImage } from "@/lib/adminImageUpload";
 
-type Slide = { id: string; title: string; imageUrl?: string | null; sortOrder: number; isActive: number };
+type Slide = { id: string; title: string; imageUrl?: string | null; linkUrl?: string | null; sortOrder: number; isActive: number };
 type FeaturedRow = {
   id: string;
   sortOrder: number;
@@ -89,6 +89,19 @@ export default function AdminHomePage() {
     } finally {
       setUploadingId(null);
     }
+  }
+
+  async function patchSlide(id: string, patch: Partial<Pick<Slide, "title" | "imageUrl" | "linkUrl" | "sortOrder">> & { isActive?: boolean }) {
+    const res = await fetch("/api/admin/hero", {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ id, ...patch }),
+    });
+    if (res.status === 401) {
+      window.location.href = "/admin/login";
+      return;
+    }
+    await loadHero();
   }
 
   useEffect(() => {
@@ -189,6 +202,26 @@ export default function AdminHomePage() {
               <div>
                 <div style={{ fontWeight: 800 }}>{s.title}</div>
                 <div style={{ opacity: 0.7, fontSize: 12 }}>order: {s.sortOrder}</div>
+                <div style={{ display: "grid", gap: 6, marginTop: 10 }}>
+                  <input
+                    value={s.linkUrl || ""}
+                    onChange={(e) =>
+                      setSlides((prev) => prev.map((slide) => (slide.id === s.id ? { ...slide, linkUrl: e.target.value } : slide)))
+                    }
+                    placeholder="Ссылка при клике на баннер, например /catalog/iphone или https://..."
+                    style={input}
+                  />
+                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                    <button onClick={() => void patchSlide(s.id, { linkUrl: s.linkUrl?.trim() || null })} style={btnGhost}>
+                      Сохранить ссылку
+                    </button>
+                    {s.linkUrl ? (
+                      <a href={s.linkUrl} target="_blank" rel="noreferrer" style={btnLink}>
+                        Проверить
+                      </a>
+                    ) : null}
+                  </div>
+                </div>
                 <div style={{ marginTop: 8, display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
                   <div style={thumb} title={s.imageUrl || ""}>
                     {s.imageUrl ? <img src={s.imageUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : "no img"}
@@ -347,6 +380,8 @@ const cardHead: React.CSSProperties = { display: "flex", alignItems: "baseline",
 const cardTitle: React.CSSProperties = { fontWeight: 1000, fontSize: 18 };
 const btnPrimary: React.CSSProperties = { padding: "10px 14px", borderRadius: 999, border: "none", background: "#ff6600", color: "white", fontWeight: 900 };
 const btnGhost: React.CSSProperties = { padding: "8px 12px", borderRadius: 999, border: "1px solid #333", background: "#1b1b1b", color: "white", fontWeight: 900 };
+const btnLink: React.CSSProperties = { ...btnGhost, textDecoration: "none", display: "inline-flex", alignItems: "center" };
+const input: React.CSSProperties = { padding: "10px 12px", borderRadius: 12, border: "1px solid #333", background: "#161616", color: "white" };
 const thumb: React.CSSProperties = {
   width: 140,
   height: 60,

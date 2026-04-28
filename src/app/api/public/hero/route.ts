@@ -34,26 +34,40 @@ async function heroRest(path: string) {
 export async function GET() {
   let data: unknown[] = [];
   try {
-    const text = await heroRest("?select=id,title,image_url,sort_order,is_active&is_active=eq.true&order=sort_order.asc");
+    const text = await heroRest("?select=id,title,image_url,link_url,sort_order,is_active&is_active=eq.true&order=sort_order.asc");
     data = JSON.parse(text || "[]") as unknown[];
   } catch (error) {
-    if (!(error instanceof Error) || !error.message.toLowerCase().includes("image_url")) {
+    if (!(error instanceof Error)) {
       return NextResponse.json({ error: error instanceof Error ? error.message : String(error) }, { status: 500 });
     }
-    try {
-      const text = await heroRest("?select=id,title,sort_order,is_active&is_active=eq.true&order=sort_order.asc");
-      data = JSON.parse(text || "[]") as unknown[];
-    } catch (fallbackError) {
-      return NextResponse.json({ error: fallbackError instanceof Error ? fallbackError.message : String(fallbackError) }, { status: 500 });
+    const message = error.message.toLowerCase();
+    if (!message.includes("image_url") && !message.includes("link_url")) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
     }
+    data = await loadHeroRowsWithAvailableColumns(message);
   }
 
-  type HeroRow = { id: string; title: string; image_url?: string | null; sort_order?: number; is_active?: boolean };
+  type HeroRow = { id: string; title: string; image_url?: string | null; link_url?: string | null; sort_order?: number; is_active?: boolean };
   const enriched = (data as HeroRow[]).map((s) => {
     if (!s) return s;
-    return { ...s, image_url: s.image_url ?? null };
+    return { ...s, image_url: s.image_url ?? null, link_url: s.link_url ?? null, linkUrl: s.link_url ?? null };
   });
 
   return NextResponse.json({ data: enriched });
+}
+
+async function loadHeroRowsWithAvailableColumns(message: string) {
+  const canTryImage = !message.includes("image_url");
+  if (canTryImage) {
+    try {
+      const text = await heroRest("?select=id,title,image_url,sort_order,is_active&is_active=eq.true&order=sort_order.asc");
+      return JSON.parse(text || "[]") as unknown[];
+    } catch (error) {
+      const fallbackMessage = error instanceof Error ? error.message.toLowerCase() : String(error).toLowerCase();
+      if (!fallbackMessage.includes("image_url")) throw error;
+    }
+  }
+  const text = await heroRest("?select=id,title,sort_order,is_active&is_active=eq.true&order=sort_order.asc");
+  return JSON.parse(text || "[]") as unknown[];
 }
 
