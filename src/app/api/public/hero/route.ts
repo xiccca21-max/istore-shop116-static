@@ -50,7 +50,8 @@ export async function GET() {
   type HeroRow = { id: string; title: string; image_url?: string | null; link_url?: string | null; sort_order?: number; is_active?: boolean };
   const enriched = (data as HeroRow[]).map((s) => {
     if (!s) return s;
-    return { ...s, image_url: s.image_url ?? null, link_url: s.link_url ?? null, linkUrl: s.link_url ?? null };
+    const imageUrl = s.image_url ?? s.link_url ?? null;
+    return { ...s, image_url: imageUrl, link_url: s.link_url ?? null, linkUrl: s.link_url ?? null };
   });
 
   return NextResponse.json({ data: enriched });
