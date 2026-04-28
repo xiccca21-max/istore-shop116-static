@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { supabaseAnon } from "@/lib/supabaseServer";
 
 type ApiProduct = {
   id: string;
@@ -31,6 +30,73 @@ type ApiProduct = {
 };
 
 const cacheByCategory = new Map<string, { at: number; data: ApiProduct[] }>();
+const REST_TIMEOUT_MS = 5_000;
+const REST_RETRIES = 3;
+
+type ProductRow = {
+  id: string;
+  slug: string;
+  title: string;
+  subtitle: string;
+  category_id: string;
+  base_price: number;
+  image_urls: string[] | null;
+  card_colors?: string[] | null;
+  card_image_scale?: number | null;
+  card_image_position_x?: number | null;
+  card_image_position_y?: number | null;
+  characteristics_text?: string | null;
+  is_active: boolean;
+  categories: { slug: string; title: string } | null;
+  product_variants: Array<{
+    id: string;
+    storage_gb: number;
+    sim_type: string;
+    colors: string[] | null;
+    image_url?: string | null;
+    price: number;
+    sku: string | null;
+    in_stock: boolean;
+  }> | null;
+};
+
+function must(name: string) {
+  const value = process.env[name];
+  if (!value) throw new Error(`Missing env ${name}`);
+  return value;
+}
+
+async function restJson<T>(table: string, params: URLSearchParams): Promise<T> {
+  const baseUrl = must("SUPABASE_URL").replace(/\/$/, "");
+  const anonKey = must("SUPABASE_ANON_KEY");
+  let lastError: unknown = null;
+
+  for (let attempt = 0; attempt < REST_RETRIES; attempt += 1) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), REST_TIMEOUT_MS);
+    try {
+      const response = await fetch(`${baseUrl}/rest/v1/${table}?${params.toString()}`, {
+        headers: {
+          apikey: anonKey,
+          authorization: `Bearer ${anonKey}`,
+        },
+        cache: "no-store",
+        signal: controller.signal,
+      });
+      const text = await response.text();
+      if (!response.ok) throw new Error(text || `Supabase REST ${response.status}`);
+      return JSON.parse(text) as T;
+    } catch (error) {
+      lastError = error;
+      if (attempt === REST_RETRIES - 1) break;
+      await new Promise((resolve) => setTimeout(resolve, 300 * (attempt + 1)));
+    } finally {
+      clearTimeout(timeout);
+    }
+  }
+
+  throw lastError instanceof Error ? lastError : new Error(String(lastError));
+}
 
 function collapseIphoneModels(items: ApiProduct[]): ApiProduct[] {
   const colorSuffixes = [
@@ -98,8 +164,6 @@ export async function GET(req: Request) {
   const limit = limitRaw ? Math.max(0, Math.min(50, parseInt(limitRaw, 10) || 0)) : 0;
   const cacheKey = `${categorySlug || "__all__"}|q=${searchQ.toLowerCase()}|l=${limit || 0}`;
 
-  const sb = supabaseAnon();
-
   function escLike(s: string) {
     // Escape characters meaningful to LIKE/ILIKE and PostgREST filters.
     return s.replaceAll("%", "\\%").replaceAll("_", "\\_").replaceAll(",", "\\,");
@@ -138,6 +202,57 @@ export async function GET(req: Request) {
           product_variants ( id, storage_gb, sim_type, colors, image_url, price, sku, in_stock )
         `;
 
+  function buildProductParams(select: string) {
+    const params = new URLSearchParams();
+    params.set("select", select);
+    params.set("is_active", "eq.true");
+    params.set("order", "base_price.desc,id.asc");
+    if (searchQ) {
+      const like = `*${escLike(searchQ)}*`;
+      params.set("or", `(title.ilike.${like},slug.ilike.${like},subtitle.ilike.${like})`);
+    }
+    if (limit) params.set("limit", String(limit));
+    return params;
+  }
+
+  async function loadProductRows(select: string, filter?: { categoryId?: string; categoryIds?: string[] }) {
+    const params = buildProductParams(select);
+    if (filter?.categoryId) params.set("category_id", `eq.${filter.categoryId}`);
+    if (filter?.categoryIds?.length) params.set("category_id", `in.(${filter.categoryIds.join(",")})`);
+    return restJson<ProductRow[]>("products", params);
+  }
+
+  function mapRows(rows: ProductRow[]): ApiProduct[] {
+    return rows.map((p) => ({
+      id: p.id,
+      slug: p.slug,
+      title: p.title,
+      subtitle: p.subtitle,
+      categoryId: p.category_id,
+      basePrice: p.base_price,
+      imageUrls: p.image_urls || [],
+      cardColors: Array.isArray(p.card_colors) ? p.card_colors : [],
+      cardImageScale: Number(p.card_image_scale || 1.42),
+      cardImagePositionX: Number(p.card_image_position_x ?? 50),
+      cardImagePositionY: Number(p.card_image_position_y ?? 50),
+      characteristicsText: p.characteristics_text || "",
+      isActive: p.is_active,
+      categorySlug: p.categories?.slug,
+      categoryTitle: p.categories?.title,
+      variants: (p.product_variants || []).map((v) => ({
+        id: v.id,
+        productId: p.id,
+        storageGb: v.storage_gb,
+        simType: v.sim_type,
+        colors: v.colors || [],
+        imageUrl: v.image_url ?? null,
+        price: v.price,
+        sku: v.sku,
+        inStock: v.in_stock,
+      })),
+    }));
+  }
+
   let categoryId: string | null = null;
   if (categorySlug) {
     const normalizedCategorySlug = (() => {
@@ -155,253 +270,63 @@ export async function GET(req: Request) {
 
     if (categorySlug === "iphone") {
       // Aggregator category: include all iPhone categories imported from the donor.
-      let catsResult;
+      let cats;
       try {
-        catsResult = await sb.from("categories").select("id,slug").or("slug.eq.iphone,slug.ilike.appleiphone%").abortSignal(AbortSignal.timeout(8000));
+        const params = new URLSearchParams();
+        params.set("select", "id,slug");
+        params.set("or", "(slug.eq.iphone,slug.ilike.appleiphone*)");
+        cats = await restJson<Array<{ id: string; slug: string }>>("categories", params);
       } catch (error) {
         return staleOrEmpty(error);
-      }
-      const { data: cats, error: catsErr } = catsResult;
-      if (catsErr) {
-        return staleOrEmpty(catsErr);
       }
       const ids = (cats || []).map((c: { id: string }) => c.id).filter(Boolean);
       if (!ids.length) return NextResponse.json({ data: [] });
 
-      let q: any = sb
-        .from("products")
-        .select(fullProductSelect)
-        .eq("is_active", true)
-        .in("category_id", ids)
-        .order("base_price", { ascending: false });
-
-      if (searchQ) {
-        const like = `%${escLike(searchQ)}%`;
-        q = q.or(`title.ilike.${like},slug.ilike.${like},subtitle.ilike.${like}`);
-      }
-      if (limit) q = q.limit(limit);
-
-      let result;
+      let rows;
       try {
-        result = await q.abortSignal(AbortSignal.timeout(8000));
+        rows = await loadProductRows(fullProductSelect, { categoryIds: ids });
       } catch (error) {
         if (isMissingProductSettingsColumn(error)) {
-          q = sb
-            .from("products")
-            .select(legacyProductSelect)
-            .eq("is_active", true)
-            .in("category_id", ids)
-            .order("base_price", { ascending: false });
-          if (searchQ) {
-            const like = `%${escLike(searchQ)}%`;
-            q = q.or(`title.ilike.${like},slug.ilike.${like},subtitle.ilike.${like}`);
-          }
-          if (limit) q = q.limit(limit);
-          result = await q.abortSignal(AbortSignal.timeout(8000));
+          rows = await loadProductRows(legacyProductSelect, { categoryIds: ids });
         } else {
           return staleOrEmpty(error);
         }
       }
-      if (result?.error && isMissingProductSettingsColumn(result.error)) {
-        q = sb
-          .from("products")
-          .select(legacyProductSelect)
-          .eq("is_active", true)
-          .in("category_id", ids)
-          .order("base_price", { ascending: false });
-        if (searchQ) {
-          const like = `%${escLike(searchQ)}%`;
-          q = q.or(`title.ilike.${like},slug.ilike.${like},subtitle.ilike.${like}`);
-        }
-        if (limit) q = q.limit(limit);
-        result = await q.abortSignal(AbortSignal.timeout(8000));
-      }
-      const { data, error } = result;
-      if (error) {
-        return staleOrEmpty(error);
-      }
 
-      const rows = (data || []) as unknown as Array<{
-        id: string;
-        slug: string;
-        title: string;
-        subtitle: string;
-        category_id: string;
-        base_price: number;
-        image_urls: string[] | null;
-        card_colors?: string[] | null;
-        card_image_scale?: number | null;
-        card_image_position_x?: number | null;
-        card_image_position_y?: number | null;
-        characteristics_text?: string | null;
-        is_active: boolean;
-        categories: { slug: string; title: string } | null;
-        product_variants: Array<{
-          id: string;
-          storage_gb: number;
-          sim_type: string;
-          colors: string[] | null;
-          image_url?: string | null;
-          price: number;
-          sku: string | null;
-          in_stock: boolean;
-        }> | null;
-      }>;
-
-      const mapped: ApiProduct[] = rows.map((p) => ({
-        id: p.id,
-        slug: p.slug,
-        title: p.title,
-        subtitle: p.subtitle,
-        categoryId: p.category_id,
-        basePrice: p.base_price,
-        imageUrls: p.image_urls || [],
-        cardColors: Array.isArray(p.card_colors) ? p.card_colors : [],
-        cardImageScale: Number(p.card_image_scale || 1.42),
-        cardImagePositionX: Number(p.card_image_position_x ?? 50),
-        cardImagePositionY: Number(p.card_image_position_y ?? 50),
-        characteristicsText: p.characteristics_text || "",
-        isActive: p.is_active,
-        categorySlug: p.categories?.slug,
-        categoryTitle: p.categories?.title,
-        variants: (p.product_variants || []).map((v) => ({
-          id: v.id,
-          productId: p.id,
-          storageGb: v.storage_gb,
-          simType: v.sim_type,
-          colors: v.colors || [],
-          imageUrl: v.image_url ?? null,
-          price: v.price,
-          sku: v.sku,
-          inStock: v.in_stock,
-        })),
-      }));
-
+      const mapped = mapRows(rows || []);
       const collapsed = collapseIphoneModels(mapped);
       const filtered = applySearchFilter(collapsed);
       cacheByCategory.set(cacheKey, { at: Date.now(), data: filtered });
       return NextResponse.json({ data: filtered });
     }
 
-    let catResult;
+    let cat;
     try {
-      catResult = await sb.from("categories").select("id").eq("slug", normalizedCategorySlug).abortSignal(AbortSignal.timeout(8000)).maybeSingle();
+      const params = new URLSearchParams();
+      params.set("select", "id");
+      params.set("slug", `eq.${normalizedCategorySlug}`);
+      params.set("limit", "1");
+      const rows = await restJson<Array<{ id: string }>>("categories", params);
+      cat = rows[0] || null;
     } catch (error) {
       return staleOrEmpty(error);
-    }
-    const { data: cat, error: catErr } = catResult;
-    if (catErr) {
-      return staleOrEmpty(catErr);
     }
     categoryId = cat?.id ?? null;
     if (!categoryId) return NextResponse.json({ data: [] });
   }
 
-  let q: any = sb
-    .from("products")
-    .select(fullProductSelect)
-    .eq("is_active", true)
-    .order("base_price", { ascending: false });
-
-  if (categoryId) q = q.eq("category_id", categoryId);
-  if (searchQ) {
-    const like = `%${escLike(searchQ)}%`;
-    q = q.or(`title.ilike.${like},slug.ilike.${like},subtitle.ilike.${like}`);
-  }
-  if (limit) q = q.limit(limit);
-
-  let result;
+  let rows;
   try {
-    result = await q.abortSignal(AbortSignal.timeout(8000));
+    rows = await loadProductRows(fullProductSelect, categoryId ? { categoryId } : undefined);
   } catch (error) {
     if (isMissingProductSettingsColumn(error)) {
-      q = sb
-        .from("products")
-        .select(legacyProductSelect)
-        .eq("is_active", true)
-        .order("base_price", { ascending: false });
-      if (categoryId) q = q.eq("category_id", categoryId);
-      if (searchQ) {
-        const like = `%${escLike(searchQ)}%`;
-        q = q.or(`title.ilike.${like},slug.ilike.${like},subtitle.ilike.${like}`);
-      }
-      if (limit) q = q.limit(limit);
-      result = await q.abortSignal(AbortSignal.timeout(8000));
+      rows = await loadProductRows(legacyProductSelect, categoryId ? { categoryId } : undefined);
     } else {
       return staleOrEmpty(error);
     }
   }
-  if (result?.error && isMissingProductSettingsColumn(result.error)) {
-    q = sb.from("products").select(legacyProductSelect).eq("is_active", true).order("base_price", { ascending: false });
-    if (categoryId) q = q.eq("category_id", categoryId);
-    if (searchQ) {
-      const like = `%${escLike(searchQ)}%`;
-      q = q.or(`title.ilike.${like},slug.ilike.${like},subtitle.ilike.${like}`);
-    }
-    if (limit) q = q.limit(limit);
-    result = await q.abortSignal(AbortSignal.timeout(8000));
-  }
-  const { data, error } = result;
-  if (error) {
-    return staleOrEmpty(error);
-  }
 
-  const rows = (data || []) as unknown as Array<{
-    id: string;
-    slug: string;
-    title: string;
-    subtitle: string;
-    category_id: string;
-    base_price: number;
-    image_urls: string[] | null;
-    card_colors?: string[] | null;
-    card_image_scale?: number | null;
-    card_image_position_x?: number | null;
-    card_image_position_y?: number | null;
-    characteristics_text?: string | null;
-    is_active: boolean;
-    categories: { slug: string; title: string } | null;
-    product_variants: Array<{
-      id: string;
-      storage_gb: number;
-      sim_type: string;
-      colors: string[] | null;
-      image_url?: string | null;
-      price: number;
-      sku: string | null;
-      in_stock: boolean;
-    }> | null;
-  }>;
-
-  const mapped: ApiProduct[] = rows.map((p) => ({
-    id: p.id,
-    slug: p.slug,
-    title: p.title,
-    subtitle: p.subtitle,
-    categoryId: p.category_id,
-    basePrice: p.base_price,
-    imageUrls: p.image_urls || [],
-    cardColors: Array.isArray(p.card_colors) ? p.card_colors : [],
-    cardImageScale: Number(p.card_image_scale || 1.42),
-    cardImagePositionX: Number(p.card_image_position_x ?? 50),
-    cardImagePositionY: Number(p.card_image_position_y ?? 50),
-    characteristicsText: p.characteristics_text || "",
-    isActive: p.is_active,
-    categorySlug: p.categories?.slug,
-    categoryTitle: p.categories?.title,
-    variants: (p.product_variants || []).map((v) => ({
-      id: v.id,
-      productId: p.id,
-      storageGb: v.storage_gb,
-      simType: v.sim_type,
-      colors: v.colors || [],
-      imageUrl: v.image_url ?? null,
-      price: v.price,
-      sku: v.sku,
-      inStock: v.in_stock,
-    })),
-  }));
-
+  const mapped = mapRows(rows || []);
   const filtered = applySearchFilter(mapped);
   cacheByCategory.set(cacheKey, { at: Date.now(), data: filtered });
   return NextResponse.json({ data: filtered });
