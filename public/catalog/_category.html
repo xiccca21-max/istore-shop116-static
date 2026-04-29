@@ -52,6 +52,8 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
 .breadcrumbs{margin:18px 4px 8px;color:var(--muted);font-size:13px}
 .breadcrumbs a{color:var(--muted)}.breadcrumbs a:hover{color:var(--accent)}
 .breadcrumbs span.sep{margin:0 6px;color:#444}
+.category-promo-banner{display:none;position:relative;border-radius:24px;overflow:hidden;border:1px solid #dcdcdc;box-shadow:var(--shadow);background:#fff;margin-bottom:16px}
+.category-promo-banner img{width:100%;height:auto;display:block;object-fit:contain}
 .grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
 .product-card{background:var(--panel);border:1px solid #2d2d2d;border-radius:24px;overflow:hidden;box-shadow:var(--shadow);transition:border-color .2s;display:block}
 .product-card:hover{border-color:var(--accent)}
@@ -114,7 +116,7 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
       <a href="/gifts/">Подарки</a>
       <a href="/raffle/">Розыгрыш</a>
       <a href="/#gift">Сертификат</a>
-      <a href="/iremont116/">Сервис</a>
+      <a href="/iremont116/">Ремонт</a>
       <a href="/#contacts">Контакты</a>
     </div>
     <div class="topbar-right">
@@ -161,7 +163,7 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
     <a href="/gifts/">Подарки</a>
     <a href="/raffle/">Розыгрыш</a>
     <a href="/#gift">Сертификат</a>
-    <a href="/iremont116/">Сервис</a>
+    <a href="/iremont116/">Ремонт</a>
     <a href="/#contacts">Контакты</a>
   </nav>
   <div class="mobile-cats-wrap" data-mobile-switcher>
@@ -179,7 +181,7 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
   <button class="mobile-strip-arrow next" type="button" aria-label="Следующие категории" data-mobile-strip-next>›</button>
   </div>
 
-  <nav class="breadcrumbs"><a href="/">Главная</a><span class="sep">/</span><a href="/catalog/">Каталог</a><span class="sep">/</span><span data-cat-title>Категория</span></nav><section class="section"><div class="section-head"><h1 class="section-title" data-cat-h1>Категория</h1></div><div class="products-wrap is-loading" id="productsWrap"><div class="list-loading" id="productsLoading" aria-label="loading"><div style="display:flex;align-items:center;justify-content:center"><span class="boot-dot"></span><span class="boot-dot"></span><span class="boot-dot"></span></div></div><div class="grid" id="productsGrid"></div></div><div class="empty-state" id="emptyState" style="display:none">Скоро в наличии</div></section>
+  <nav class="breadcrumbs"><a href="/">Главная</a><span class="sep">/</span><a href="/catalog/">Каталог</a><span class="sep">/</span><span data-cat-title>Категория</span></nav><section class="section"><a class="category-promo-banner" id="categoryPromoBanner" href="/gifts/" aria-label="Перейти к акции с подарками"><img src="/assets/iphone-gifts-banner.png" alt="При покупке iPhone дарим три подарка"></a><div class="section-head"><h1 class="section-title" data-cat-h1>Категория</h1></div><div class="products-wrap is-loading" id="productsWrap"><div class="list-loading" id="productsLoading" aria-label="loading"><div style="display:flex;align-items:center;justify-content:center"><span class="boot-dot"></span><span class="boot-dot"></span><span class="boot-dot"></span></div></div><div class="grid" id="productsGrid"></div></div><div class="empty-state" id="emptyState" style="display:none">Скоро в наличии</div></section>
 
   <footer class="footer">
     <div class="footer-grid">
@@ -257,6 +259,10 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
     'ipad':'ipad'
   };
   var querySlug = map[slug] || slug;
+  var promoBanner = document.getElementById('categoryPromoBanner');
+  if (promoBanner) {
+    promoBanner.style.display = (slug === 'iphone') ? 'block' : 'none';
+  }
 
   function setTitle(t){
     var el1=document.querySelector('[data-cat-title]');

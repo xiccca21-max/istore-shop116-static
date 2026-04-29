@@ -303,7 +303,7 @@
     { href: "/gifts/", label: "Подарки" },
     { href: "/raffle/", label: "Розыгрыш" },
     { href: "/#gift", label: "Сертификат" },
-    { href: "/iremont116/", label: "Сервис" },
+    { href: "/iremont116/", label: "Ремонт" },
     { href: "/#contacts", label: "Контакты" },
   ];
 
@@ -331,11 +331,12 @@
         body > .topbar, .page > .topbar{display:none !important}
 
         .header{position:sticky !important;top:6px !important;z-index:30 !important;background:rgba(30,30,30,.92) !important;backdrop-filter:blur(16px) !important;-webkit-backdrop-filter:blur(16px) !important;border:1px solid #323232 !important;border-radius:22px !important;padding:8px 10px !important;box-shadow:0 12px 36px rgba(0,0,0,.35) !important}
-        .header-row{display:grid !important;grid-template-columns:minmax(0,1fr) auto auto !important;align-items:center !important;gap:8px !important;padding:0 !important;margin:0 !important}
-        .header .logo-slot{display:none !important}
+        .header-row{display:grid !important;grid-template-columns:minmax(0,1fr) auto auto auto !important;align-items:center !important;gap:8px !important;padding:0 !important;margin:0 !important}
+        .header .logo-slot{display:flex !important;position:static !important;grid-column:2 !important;grid-row:1 !important;width:74px !important;height:30px !important;align-items:center !important;justify-content:center !important;overflow:visible !important}
+        .header .logo-slot img{height:100% !important;width:auto !important;object-fit:contain !important}
         .mobile-cats,.mobile-cats-wrap,.nav-more-toggle,.nav-more-menu,.nav-more-backdrop{display:none !important}
 
-        .mobile-menu-toggle{display:inline-flex !important;align-items:center;justify-content:center;grid-column:2 !important;grid-row:1 !important;width:30px !important;height:30px !important;padding:0 !important;border:0 !important;border-radius:0 !important;background:transparent !important;color:#f1f1f1 !important;font-size:0 !important;cursor:pointer}
+        .mobile-menu-toggle{display:inline-flex !important;align-items:center;justify-content:center;grid-column:3 !important;grid-row:1 !important;width:30px !important;height:30px !important;padding:0 !important;border:0 !important;border-radius:0 !important;background:transparent !important;color:#f1f1f1 !important;font-size:0 !important;cursor:pointer}
         .mobile-menu-toggle .burger{position:relative;width:14px;height:10px;display:inline-block;transform:scale(1.25);transform-origin:center;color:#f1f1f1}
         .mobile-menu-toggle .burger::before,.mobile-menu-toggle .burger::after,.mobile-menu-toggle .burger span{content:"";position:absolute;left:0;width:100%;height:2px;background:currentColor;border-radius:2px;transition:transform .2s ease,opacity .2s ease}
         .mobile-menu-toggle .burger::before{top:0}
@@ -345,17 +346,17 @@
         body.menu-open .mobile-menu-toggle .burger span{opacity:0}
         body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rotate(-45deg)}
 
-        .header-row .cart-link{display:inline-flex !important;align-items:center;justify-content:center;grid-column:3 !important;grid-row:1 !important;justify-self:end !important;margin:0 !important;width:30px !important;height:30px !important;padding:0 !important;border:0 !important;border-radius:0 !important;background:transparent !important;position:relative}
+        .header-row .cart-link{display:inline-flex !important;align-items:center;justify-content:center;grid-column:4 !important;grid-row:1 !important;justify-self:end !important;margin:0 !important;width:30px !important;height:30px !important;padding:0 !important;border:0 !important;border-radius:0 !important;background:transparent !important;position:relative}
         .header-row .cart-link svg{width:26px !important;height:26px !important}
         .header-row .cart-link .cart-badge{position:absolute;top:-4px;right:-4px;min-width:16px;height:16px;padding:0 4px;border-radius:999px;background:#ff6600;color:#fff;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;line-height:1}
 
-        .header-row .search{display:flex !important;align-items:center !important;grid-column:1 !important;grid-row:1 !important;justify-self:start !important;width:62% !important;min-width:200px !important;max-width:none !important;height:40px !important;padding:0 10px !important;gap:8px !important;border:1px solid #333 !important;background:#161616 !important;border-radius:999px !important;color:#7a7a7a !important;box-sizing:border-box}
+        .header-row .search{display:flex !important;align-items:center !important;grid-column:1 !important;grid-row:1 !important;justify-self:start !important;width:56% !important;min-width:180px !important;max-width:none !important;height:40px !important;padding:0 10px !important;gap:8px !important;border:1px solid #333 !important;background:#161616 !important;border-radius:999px !important;color:#7a7a7a !important;box-sizing:border-box}
         .header-row .search .search-icon{display:none !important}
         .header-row .search .search-input{flex:1 1 auto !important;min-width:0 !important;height:100% !important;border:0 !important;outline:0 !important;background:transparent !important;color:#ddd !important;font-size:13px !important;text-align:center !important}
         .header-row .search .search-input::placeholder{color:#7a7a7a !important}
         .header-row .search .search-btn{display:none !important}
 
-        .header .nav-shell{display:grid !important;grid-template-columns:auto minmax(0,1fr) auto !important;align-items:center !important;gap:6px !important;margin:8px 0 0 0 !important;padding:0 !important;position:static !important}
+        .header .nav-shell{display:grid !important;grid-template-columns:minmax(0,1fr) !important;align-items:center !important;gap:6px !important;margin:8px 0 0 0 !important;padding:0 !important;position:static !important}
         .header .nav-shell .nav{margin:0 !important;padding:0 0 2px 0 !important;gap:6px !important;display:flex !important;flex-wrap:nowrap !important;overflow-x:auto !important;overflow-y:hidden !important;-webkit-overflow-scrolling:touch !important;scroll-behavior:smooth !important;scrollbar-width:none !important}
         .header .nav-shell .nav::-webkit-scrollbar{display:none !important}
         .header .nav-shell .nav a{flex:0 0 auto !important;display:inline-flex !important;align-items:center !important;height:34px !important;padding:0 12px !important;border-radius:999px !important;background:#1b1b1b !important;border:1px solid #2d2d2d !important;color:#d9d9d9 !important;font-size:13px !important;white-space:nowrap !important;text-decoration:none !important}
@@ -363,7 +364,7 @@
         .header .nav-shell .nav a.active{background:#ff6600 !important;border-color:#ff6600 !important;color:#fff !important}
         .header .nav-shell .nav .label-short{display:none !important}
         .header .nav-shell .nav .label-full{display:inline !important}
-        .header .nav-shell .mobile-strip-arrow{display:grid !important;place-items:center !important;align-self:center !important;width:28px !important;height:36px !important;border:0 !important;background:transparent !important;color:#cfcfcf !important;font-size:20px !important;line-height:1 !important;padding:0 !important;cursor:pointer}
+        .header .nav-shell .mobile-strip-arrow{display:none !important}
       }
     `;
     document.head.appendChild(style);
@@ -467,7 +468,7 @@
     // 2. Remove any legacy mobile-only blocks that duplicate the strip.
     document.querySelectorAll(".mobile-cats, .mobile-cats-wrap").forEach((el) => el.remove());
 
-    // 3. Nav shell: arrow + nav + arrow inside the header (sibling of header-row).
+    // 3. Nav shell with touch-scrollable nav inside the header.
     let shell = header.querySelector(".nav-shell");
     let nav = header.querySelector(".nav");
     if (!nav) {
@@ -485,26 +486,7 @@
     shell.setAttribute("data-mobile-switcher", "");
     if (nav.parentElement !== shell) shell.appendChild(nav);
 
-    let prev = shell.querySelector("[data-mobile-strip-prev]");
-    if (!prev) {
-      prev = document.createElement("button");
-      prev.className = "mobile-strip-arrow prev";
-      prev.type = "button";
-      prev.setAttribute("aria-label", "Предыдущие категории");
-      prev.setAttribute("data-mobile-strip-prev", "");
-      prev.textContent = "‹";
-    }
-    let next = shell.querySelector("[data-mobile-strip-next]");
-    if (!next) {
-      next = document.createElement("button");
-      next.className = "mobile-strip-arrow next";
-      next.type = "button";
-      next.setAttribute("aria-label", "Следующие категории");
-      next.setAttribute("data-mobile-strip-next", "");
-      next.textContent = "›";
-    }
-    shell.insertBefore(prev, nav);
-    shell.appendChild(next);
+    shell.querySelectorAll("[data-mobile-strip-prev], [data-mobile-strip-next], .mobile-strip-arrow").forEach((el) => el.remove());
 
     // Ensure shell is the LAST child of header (after the row).
     if (header.lastElementChild !== shell) header.appendChild(shell);
@@ -554,11 +536,7 @@
       a.onclick = () => setMenuOpen(false);
     });
 
-    if (shell.getAttribute("data-bound-strip") !== "1") {
-      shell.setAttribute("data-bound-strip", "1");
-      prev.addEventListener("click", () => nav.scrollBy({ left: -180, behavior: "smooth" }));
-      next.addEventListener("click", () => nav.scrollBy({ left: 180, behavior: "smooth" }));
-    }
+    if (shell.getAttribute("data-bound-strip") !== "1") shell.setAttribute("data-bound-strip", "1");
 
     if (!document.body.dataset.mobileHeaderEscBound) {
       document.body.dataset.mobileHeaderEscBound = "1";

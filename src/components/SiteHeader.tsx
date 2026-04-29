@@ -42,7 +42,7 @@ export function SiteHeader({ activeKey = "" }: Props) {
           <a href="/gifts/">Подарки</a>
           <a href="/raffle/">Розыгрыш</a>
           <a href="/#gift">Сертификат</a>
-          <a href="/iremont116/">Сервис</a>
+          <a href="/iremont116/">Ремонт</a>
           <a href="/#contacts">Контакты</a>
         </div>
         <div className="topbar-right">
@@ -143,7 +143,7 @@ export function SiteHeader({ activeKey = "" }: Props) {
         <a href="/gifts/">Подарки</a>
         <a href="/raffle/">Розыгрыш</a>
         <a href="/#gift">Сертификат</a>
-        <a href="/iremont116/">Сервис</a>
+        <a href="/iremont116/">Ремонт</a>
         <a href="/#contacts">Контакты</a>
       </nav>
 

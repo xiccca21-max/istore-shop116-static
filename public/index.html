@@ -232,9 +232,9 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
   .search-icon{display:none}
   .search-input{font-size:13px;text-align:center}
   .search-btn{display:none}
-  .nav-shell{margin-top:8px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:6px}
+  .nav-shell{margin-top:8px;display:grid;grid-template-columns:minmax(0,1fr);align-items:center;gap:6px}
   .nav{margin-left:0;padding-top:0;padding-bottom:2px;gap:6px;-webkit-overflow-scrolling:touch;padding-right:2px;overflow:auto;scroll-behavior:smooth}
-  .mobile-strip-arrow{display:grid;place-items:center;align-self:center;width:28px;height:36px;border:0;background:transparent;color:#cfcfcf;font-size:20px;line-height:1;padding:0;vertical-align:middle}
+  .mobile-strip-arrow{display:none}
   .nav a{padding:8px 12px;font-size:13px}
   .nav a.nav-extra{display:none}
   .nav .label-full{display:none}
@@ -277,9 +277,7 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
   .footer-grid{grid-template-columns:1fr}
   .hero{height:304px}
   .hero-slide h2{font-size:32px}
-  .hero-arrow{display:none}
-  .cats-arrow,.review-arrow{width:36px;height:36px}
-  .cats-arrow::before,.review-arrow::before{width:7px;height:7px;border-right-width:2px;border-bottom-width:2px}
+  .hero-arrow,.cats-arrow,.buyers-arrow,.review-arrow,.mobile-strip-arrow{display:none!important}
   .reviews-head{align-items:flex-start}
   .review-controls{order:2;margin-left:0}
   .reviews-head .to-2gis{order:3}
@@ -307,7 +305,7 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
         <a href="/gifts/">Подарки</a>
         <a href="/raffle/">Розыгрыш</a>
         <a href="/#gift">Сертификат</a>
-        <a href="/iremont116/">Сервис</a>
+        <a href="/iremont116/">Ремонт</a>
         <a href="/#contacts">Контакты</a>
       </div>
       <div class="topbar-right">
@@ -340,7 +338,7 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
       <a href="/gifts/">Подарки</a>
       <a href="/raffle/">Розыгрыш</a>
       <a href="/#gift">Сертификат</a>
-      <a href="/iremont116/">Сервис</a>
+      <a href="/iremont116/">Ремонт</a>
       <a href="/#contacts">Контакты</a>
     </nav>
     <nav id="nav-more-menu" class="nav-more-menu" aria-label="Дополнительные категории">

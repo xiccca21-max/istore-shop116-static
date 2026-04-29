@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Сервис iRemont-116 — iStore Набережные Челны</title><meta name="description" content="iRemont-116 — сервисный центр Apple в Набережных Челнах: ремонт iPhone/iPad/MacBook/Apple Watch."><link rel="icon" type="image/png" href="/assets/header-logo.png"><script defer src="/assets/storefront.js?v=1777312903"></script><style>
+<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Ремонт iRemont-116 — iStore Набережные Челны</title><meta name="description" content="iRemont-116 — сервисный центр Apple в Набережных Челнах: ремонт iPhone/iPad/MacBook/Apple Watch."><link rel="icon" type="image/png" href="/assets/header-logo.png"><script defer src="/assets/storefront.js?v=1777312903"></script><style>
 :root{--bg:#1a1a1a;--panel:#222;--panel-2:#2a2a2a;--line:#323232;--text:#f2f2f2;--muted:#a8a8a8;--accent:#ff6600;--accent-2:#ff8533;--radius:24px;--shadow:0 12px 36px rgba(0,0,0,.35)}
 *{box-sizing:border-box}html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased}
 a{color:inherit;text-decoration:none}img{max-width:100%;display:block}
@@ -110,7 +110,12 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
   .nav a.nav-extra{display:none}
   .nav .label-full{display:none}
   .nav .label-short{display:inline}
-  .mobile-strip-arrow{display:grid;place-items:center;align-self:center;width:28px;height:36px;border:0;background:transparent;color:#cfcfcf;font-size:20px;line-height:1;padding:0;vertical-align:middle}
+  .mobile-cats-wrap{display:grid;grid-template-columns:minmax(0,1fr);align-items:center;gap:6px;margin:10px 2px 2px}
+  .mobile-cats{display:flex;gap:8px;overflow:auto;padding:0 2px 2px;scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-behavior:smooth}
+  .mobile-cats::-webkit-scrollbar{display:none}
+  .mobile-cats a{display:inline-flex;align-items:center;height:36px;padding:0 14px;border-radius:999px;background:#1b1b1b;border:1px solid #2d2d2d;color:#d9d9d9;font-size:13px;white-space:nowrap}
+  .mobile-cats a.active{background:var(--accent);border-color:var(--accent);color:#fff}
+  .mobile-strip-arrow{display:none}
   .hero h1{font-size:34px}
   .grid{grid-template-columns:1fr}
   .footer-grid{grid-template-columns:1fr}
@@ -123,7 +128,7 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
       <a href="/gifts/">Подарки</a>
       <a href="/raffle/">Розыгрыш</a>
       <a href="/#gift">Подарочный сертификат</a>
-      <a href="/iremont116/">Сервис</a>
+      <a href="/iremont116/">Ремонт</a>
       <a href="/#contacts">Контакты</a>
     </div>
     <div class="topbar-right">
@@ -168,7 +173,7 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
     <a href="/gifts/">Подарки</a>
     <a href="/raffle/">Розыгрыш</a>
     <a href="/#gift">Сертификат</a>
-    <a href="/iremont116/">Сервис</a>
+    <a href="/iremont116/">Ремонт</a>
     <a href="/#contacts">Контакты</a>
   </nav>
   <nav id="nav-more-menu" class="nav-more-menu" aria-label="Дополнительные категории">
@@ -180,12 +185,12 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
     <a href="/catalog/">Весь каталог</a>
   </nav>
 
-  <nav class="breadcrumbs"><a href="/">Главная</a><span class="sep">/</span><span>Сервис iRemont-116</span></nav>
+  <nav class="breadcrumbs"><a href="/">Главная</a><span class="sep">/</span><span>Ремонт iRemont-116</span></nav>
 
   <section class="section">
     <div class="hero">
       <div>
-        <div class="badge">Сервис iRemont-116</div>
+        <div class="badge">Ремонт iRemont-116</div>
         <h1 style="margin-top:10px">Ремонт техники Apple</h1>
         <p>Делаем гравировку клавиатур и не только, также делаем полировку Apple Watch и iPhone (все модели от 11 и выше).</p>
         <div class="cta-row">
@@ -283,7 +288,7 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
         <h3>Разделы</h3>
         <p><a href="/">Главная</a></p>
         <p><a href="/catalog/">Каталог</a></p>
-        <p><a href="/iremont116/">Сервис iRemont-116</a></p>
+        <p><a href="/iremont116/">Ремонт iRemont-116</a></p>
       </div>
     </div>
     <div class="footer-copy">© iStore Набережные Челны. Все товарные знаки принадлежат их правообладателям.</div>

@@ -30,18 +30,48 @@ a{color:inherit;text-decoration:none}img{max-width:100%;display:block}button,inp
 .hero{background:var(--panel);border:1px solid #2d2d2d;border-radius:30px;box-shadow:var(--shadow);padding:28px;display:grid;gap:14px}
 .hero h1{margin:0;font-size:44px;line-height:1.02;font-weight:900;letter-spacing:-.6px}
 .hero p{margin:0;color:var(--muted);font-size:16px;line-height:1.6}
+.hero-badge{display:inline-flex;align-items:center;justify-content:center;padding:10px 16px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.14);color:#ededed;font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.4px}
+.highlight-offer{background:linear-gradient(145deg,rgba(255,255,255,.035),rgba(255,255,255,.015));border:1px solid #3a3a3a;border-radius:24px;padding:18px 20px;display:grid;gap:8px}
+.highlight-offer .main-title{margin:0;font-size:42px;line-height:1.02;font-weight:900;letter-spacing:-.6px;color:#fff}
+.highlight-offer .main-title .accent{color:var(--accent)}
+.highlight-offer .title{margin:0;font-size:30px;line-height:1.1;font-weight:900;color:#fff}
+.highlight-offer .subtitle{margin:0;color:#d2d2d2;font-size:15px;line-height:1.55}
+.offer-metrics{display:flex;flex-wrap:wrap;gap:10px}
+.offer-metric{display:grid;gap:2px;min-width:130px;padding:10px 12px;border-radius:14px;background:#1a1a1a;border:1px solid #343434}
+.offer-metric b{font-size:26px;line-height:1;color:var(--accent);letter-spacing:-.3px}
+.offer-metric span{font-size:12px;color:#cdcdcd;text-transform:uppercase;letter-spacing:.3px}
+.detail-list{margin:2px 0 0;padding-left:18px;display:grid;gap:8px;color:#e6e6e6;font-size:15px;line-height:1.55}
+.official-note{margin:0;color:#bfbfbf;font-size:13px;line-height:1.6}
+.trust-row{display:flex;flex-wrap:wrap;gap:8px}
+.trust-chip{position:relative;isolation:isolate;overflow:hidden;display:inline-flex;align-items:center;gap:6px;padding:8px 11px;border-radius:999px;border:1px solid rgba(255,255,255,.16);background:linear-gradient(145deg,rgba(255,255,255,.1),rgba(255,255,255,.03));color:#ececec;font-size:12px;font-weight:700;box-shadow:0 10px 20px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.2);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);transform:perspective(700px) rotateX(5deg) translateY(0);transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease}
+.trust-chip::before{content:"";position:absolute;inset:1px 1px auto 1px;height:55%;border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,.22),rgba(255,255,255,0));pointer-events:none;z-index:-1}
+.trust-chip:hover{transform:perspective(700px) rotateX(0deg) translateY(-2px);border-color:rgba(255,255,255,.26);box-shadow:0 14px 24px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.24)}
+.pay-example{background:#181818;border:1px solid #313131;border-radius:20px;padding:14px 16px;display:flex;justify-content:space-between;gap:12px;align-items:center}
+.pay-example .label{font-size:13px;color:#bdbdbd}
+.pay-example .value{font-size:28px;font-weight:900;color:#fff;line-height:1}
 .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.card{background:#191919;border:1px solid #2d2d2d;border-radius:22px;padding:18px}
-.card b{color:var(--accent)}
+.card{position:relative;isolation:isolate;overflow:hidden;background:linear-gradient(145deg,rgba(255,255,255,.08),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.16);border-radius:22px;padding:18px;box-shadow:0 14px 28px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.18),inset 0 -10px 18px rgba(0,0,0,.18);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);transform:perspective(900px) rotateX(5deg) translateY(0);transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease}
+.card::before{content:"";position:absolute;inset:1px 1px auto 1px;height:48%;border-radius:20px;background:linear-gradient(180deg,rgba(255,255,255,.22),rgba(255,255,255,0));pointer-events:none;z-index:-1}
+.card::after{content:"";position:absolute;right:-36px;top:-46px;width:132px;height:132px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.25) 0,rgba(255,255,255,0) 70%);pointer-events:none;z-index:-1}
+.card:hover{transform:perspective(900px) rotateX(0deg) translateY(-4px);border-color:rgba(255,255,255,.26);box-shadow:0 20px 36px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.24),inset 0 -10px 22px rgba(0,0,0,.22)}
+.card b{display:block;color:#f0f0f0;font-size:24px;line-height:1.1;text-shadow:0 1px 0 rgba(255,255,255,.14)}
 .btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 16px;border-radius:999px;font-weight:800;font-size:14px;border:1px solid #2d2d2d;background:#1b1b1b;color:#fff;cursor:pointer}
 .btn.primary{background:var(--accent);border-color:var(--accent)}
 .btn.primary:hover{background:var(--accent-2);border-color:var(--accent-2)}
+.btn-hint{color:#b7b7b7;font-size:12px}
 .footer{margin-top:40px;background:#141414;border:1px solid #222;border-radius:30px;padding:30px 32px}
+.footer-grid{display:grid;grid-template-columns:1.3fr .9fr .9fr;gap:28px}
+.footer h3{margin:0 0 14px;font-size:18px;font-weight:700;color:#fff}
 .footer p,.footer a{color:#bfbfbf;line-height:1.7;font-size:14px}
 .footer a:hover{color:var(--accent)}
-@media (max-width:1150px){.grid{grid-template-columns:1fr}}
-@media (max-width:760px){.topbar{display:none}.header-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;padding:0}.logo-slot{display:none}.search{grid-column:1;width:62%;min-width:200px;height:40px!important;padding:0 10px!important}.search-icon{display:none!important}.search-btn{display:none!important}.search-input{text-align:center!important}.nav{margin-left:0}.hero h1{font-size:34px}}
+.footer-copy{margin-top:24px;padding-top:18px;border-top:1px solid #242424;color:#7b7b7b;font-size:12px}
+.social-icons{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+.social-icon-btn{width:44px;height:44px;border-radius:999px;display:grid;place-items:center;border:1px solid rgba(255,255,255,.14);background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.06));box-shadow:0 10px 26px rgba(0,0,0,.35);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);transition:transform .15s ease,border-color .15s ease,background .15s ease}
+.social-icon-btn:hover{transform:translateY(-1px);border-color:rgba(255,102,0,.55);background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.07))}
+.social-icon{width:20px;height:20px;display:block;color:#f3f3f3}
+@media (max-width:1150px){.grid{grid-template-columns:1fr}.footer-grid{grid-template-columns:1fr 1fr}}
+@media (max-width:760px){.topbar{display:none}.header-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;padding:0}.logo-slot{display:none}.search{grid-column:1;width:62%;min-width:200px;height:40px!important;padding:0 10px!important}.search-icon{display:none!important}.search-btn{display:none!important}.search-input{text-align:center!important}.nav{margin-left:0}.hero h1{font-size:34px}.highlight-offer .main-title{font-size:34px}.highlight-offer .title{font-size:24px}.offer-metric{min-width:unset;flex:1 1 31%}.pay-example{flex-direction:column;align-items:flex-start}.pay-example .value{font-size:24px}.footer-grid{grid-template-columns:1fr}}
 </style></head><body><div class="page">
   <div class="topbar">
     <div class="topbar-left">
@@ -50,7 +80,7 @@ a{color:inherit;text-decoration:none}img{max-width:100%;display:block}button,inp
       <a href="/gifts/">Подарки</a>
       <a href="/raffle/">Розыгрыш</a>
       <a href="/#gift">Сертификат</a>
-      <a href="/iremont116/">Сервис</a>
+      <a href="/iremont116/">Ремонт</a>
       <a href="/#contacts">Контакты</a>
     </div>
     <div class="topbar-right">
@@ -86,26 +116,87 @@ a{color:inherit;text-decoration:none}img{max-width:100%;display:block}button,inp
 
   <section class="section">
     <div class="hero">
-      <h1>Рассрочка без процентов</h1>
-      <p>Тут будет красивая посадочная, а пока — короткая информация. Напиши, какие банки/условия/сроки у вас точно есть — и мы соберём финальную версию.</p>
+      <div class="highlight-offer">
+        <h1 class="main-title">Рассрочка <span class="accent">без процентов</span></h1>
+        <p class="title">До 36 месяцев без первоначального взноса</p>
+        <p class="subtitle">Оформление доступно на технику из ассортимента iStore Набережные Челны. Платеж делится на равные части, без первого взноса в день покупки.</p>
+        <div class="offer-metrics">
+          <div class="offer-metric"><b>36</b><span>месяцев</span></div>
+          <div class="offer-metric"><b>0%</b><span>переплата</span></div>
+          <div class="offer-metric"><b>0 ₽</b><span>первый взнос</span></div>
+        </div>
+      </div>
+      <div class="pay-example">
+        <div>
+          <div class="label">Пример ежемесячного платежа</div>
+          <div class="label">iPhone за 120 000 ₽ на 36 месяцев</div>
+        </div>
+        <div class="value">от 3 334 ₽/мес</div>
+      </div>
+      <div class="trust-row">
+        <span class="trust-chip">Официально</span>
+        <span class="trust-chip">По паспорту РФ</span>
+        <span class="trust-chip">Банки-партнеры</span>
+        <span class="trust-chip">Решение за несколько минут</span>
+      </div>
+      <ul class="detail-list">
+        <li>Срок рассрочки: до 36 месяцев (срок подбирается индивидуально при оформлении).</li>
+        <li>Первоначальный взнос: 0%.</li>
+        <li>Переплата: 0% при соблюдении условий программы рассрочки банка-партнера.</li>
+        <li>Решение по заявке принимается банком, обычно в течение нескольких минут.</li>
+        <li>Для оформления нужен паспорт гражданина РФ; дополнительные документы — по запросу банка.</li>
+      </ul>
+      <p class="official-note">Рассрочка предоставляется банками-партнерами. Условия, срок и доступная сумма определяются банком после рассмотрения заявки. Подробности уточняйте у менеджера iStore перед оформлением.</p>
       <div class="btn-row">
         <a class="btn primary" href="tel:+79870059039">Позвонить</a>
-        <a class="btn" href="/catalog/">Выбрать товар</a>
+        <a class="btn" href="/catalog/">Рассчитать по товару</a>
       </div>
+      <div class="btn-hint">Ответим за 2-3 минуты и подскажем оптимальный срок.</div>
     </div>
   </section>
 
   <section class="section">
     <div class="grid">
-      <div class="card"><b>0%</b><div style="margin-top:6px;color:#d8d8d8;line-height:1.55">Рассрочка без переплат (уточним конкретные условия).</div></div>
-      <div class="card"><b>Быстро</b><div style="margin-top:6px;color:#d8d8d8;line-height:1.55">Поможем подобрать модель и оформить покупку.</div></div>
-      <div class="card"><b>Удобно</b><div style="margin-top:6px;color:#d8d8d8;line-height:1.55">Можно начать с выбора товара в каталоге.</div></div>
+      <div class="card"><b>До 36 месяцев</b><div style="margin-top:6px;color:#d8d8d8;line-height:1.55">Срок выбирается под ваш комфортный ежемесячный платеж.</div></div>
+      <div class="card"><b>0 ₽ первый взнос</b><div style="margin-top:6px;color:#d8d8d8;line-height:1.55">Оформление без первоначального платежа в день покупки.</div></div>
+      <div class="card"><b>10-15 минут</b><div style="margin-top:6px;color:#d8d8d8;line-height:1.55">Быстрая подача заявки с менеджером в магазине.</div></div>
     </div>
   </section>
 
   <footer class="footer">
-    <p><a href="/">Главная</a> · <a href="/catalog/">Каталог</a> · <a href="/iremont116/">Сервис</a></p>
-    <p style="color:#7b7b7b;font-size:12px;margin-top:14px">© iStore Набережные Челны</p>
+    <div class="footer-grid">
+      <div>
+        <h3>iStore Набережные Челны</h3>
+        <p>Набережные Челны, ул. Сююмбике 21/33 (41/04 по комплексу), вход со стороны пр. Беляева</p>
+        <p>10:00–20:00 ежедневно</p>
+      </div>
+      <div>
+        <h3>Связь</h3>
+        <p><a href="tel:+79870059039">+7 (987) 005-90-39</a></p>
+        <p><a href="tel:+79172757445">+7 (917) 275-74-45</a> — ремонт</p>
+        <p><a href="mailto:istore116shop@gmail.com">istore116shop@gmail.com</a></p>
+        <p style="margin-top:12px"><a href="https://t.me/iStore116Bot" target="_blank" rel="noopener">Заявки на покупку</a></p>
+        <p><a href="https://t.me/iStore116/1616" target="_blank" rel="noopener">Розыгрыш призов</a></p>
+        <div class="social-icons" aria-label="Соцсети">
+          <a class="social-icon-btn" href="https://t.me/iStore116" target="_blank" rel="noopener" aria-label="Telegram канал">
+            <svg class="social-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21.8 4.5c.3-1.4-1-2.1-2.2-1.7L2.9 9.2c-1.5.6-1.5 2.7.1 3.1l4.6 1.3 1.7 5.3c.4 1.3 2.1 1.6 3 .6l2.6-2.6 4.7 3.4c1 .7 2.3.2 2.5-1.1L21.8 4.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M8 13.5 18.8 6.9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+          </a>
+          <a class="social-icon-btn" href="https://max.ru/iStore116" target="_blank" rel="noopener" aria-label="MAX канал">
+            <svg class="social-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4.5 18.5V5.5h3.8l3.7 6.2 3.7-6.2h3.8v13h-3.3V11l-3 5h-2.4l-3-5v7.5H4.5Z" fill="currentColor"/></svg>
+          </a>
+          <a class="social-icon-btn" href="https://www.instagram.com/istore_shop116?igsh=YnpsNmkzYzduNmp6&utm_source=qr" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg class="social-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7.5 3.8h9A3.7 3.7 0 0 1 20.2 7.5v9a3.7 3.7 0 0 1-3.7 3.7h-9A3.7 3.7 0 0 1 3.8 16.5v-9A3.7 3.7 0 0 1 7.5 3.8Z" stroke="currentColor" stroke-width="1.7"/><path d="M12 16.2a4.2 4.2 0 1 0 0-8.4 4.2 4.2 0 0 0 0 8.4Z" stroke="currentColor" stroke-width="1.7"/><path d="M17.2 6.9h.01" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"/></svg>
+          </a>
+        </div>
+      </div>
+      <div>
+        <h3>Разделы</h3>
+        <p><a href="/">Главная</a></p>
+        <p><a href="/catalog/">Каталог</a></p>
+        <p><a href="https://2gis.ru/nabchelny/firm/70000001065465431/tab/reviews?m=52.394279%2C55.739588%2F16.38" target="_blank" rel="noopener">Отзывы в 2GIS</a></p>
+      </div>
+    </div>
+    <div class="footer-copy">© iStore Набережные Челны. Все товарные знаки принадлежат их правообладателям.</div>
   </footer>
 </div></body></html>
 
