@@ -40,6 +40,7 @@ a{color:inherit;text-decoration:none}img{max-width:100%;display:block}button,inp
 .offer-metric{display:grid;gap:2px;min-width:130px;padding:10px 12px;border-radius:14px;background:#1a1a1a;border:1px solid #343434}
 .offer-metric b{font-size:26px;line-height:1;color:var(--accent);letter-spacing:-.3px}
 .offer-metric span{font-size:12px;color:#cdcdcd;text-transform:uppercase;letter-spacing:.3px}
+.offer-metric.is-priority{text-align:center;justify-items:center}
 .detail-list{margin:2px 0 0;padding-left:18px;display:grid;gap:8px;color:#e6e6e6;font-size:15px;line-height:1.55}
 .official-note{margin:0;color:#bfbfbf;font-size:13px;line-height:1.6}
 .trust-row{display:flex;flex-wrap:wrap;gap:8px}
@@ -71,7 +72,7 @@ a{color:inherit;text-decoration:none}img{max-width:100%;display:block}button,inp
 .social-icon-btn:hover{transform:translateY(-1px);border-color:rgba(255,102,0,.55);background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.07))}
 .social-icon{width:20px;height:20px;display:block;color:#f3f3f3}
 @media (max-width:1150px){.grid{grid-template-columns:1fr}.footer-grid{grid-template-columns:1fr 1fr}}
-@media (max-width:760px){.topbar{display:none}.header-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;padding:0}.logo-slot{display:none}.search{grid-column:1;width:62%;min-width:200px;height:40px!important;padding:0 10px!important}.search-icon{display:none!important}.search-btn{display:none!important}.search-input{text-align:center!important}.nav{margin-left:0}.hero h1{font-size:34px}.highlight-offer .main-title{font-size:34px}.highlight-offer .title{font-size:24px}.offer-metric{min-width:unset;flex:1 1 31%}.pay-example{flex-direction:column;align-items:flex-start}.pay-example .value{font-size:24px}.footer-grid{grid-template-columns:1fr}}
+@media (max-width:760px){.topbar{display:none}.header-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;padding:0}.logo-slot{display:none}.search{grid-column:1;width:62%;min-width:200px;height:40px!important;padding:0 10px!important}.search-icon{display:none!important}.search-btn{display:none!important}.search-input{text-align:center!important}.nav{margin-left:0}.hero h1{font-size:34px}.highlight-offer .main-title{font-size:34px}.highlight-offer .title{font-size:24px}.offer-metric{min-width:unset;flex:1 1 31%}.offer-metric.is-priority{order:-1;flex-basis:100%}.pay-example{flex-direction:column;align-items:flex-start}.pay-example .value{font-size:24px}.trust-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.trust-chip{width:100%;justify-content:center;text-align:center;padding:10px 12px}.footer-grid{grid-template-columns:1fr}}
 </style></head><body><div class="page">
   <div class="topbar">
     <div class="topbar-left">
@@ -121,9 +122,9 @@ a{color:inherit;text-decoration:none}img{max-width:100%;display:block}button,inp
         <p class="title">До 36 месяцев без первоначального взноса</p>
         <p class="subtitle">Оформление доступно на технику из ассортимента iStore Набережные Челны. Платеж делится на равные части, без первого взноса в день покупки.</p>
         <div class="offer-metrics">
+          <div class="offer-metric is-priority"><b>0 ₽</b><span>первый взнос</span></div>
           <div class="offer-metric"><b>36</b><span>месяцев</span></div>
           <div class="offer-metric"><b>0%</b><span>переплата</span></div>
-          <div class="offer-metric"><b>0 ₽</b><span>первый взнос</span></div>
         </div>
       </div>
       <div class="pay-example">
