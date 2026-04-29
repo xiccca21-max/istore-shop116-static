@@ -17,6 +17,7 @@ const OrderSchema = z.object({
   name: z.string().min(1),
   phone: z.string().min(1),
   comment: z.string().optional().default(""),
+  consent: z.literal(true),
   items: z.array(CartItemSchema).min(1),
 });
 

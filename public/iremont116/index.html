@@ -73,6 +73,9 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
 .form{display:grid;gap:10px}
 .inp{width:100%;padding:12px 14px;border-radius:14px;border:1px solid #333;background:#161616;color:#fff;outline:none}
 .inp::placeholder{color:#7a7a7a}
+.consent{display:flex;align-items:flex-start;gap:8px;margin-top:2px;color:#bfbfbf;font-size:12px;line-height:1.45}
+.consent input{margin-top:2px}
+.consent a{color:var(--accent);text-decoration:underline}
 .footer{margin-top:40px;background:#141414;border:1px solid #222;border-radius:30px;padding:30px 32px}
 .footer-grid{display:grid;grid-template-columns:1.3fr .9fr .9fr;gap:28px}
 .footer h3{margin:0 0 14px;font-size:18px;font-weight:700;color:#fff}
@@ -261,6 +264,7 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
         <form class="form" onsubmit="event.preventDefault(); var n=this.querySelector('[name=name]').value||''; var p=this.querySelector('[name=phone]').value||''; var text='Заявка iRemont-116%0AИмя: '+encodeURIComponent(n)+'%0AТелефон: '+encodeURIComponent(p); window.open('https://t.me/iStore116Bot?start=iremont116','_blank');">
           <input class="inp" name="name" placeholder="Ваше имя" required>
           <input class="inp" name="phone" placeholder="Ваш номер телефона" required>
+          <label class="consent"><input type="checkbox" name="consent" required> <span>Я даю согласие на обработку персональных данных и принимаю условия <a href="/privacy/" target="_blank" rel="noopener">Политики конфиденциальности</a>.</span></label>
           <button class="btn primary" type="submit">Оформить заказ</button>
         </form>
         <div class="reason" style="margin-top:14px">
@@ -288,6 +292,7 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
         <h3>Разделы</h3>
         <p><a href="/">Главная</a></p>
         <p><a href="/catalog/">Каталог</a></p>
+        <p><a href="/privacy/">Политика конфиденциальности</a></p>
         <p><a href="/iremont116/">Ремонт iRemont-116</a></p>
       </div>
     </div>

@@ -25,6 +25,9 @@ const nextConfig: NextConfig = {
       // Simple landing
       { source: "/installment", destination: "/installment/index.html" },
       { source: "/installment/", destination: "/installment/index.html" },
+      // Privacy policy
+      { source: "/privacy", destination: "/privacy/index.html" },
+      { source: "/privacy/", destination: "/privacy/index.html" },
       // Checkout / cart
       { source: "/checkout", destination: "/checkout/index.html" },
       { source: "/checkout/", destination: "/checkout/index.html" },

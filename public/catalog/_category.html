@@ -52,8 +52,8 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
 .breadcrumbs{margin:18px 4px 8px;color:var(--muted);font-size:13px}
 .breadcrumbs a{color:var(--muted)}.breadcrumbs a:hover{color:var(--accent)}
 .breadcrumbs span.sep{margin:0 6px;color:#444}
-.category-promo-banner{display:none;position:relative;border-radius:24px;overflow:hidden;border:1px solid #dcdcdc;box-shadow:var(--shadow);background:#fff;margin-bottom:16px}
-.category-promo-banner img{width:100%;height:auto;display:block;object-fit:contain}
+.category-promo-banner{display:none;position:relative;border-radius:24px;overflow:hidden;height:384px;border:1px solid #dcdcdc;box-shadow:var(--shadow);background:#fff;margin-bottom:16px;align-items:center;justify-content:center}
+.category-promo-banner img{width:min(1024px,100%);height:auto;max-height:100%;display:block;object-fit:contain}
 .grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
 .product-card{background:var(--panel);border:1px solid #2d2d2d;border-radius:24px;overflow:hidden;box-shadow:var(--shadow);transition:border-color .2s;display:block}
 .product-card:hover{border-color:var(--accent)}
@@ -106,6 +106,7 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
   body.menu-open .mobile-menu-backdrop{display:block}
   body.menu-open .mobile-menu{display:block}
   .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .category-promo-banner{height:304px}
   .footer-grid{grid-template-columns:1fr}
 }
 </style></head><body><div class="page">
@@ -200,6 +201,7 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
         <h3>Разделы</h3>
         <p><a href="/">Главная</a></p>
         <p><a href="/catalog/">Каталог</a></p>
+        <p><a href="/privacy/">Политика конфиденциальности</a></p>
       </div>
     </div>
     <div class="footer-copy">© iStore Набережные Челны. Все товарные знаки принадлежат их правообладателям.</div>
@@ -254,17 +256,27 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
     'applewatch':'apple-watch',
     'mac':'macbook',
     'aksessuary':'aksessuary',
+    'accessory':'aksessuary',
+    'accessories':'aksessuary',
     'samsung':'samsung',
     'dyson':'dyson',
     'ipad':'ipad'
   };
   var querySlug = map[slug] || slug;
+  if(/^aksessuar/.test(slug)) querySlug='aksessuary';
   var promoBanner = document.getElementById('categoryPromoBanner');
   if (promoBanner) {
-    promoBanner.style.display = (slug === 'iphone') ? 'block' : 'none';
+    promoBanner.style.display = (slug === 'iphone') ? 'flex' : 'none';
+  }
+
+  function normalizeCategoryTitle(t){
+    var s=String(t||'').trim().toLowerCase();
+    if(s.indexOf('aksessuar')===0 || s==='accessory' || s==='accessories') return 'Аксессуары';
+    return String(t||'').trim() || 'Категория';
   }
 
   function setTitle(t){
+    t = normalizeCategoryTitle(t);
     var el1=document.querySelector('[data-cat-title]');
     var el2=document.querySelector('[data-cat-h1]');
     if(el1) el1.textContent=t;

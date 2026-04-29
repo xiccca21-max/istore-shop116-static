@@ -78,6 +78,9 @@ export function SiteFooter() {
             <a href="/catalog/">Каталог</a>
           </p>
           <p>
+            <a href="/privacy/">Политика конфиденциальности</a>
+          </p>
+          <p>
             <a
               href="https://2gis.ru/nabchelny/firm/70000001065465431/tab/reviews?m=52.394279%2C55.739588%2F16.38"
               target="_blank"

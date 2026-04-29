@@ -8,11 +8,12 @@ export default function CartPage() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [comment, setComment] = useState("");
+  const [consent, setConsent] = useState(false);
   const [status, setStatus] = useState<{ type: "idle" | "loading" | "ok" | "err"; msg?: string }>({
     type: "idle",
   });
 
-  const canSubmit = useMemo(() => items.length > 0 && name.trim() && phone.trim(), [items.length, name, phone]);
+  const canSubmit = useMemo(() => items.length > 0 && name.trim() && phone.trim() && consent, [items.length, name, phone, consent]);
 
   async function submit() {
     if (!canSubmit) return;
@@ -21,7 +22,7 @@ export default function CartPage() {
       const res = await fetch("/api/orders", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ name, phone, comment, items }),
+        body: JSON.stringify({ name, phone, comment, consent, items }),
       });
       if (!res.ok) {
         const t = await res.text();
@@ -31,6 +32,7 @@ export default function CartPage() {
       setName("");
       setPhone("");
       setComment("");
+      setConsent(false);
       setStatus({ type: "ok", msg: "Заявка отправлена" });
     } catch (e: unknown) {
       setStatus({ type: "err", msg: e instanceof Error ? e.message : "Ошибка" });
@@ -114,6 +116,16 @@ export default function CartPage() {
             placeholder="Комментарий"
             style={{ ...input, minHeight: 90, resize: "vertical" }}
           />
+          <label style={{ display: "flex", gap: 8, alignItems: "flex-start", color: "#bfbfbf", fontSize: 12, lineHeight: 1.45 }}>
+            <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} style={{ marginTop: 2 }} />
+            <span>
+              Я даю согласие на обработку персональных данных и принимаю условия{" "}
+              <a href="/privacy/" target="_blank" rel="noopener" style={{ color: "#ff6600", textDecoration: "underline" }}>
+                Политики конфиденциальности
+              </a>
+              .
+            </span>
+          </label>
           <button onClick={submit} disabled={!canSubmit || status.type === "loading"} style={btnPrimary}>
             {status.type === "loading" ? "Отправка..." : "Отправить"}
           </button>
