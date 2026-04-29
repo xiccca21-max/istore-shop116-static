@@ -178,7 +178,7 @@ export default function AdminProductsPage() {
           basePrice: 0,
           imageUrls: [],
           cardColors: [],
-          cardImageScale: 1.42,
+          cardImageScale: 1,
           cardImagePositionX: 50,
           cardImagePositionY: 50,
           characteristicsText: "",
@@ -319,9 +319,8 @@ export default function AdminProductsPage() {
     return {
       width: "100%",
       height: "100%",
-      objectFit: "cover",
+      objectFit: "contain",
       objectPosition: `${Number(product.cardImagePositionX ?? 50)}% ${Number(product.cardImagePositionY ?? 50)}%`,
-      transform: `scale(${Number(product.cardImageScale || 1.42)})`,
     };
   }
 
@@ -471,7 +470,7 @@ export default function AdminProductsPage() {
                         min="1"
                         max="3"
                         step="0.01"
-                        value={Number(p.cardImageScale || 1.42)}
+                        value={Number(p.cardImageScale || 1)}
                         onChange={(e) => updateProduct(p.id, { cardImageScale: Number(e.target.value) })}
                       />
                       <input
@@ -479,7 +478,7 @@ export default function AdminProductsPage() {
                         min="1"
                         max="3"
                         step="0.01"
-                        value={Number(p.cardImageScale || 1.42)}
+                        value={Number(p.cardImageScale || 1)}
                         onChange={(e) => updateProduct(p.id, { cardImageScale: Number(e.target.value) })}
                         style={input}
                       />
@@ -526,13 +525,13 @@ export default function AdminProductsPage() {
                     </div>
                   </div>
                   <div style={{ display: "flex", gap: 8, marginTop: 8, flexWrap: "wrap" }}>
-                    <button onClick={() => updateProduct(p.id, { cardImageScale: 1.42, cardImagePositionX: 50, cardImagePositionY: 50 })} style={btnChip("#1b1b1b")}>
+                    <button onClick={() => updateProduct(p.id, { cardImageScale: 1, cardImagePositionX: 50, cardImagePositionY: 50 })} style={btnChip("#1b1b1b")}>
                       Сбросить
                     </button>
                     <button
                       onClick={() =>
                         patchProduct(p.id, {
-                          cardImageScale: Number(p.cardImageScale || 1.42),
+                          cardImageScale: Number(p.cardImageScale || 1),
                           cardImagePositionX: Number(p.cardImagePositionX ?? 50),
                           cardImagePositionY: Number(p.cardImagePositionY ?? 50),
                         })
@@ -613,7 +612,7 @@ export default function AdminProductsPage() {
                         categoryId: p.categoryId,
                         imageUrls: p.imageUrls,
                         cardColors: parseColors(cardColorText(p)),
-                        cardImageScale: Number(p.cardImageScale || 1.42),
+                        cardImageScale: Number(p.cardImageScale || 1),
                         cardImagePositionX: Number(p.cardImagePositionX ?? 50),
                         cardImagePositionY: Number(p.cardImagePositionY ?? 50),
                         characteristicsText: p.characteristicsText || "",

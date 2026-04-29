@@ -348,7 +348,7 @@ export default function AdminHomePage() {
               >
                 <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                   <div style={thumbSmall}>
-                    {f.product.imageUrls?.[0] ? <img src={f.product.imageUrls[0]} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", transform: "scale(1.42)" }} /> : null}
+                    {f.product.imageUrls?.[0] ? <img src={f.product.imageUrls[0]} alt="" style={{ width: "100%", height: "100%", objectFit: "contain" }} /> : null}
                   </div>
                   <div>
                     <div style={{ fontWeight: 900 }}>{f.product.title}</div>
@@ -413,5 +413,5 @@ const thumb: React.CSSProperties = {
   fontSize: 10,
   fontWeight: 900,
 };
-const thumbSmall: React.CSSProperties = { width: 54, height: 40, borderRadius: 12, border: "1px solid #333", background: "#111", overflow: "hidden" };
+const thumbSmall: React.CSSProperties = { width: 54, height: 54, borderRadius: 12, border: "1px solid #333", background: "#111", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" };
 

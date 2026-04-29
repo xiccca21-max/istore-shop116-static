@@ -141,7 +141,6 @@ export function ProductDetail941(props: {
   const showSim = shouldShowSim(props.product, variants);
   const groups = optionGroups(variants, selected, showSim);
   const imageStyle = {
-    "--pdp-card-image-scale": String(Number(props.product.cardImageScale || 1.42)),
     "--pdp-card-image-x": `${Number(props.product.cardImagePositionX ?? 50)}%`,
     "--pdp-card-image-y": `${Number(props.product.cardImagePositionY ?? 50)}%`,
   } as CSSProperties;

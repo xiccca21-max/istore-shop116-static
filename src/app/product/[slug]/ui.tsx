@@ -88,7 +88,8 @@ export function ProductVariantsGrid(props: {
         >
           <div
             style={{
-              height: 260,
+              aspectRatio: "1 / 1",
+              width: "100%",
               background: "#181818",
               borderBottom: "1px solid #242424",
               display: "flex",
@@ -100,7 +101,7 @@ export function ProductVariantsGrid(props: {
           >
             {img ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={img} alt={props.title} style={{ width: "100%", height: "100%", objectFit: "cover", transform: "scale(1.42)" }} />
+              <img src={img} alt={props.title} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
             ) : (
               <div style={{ fontSize: 12, opacity: 0.7 }}>Фото</div>
             )}

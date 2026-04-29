@@ -57,8 +57,8 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
 .grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
 .product-card{background:var(--panel);border:1px solid #2d2d2d;border-radius:24px;overflow:hidden;box-shadow:var(--shadow);transition:border-color .2s;display:block}
 .product-card:hover{border-color:var(--accent)}
-.product-media{height:260px;background:#181818;padding:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.product-media img{height:100%;width:100%;object-fit:cover;transform:scale(1.42)}
+.product-media{aspect-ratio:1/1;width:100%;background:#181818;padding:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.product-media img{max-width:100%;max-height:100%;height:100%;width:100%;object-fit:contain}
 .product-body{padding:16px 18px 20px}
 .product-title{font-size:20px;font-weight:700;margin-bottom:6px;line-height:1.2}
 .product-sub{font-size:13px;color:var(--muted);margin-bottom:14px}
@@ -308,6 +308,7 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
       'aksessuary':'Аксессуары',
       'google':'Google Pixel',
       'igrovye-pristavki':'Игровые приставки',
+      'sony-playstation':'Sony PlayStation',
       'tehnika-dlya-doma':'Техника для дома',
       'fitnes-braslety':'Фитнес-браслеты',
       'smartfony':'Смартфоны',
@@ -356,10 +357,9 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
   }
 
   function cardImageStyle(p){
-    var scale=Math.max(1,Math.min(3,Number(p&&p.cardImageScale)||1.42));
     var x=Math.max(0,Math.min(100,Number(p&&p.cardImagePositionX)));
     var y=Math.max(0,Math.min(100,Number(p&&p.cardImagePositionY)));
-    return 'width:100%;height:100%;object-fit:cover;object-position:'+(isFinite(x)?x:50)+'% '+(isFinite(y)?y:50)+'%;transform:scale('+scale+')';
+    return 'width:100%;height:100%;object-fit:contain;object-position:'+(isFinite(x)?x:50)+'% '+(isFinite(y)?y:50)+'%';
   }
 
   function renderCard(p){

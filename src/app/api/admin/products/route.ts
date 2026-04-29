@@ -93,7 +93,7 @@ const CreateSchema = z.object({
   basePrice: z.number().int().nonnegative().default(0),
   imageUrls: z.array(z.string()).default([]),
   cardColors: z.array(z.string().trim().min(1)).max(64).default([]),
-  cardImageScale: z.number().min(1).max(3).default(1.42),
+  cardImageScale: z.number().min(1).max(3).default(1),
   cardImagePositionX: z.number().int().min(0).max(100).default(50),
   cardImagePositionY: z.number().int().min(0).max(100).default(50),
   characteristicsText: z.string().optional().default(""),

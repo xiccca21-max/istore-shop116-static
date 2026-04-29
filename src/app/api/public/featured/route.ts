@@ -123,7 +123,7 @@ export async function GET() {
       basePrice: p!.base_price,
       imageUrls: p!.image_urls || [],
       cardColors: Array.isArray(p!.card_colors) ? p!.card_colors : [],
-      cardImageScale: Number(p!.card_image_scale || 1.42),
+      cardImageScale: Number(p!.card_image_scale || 1),
       cardImagePositionX: Number(p!.card_image_position_x ?? 50),
       cardImagePositionY: Number(p!.card_image_position_y ?? 50),
       characteristicsText: p!.characteristics_text || "",

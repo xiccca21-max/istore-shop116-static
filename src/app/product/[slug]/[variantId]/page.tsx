@@ -48,7 +48,7 @@ export default async function ProductVariantPage(props: { params: Promise<{ slug
           subtitle: data.subtitle || "",
           categoryTitle: (data.categories as { title?: string } | null)?.title,
           imageUrls: Array.isArray(data.image_urls) ? data.image_urls : [],
-          cardImageScale: Number((data as { card_image_scale?: unknown }).card_image_scale || 1.42),
+          cardImageScale: Number((data as { card_image_scale?: unknown }).card_image_scale || 1),
           cardImagePositionX: Number((data as { card_image_position_x?: unknown }).card_image_position_x ?? 50),
           cardImagePositionY: Number((data as { card_image_position_y?: unknown }).card_image_position_y ?? 50),
           characteristicsText,
