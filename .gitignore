@@ -10,3 +10,6 @@ node_modules/
 data/
 www/_next/
 www/data/
+
+# локальные выгрузки картинок для правки (импорт скриптами)
+image-import/mac-tilda-originals/*
