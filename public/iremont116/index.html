@@ -43,8 +43,6 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
 .mobile-menu{display:none;position:fixed;left:10px;right:10px;top:78px;background:rgba(25,25,25,.98);border:1px solid #2f2f2f;border-radius:18px;box-shadow:var(--shadow);padding:8px;z-index:40}
 .mobile-menu a{display:block;padding:12px 14px;border-radius:12px;color:#e6e6e6;font-size:15px}
 .mobile-menu a:hover{background:#232323}
-.mobile-cats-wrap{display:none}
-.mobile-cats{display:none}
 .section{margin-top:28px}
 .section-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:16px}
 .section-title{margin:0;font-size:32px;line-height:1.1;font-weight:800;letter-spacing:-.5px}
@@ -97,7 +95,8 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
   .search-icon{display:none}
   .search-btn{display:none}
   .search-input{font-size:13px;text-align:center}
-  .nav-shell{display:none}
+  .nav-shell{margin-top:8px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:6px}
+  .nav{margin-left:0;padding-top:0;padding-bottom:2px;gap:6px;-webkit-overflow-scrolling:touch;padding-right:2px;overflow:auto;scroll-behavior:smooth}
   body.menu-open,body.nav-more-open{overflow:hidden}
   body.menu-open .mobile-menu-backdrop{display:block}
   body.menu-open .mobile-menu{display:block}
@@ -107,11 +106,10 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
   .nav-more-menu{position:fixed;left:10px;right:10px;bottom:10px;background:rgba(25,25,25,.98);border:1px solid #2f2f2f;border-radius:18px;box-shadow:var(--shadow);padding:8px;z-index:38;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
   .nav-more-menu a{display:block;padding:11px 12px;border-radius:12px;background:#1b1b1b;border:1px solid #2d2d2d;color:#e6e6e6;font-size:13px;text-align:center}
   .nav-more-menu a:hover{background:#232323}
-  .mobile-cats-wrap{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:6px;margin:10px 2px 2px}
-  .mobile-cats{display:flex;gap:8px;overflow:auto;padding:0 2px 2px;scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-behavior:smooth}
-  .mobile-cats::-webkit-scrollbar{display:none}
-  .mobile-cats a{display:inline-flex;align-items:center;height:36px;padding:0 14px;border-radius:999px;background:#1b1b1b;border:1px solid #2d2d2d;color:#d9d9d9;font-size:13px;white-space:nowrap}
-  .mobile-cats a.active{background:var(--accent);border-color:var(--accent);color:#fff}
+  .nav a{padding:8px 12px;font-size:13px}
+  .nav a.nav-extra{display:none}
+  .nav .label-full{display:none}
+  .nav .label-short{display:inline}
   .mobile-strip-arrow{display:grid;place-items:center;align-self:center;width:28px;height:36px;border:0;background:transparent;color:#cfcfcf;font-size:20px;line-height:1;padding:0;vertical-align:middle}
   .hero h1{font-size:34px}
   .grid{grid-template-columns:1fr}
@@ -120,6 +118,10 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
 </style></head><body><div class="page">
   <div class="topbar">
     <div class="topbar-left">
+      <a href="/installment/">Рассрочка</a>
+      <a href="/trade-in/">Trade-In</a>
+      <a href="/gifts/">Подарки</a>
+      <a href="/raffle/">Розыгрыш</a>
       <a href="/#gift">Подарочный сертификат</a>
       <a href="/iremont116/">Сервис</a>
       <a href="/#contacts">Контакты</a>
@@ -177,20 +179,6 @@ body.menu-open .mobile-menu-toggle .burger::after{transform:translateY(-4px) rot
     <a href="/catalog/aksessuary/">Аксессуары</a>
     <a href="/catalog/">Весь каталог</a>
   </nav>
-  <div class="mobile-cats-wrap" data-mobile-switcher>
-    <button class="mobile-strip-arrow prev" type="button" aria-label="Предыдущие категории" data-mobile-strip-prev>‹</button>
-    <nav class="mobile-cats" aria-label="Категории" data-mobile-strip>
-      <a href="/catalog/">Каталог</a>
-      <a href="/catalog/iphone/">iPhone</a>
-      <a href="/catalog/air-pods/">AirPods</a>
-      <a href="/catalog/mac/">Mac</a>
-      <a href="/catalog/apple-watch/">Watch</a>
-      <a href="/catalog/ipad/">iPad</a>
-      <a href="/catalog/aksessuary/">Акс.</a>
-      <a href="/catalog/">Все</a>
-    </nav>
-    <button class="mobile-strip-arrow next" type="button" aria-label="Следующие категории" data-mobile-strip-next>›</button>
-  </div>
 
   <nav class="breadcrumbs"><a href="/">Главная</a><span class="sep">/</span><span>Сервис iRemont-116</span></nav>
 
