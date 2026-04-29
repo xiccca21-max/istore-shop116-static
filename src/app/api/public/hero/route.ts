@@ -54,7 +54,15 @@ export async function GET() {
     return { ...s, image_url: imageUrl, link_url: s.link_url ?? null, linkUrl: s.link_url ?? null };
   });
 
-  return NextResponse.json({ data: enriched });
+  return NextResponse.json(
+    { data: enriched },
+    {
+      headers: {
+        // Hero JSON редко меняется; кэш снимает лишний round-trip к Supabase при каждой загрузке главной.
+        "Cache-Control": "public, s-maxage=120, stale-while-revalidate=600",
+      },
+    },
+  );
 }
 
 async function loadHeroRowsWithAvailableColumns(message: string) {

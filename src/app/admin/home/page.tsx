@@ -3,7 +3,15 @@
 import { useEffect, useMemo, useState } from "react";
 import { uploadAdminImage } from "@/lib/adminImageUpload";
 
-type Slide = { id: string; title: string; imageUrl?: string | null; linkUrl?: string | null; sortOrder: number; isActive: number };
+type Slide = {
+  id: string;
+  title: string;
+  imageUrl?: string | null;
+  linkUrl?: string | null;
+  previewImageUrl?: string | null;
+  sortOrder: number;
+  isActive: number;
+};
 type FeaturedRow = {
   id: string;
   sortOrder: number;
@@ -12,6 +20,15 @@ type FeaturedRow = {
 };
 
 type ApiProduct = { id: string; slug: string; title: string; subtitle: string; basePrice: number; imageUrls: string[] };
+
+function normalizePreviewHref(raw: string): string {
+  const u = String(raw || "").trim();
+  if (!u) return "#";
+  if (/^[a-z][a-z0-9+.-]*:/i.test(u)) return u;
+  if (u.startsWith("//")) return u;
+  if (u.startsWith("/")) return u;
+  return "/" + u.replace(/^\/+/, "");
+}
 
 export default function AdminHomePage() {
   const [slides, setSlides] = useState<Slide[]>([]);
@@ -185,6 +202,10 @@ export default function AdminHomePage() {
           <div style={cardTitle}>Hero баннер</div>
         </div>
 
+        <div style={{ opacity: 0.78, fontSize: 12, marginBottom: 10, lineHeight: 1.45 }}>
+          <b>Ссылка при клике</b> — отдельно от картинки: введите URL картинки ниже у слайда (или загрузите файл), а в поле «Куда вести» — страницу каталога или внешний сайт. Для быстрой загрузки баннеров лучше те же CDN-ссылки, что и у товаров (не многомегабайтные VK-оригиналы).
+        </div>
+
         <div style={{ display: "flex", gap: 8, marginBottom: 14 }}>
           <input
             value={title}
@@ -220,12 +241,13 @@ export default function AdminHomePage() {
                 <div style={{ fontWeight: 800 }}>{s.title}</div>
                 <div style={{ opacity: 0.7, fontSize: 12 }}>order: {s.sortOrder}</div>
                 <div style={{ display: "grid", gap: 6, marginTop: 10 }}>
+                  <div style={{ fontSize: 11, opacity: 0.75, fontWeight: 800 }}>Куда вести при клике</div>
                   <input
                     value={s.linkUrl || ""}
                     onChange={(e) =>
                       setSlides((prev) => prev.map((slide) => (slide.id === s.id ? { ...slide, linkUrl: e.target.value } : slide)))
                     }
-                    placeholder="Ссылка при клике на баннер, например /catalog/iphone или https://..."
+                    placeholder="/catalog/iphone/ или https://..."
                     style={input}
                   />
                   <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
@@ -233,15 +255,33 @@ export default function AdminHomePage() {
                       Сохранить ссылку
                     </button>
                     {s.linkUrl ? (
-                      <a href={s.linkUrl} target="_blank" rel="noreferrer" style={btnLink}>
+                      <a href={normalizePreviewHref(s.linkUrl)} target="_blank" rel="noreferrer" style={btnLink}>
                         Проверить
                       </a>
                     ) : null}
                   </div>
+                  <div style={{ fontSize: 11, opacity: 0.75, fontWeight: 800, marginTop: 6 }}>URL картинки баннера (если не через «Загрузить»)</div>
+                  <input
+                    value={s.imageUrl || ""}
+                    onChange={(e) =>
+                      setSlides((prev) => prev.map((slide) => (slide.id === s.id ? { ...slide, imageUrl: e.target.value } : slide)))
+                    }
+                    placeholder="https://cdn.jsdelivr.net/... или /assets/..."
+                    style={input}
+                  />
+                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                    <button onClick={() => void patchSlide(s.id, { imageUrl: s.imageUrl?.trim() || null })} style={btnGhost}>
+                      Сохранить URL картинки
+                    </button>
+                  </div>
                 </div>
                 <div style={{ marginTop: 8, display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
-                  <div style={thumb} title={s.imageUrl || ""}>
-                    {s.imageUrl ? <img src={s.imageUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : "no img"}
+                  <div style={thumb} title={s.previewImageUrl || s.imageUrl || ""}>
+                    {s.previewImageUrl || s.imageUrl ? (
+                      <img src={String(s.previewImageUrl || s.imageUrl)} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                    ) : (
+                      "no img"
+                    )}
                   </div>
 
                   <label style={btnGhost}>

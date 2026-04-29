@@ -65,8 +65,9 @@ export async function GET(req: NextRequest) {
   const mapped = rows.map((s) => ({
     id: s.id,
     title: s.title,
-    imageUrl: s.image_url ?? s.link_url ?? null,
+    imageUrl: s.image_url ?? null,
     linkUrl: s.link_url ?? null,
+    previewImageUrl: s.image_url ?? s.link_url ?? null,
     sortOrder: s.sort_order,
     isActive: s.is_active ? 1 : 0,
   }));
