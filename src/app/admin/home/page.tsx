@@ -124,7 +124,7 @@ export default function AdminHomePage() {
       const json = await res.json().catch(() => null);
       const message =
         json?.message ||
-        (res.status === 409
+        (res.status === 409 && json?.error === "hero_link_url_column_missing"
           ? "Ссылки для hero пока не сохраняются: в базе не применена миграция hero_slides.link_url."
           : "Не удалось сохранить изменения hero-баннера.");
       setHeroNotice(message);

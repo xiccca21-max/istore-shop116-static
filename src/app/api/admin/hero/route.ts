@@ -227,7 +227,21 @@ export async function PATCH(req: NextRequest) {
     if (!ignored.length) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
-    if (!Object.keys(patch).length) return NextResponse.json({ ok: true, ignored });
+    if (!Object.keys(patch).length) {
+      const wantedImage =
+        payload.imageUrl !== undefined && payload.imageUrl !== null && String(payload.imageUrl).trim() !== "";
+      if (ignored.includes("imageUrl") && wantedImage) {
+        return NextResponse.json(
+          {
+            error: "hero_image_url_column_missing",
+            message:
+              "В проекте Supabase нет колонки public.hero_slides.image_url. Откройте Supabase → SQL → New query, выполните миграцию 20260430220000_add_hero_slides_image_url.sql (add column image_url) и «Run», затем снова сохраните URL картинки.",
+          },
+          { status: 409 },
+        );
+      }
+      return NextResponse.json({ ok: true, ignored });
+    }
     try {
       await heroRest(`?id=eq.${encodeURIComponent(payload.id)}`, {
         method: "PATCH",
