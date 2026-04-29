@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { normalizeMisplacedHeroImageUrls } from "@/lib/heroSlideUrls";
 
 function must(name: string) {
   const value = process.env[name];
@@ -50,8 +51,8 @@ export async function GET() {
   type HeroRow = { id: string; title: string; image_url?: string | null; link_url?: string | null; sort_order?: number; is_active?: boolean };
   const enriched = (data as HeroRow[]).map((s) => {
     if (!s) return s;
-    const imageUrl = s.image_url ?? s.link_url ?? null;
-    return { ...s, image_url: imageUrl, link_url: s.link_url ?? null, linkUrl: s.link_url ?? null };
+    const n = normalizeMisplacedHeroImageUrls(s.image_url, s.link_url);
+    return { ...s, image_url: n.image_url, link_url: n.link_url, linkUrl: n.link_url };
   });
 
   return NextResponse.json(

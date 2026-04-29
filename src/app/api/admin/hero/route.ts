@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ADMIN_COOKIE_NAME, verifySessionToken } from "@/lib/adminAuth";
+import { normalizeMisplacedHeroImageUrls } from "@/lib/heroSlideUrls";
 import { z } from "zod";
 import crypto from "node:crypto";
 
@@ -62,6 +63,22 @@ export async function GET(req: NextRequest) {
   }
 
   const rows = data as unknown as Array<{ id: string; title: string; image_url?: string | null; link_url?: string | null; sort_order: number; is_active: boolean }>;
+  for (const s of rows) {
+    const n = normalizeMisplacedHeroImageUrls(s.image_url, s.link_url);
+    if (n.changed) {
+      try {
+        await heroRest(`?id=eq.${encodeURIComponent(s.id)}`, {
+          method: "PATCH",
+          headers: { "content-type": "application/json", prefer: "return=minimal" },
+          body: JSON.stringify({ image_url: n.image_url, link_url: n.link_url }),
+        });
+      } catch {
+        // Still show corrected mapping in the admin UI even if Supabase PATCH fails.
+      }
+      s.image_url = n.image_url;
+      s.link_url = n.link_url;
+    }
+  }
   const mapped = rows.map((s) => ({
     id: s.id,
     title: s.title,
