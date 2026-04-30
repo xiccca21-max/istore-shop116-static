@@ -3,6 +3,9 @@ import { supabaseAnon } from "@/lib/supabaseServer";
 import { SiteHeader } from "@/components/SiteHeader";
 import { RaffleReportsFeed, type RaffleReportView } from "@/components/raffle/RaffleReportsFeed";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 type RafflePrizeDisplay = {
   label: string;
   /** Первое изображение из карточки товара в каталоге */
