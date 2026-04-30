@@ -124,7 +124,6 @@ function RaffleReportPost({ report }: { report: RaffleReportView }) {
       </div>
 
       {report.title ? <h3>{report.title}</h3> : null}
-      <p>{report.body}</p>
     </article>
   );
 }

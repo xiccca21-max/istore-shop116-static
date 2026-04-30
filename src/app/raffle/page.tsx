@@ -1,5 +1,5 @@
 import { SiteFooter } from "@/components/SiteFooter";
-import { supabaseAnon } from "@/lib/supabaseServer";
+import { supabaseAnon, supabaseService } from "@/lib/supabaseServer";
 import { SiteHeader } from "@/components/SiteHeader";
 import { RaffleReportsFeed, type RaffleReportView } from "@/components/raffle/RaffleReportsFeed";
 
@@ -50,7 +50,9 @@ async function getPrizes(): Promise<RafflePrizeDisplay[]> {
 
 async function getReports(): Promise<RaffleReportView[]> {
   try {
-    const sb = supabaseAnon();
+    // Use server-side service role to avoid RLS/policy drift between envs.
+    // We still return only active public reports.
+    const sb = supabaseService();
     const { data, error } = await sb
       .from("raffle_reports")
       .select("id,title,body,image_urls,is_active,sort_order,created_at")
