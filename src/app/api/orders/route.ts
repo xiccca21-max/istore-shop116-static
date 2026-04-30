@@ -21,6 +21,83 @@ const OrderSchema = z.object({
   items: z.array(CartItemSchema).min(1),
 });
 
+function env(name: string): string {
+  return String(process.env[name] || "").trim();
+}
+
+function formatPrice(value: number): string {
+  return `${Number(value || 0).toLocaleString("ru-RU")} RUB`;
+}
+
+function escapeHtml(text: string): string {
+  return String(text || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+async function sendOrderToTelegram(params: {
+  orderId: string;
+  name: string;
+  phone: string;
+  comment: string;
+  total: number;
+  items: Array<{ title: string; subtitle: string; qty: number; price: number }>;
+}) {
+  const token = env("TELEGRAM_BOT_TOKEN");
+  const chatId = env("TELEGRAM_CHAT_ID");
+  if (!token || !chatId) return;
+
+  const itemLines = params.items
+    .map((it, idx) => {
+      const subtitle = it.subtitle ? ` (${escapeHtml(it.subtitle)})` : "";
+      return `${idx + 1}. ${escapeHtml(it.title)}${subtitle} x${it.qty} = <b>${escapeHtml(formatPrice(it.price * it.qty))}</b>`;
+    })
+    .join("\n");
+
+  const commentLine = params.comment ? `\nКомментарий: ${escapeHtml(params.comment)}` : "";
+  const text = [
+    `<b>Новая заявка №${escapeHtml(params.orderId)}</b>`,
+    "",
+    itemLines || "Товары не переданы",
+    "",
+    `<b>Сумма:</b> ${escapeHtml(formatPrice(params.total))}`,
+    "",
+    "<b>Покупатель:</b>",
+    `Имя: ${escapeHtml(params.name)}`,
+    `Телефон: ${escapeHtml(params.phone)}`,
+    commentLine,
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      chat_id: chatId,
+      text,
+      parse_mode: "HTML",
+      disable_web_page_preview: true,
+    }),
+  });
+  if (!res.ok) {
+    const body = await res.text().catch(() => "");
+    throw new Error(`telegram_send_failed_${res.status}: ${body}`);
+  }
+}
+
+async function sendOrderToTelegramSafe(params: Parameters<typeof sendOrderToTelegram>[0]) {
+  try {
+    await Promise.race([
+      sendOrderToTelegram(params),
+      new Promise((_, reject) => setTimeout(() => reject(new Error("telegram_send_timeout")), 7000)),
+    ]);
+  } catch (error) {
+    console.error("Telegram send failed:", error);
+  }
+}
+
 export async function POST(req: Request) {
   const payload = OrderSchema.parse(await req.json());
 
@@ -88,6 +165,20 @@ export async function POST(req: Request) {
   }));
   const { error: itemsErr } = await sb.from("order_items").insert(items);
   if (itemsErr) return NextResponse.json({ error: itemsErr.message }, { status: 500 });
+
+  await sendOrderToTelegramSafe({
+    orderId,
+    name: payload.name,
+    phone: payload.phone,
+    comment: payload.comment,
+    total,
+    items: normalizedItems.map((it) => ({
+      title: it.title,
+      subtitle: it.subtitle,
+      qty: it.qty,
+      price: it.price,
+    })),
+  });
 
   return NextResponse.json({ data: { id: orderId } }, { status: 201 });
 }
