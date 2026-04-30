@@ -1,5 +1,11 @@
 /**
  * Одноразово: категория iMac + CDN-картинки для импортированных Mac/iMac.
+ *
+ * Логика:
+ * - У категории iMac картинка без фона: 0262_categories_imac.png (шапка/иконка категории).
+ * - На карточках товаров iMac — одна и та же фотография с чёрным фоном: 0265_…jpeg (не PNG без фона).
+ * - Mac mini и iMac лежат в одной категории imac.
+ *
  * Запуск: node --env-file=.env.local scripts/apply-imac-category-and-images.mjs
  */
 import crypto from "node:crypto";
@@ -8,6 +14,8 @@ const u = process.env.SUPABASE_URL.replace(/\/$/, "");
 const k = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const BASE =
   "https://cdn.jsdelivr.net/gh/xiccca21-max/istore-images-cdn@master/uploads/2026-04-30";
+
+const IMAC_CARD_IMAGE = `${BASE}/0265_products_apple-imac-24-retina-4k-16-1tb-roste.jpeg`;
 
 async function patchProduct(slug, body) {
   const r = await fetch(`${u}/rest/v1/products?slug=eq.${encodeURIComponent(slug)}`, {
@@ -49,18 +57,20 @@ async function main() {
   console.log("created category imac", catId);
 
   await patchProduct("apple-mac-mini-m4-16-256", {
+    category_id: catId,
     image_urls: [`${BASE}/0263_products_apple-mac-mini-m4-16-256.jpeg`],
   });
   await patchProduct("apple-mac-mini-m4-pro-24-512", {
+    category_id: catId,
     image_urls: [`${BASE}/0264_products_apple-mac-mini-m4-pro-24-512.jpeg`],
   });
   await patchProduct("apple-imac-24-retina-4k-16-1tb-roste", {
     category_id: catId,
-    image_urls: [`${BASE}/0265_products_apple-imac-24-retina-4k-16-1tb-roste.jpeg`],
+    image_urls: [IMAC_CARD_IMAGE],
   });
   await patchProduct("apple-imac-24-retina-4k-16-512-roste", {
     category_id: catId,
-    image_urls: [`${BASE}/0266_products_apple-imac-24-retina-4k-16-512-roste.png`],
+    image_urls: [IMAC_CARD_IMAGE],
   });
 
   console.log("done");
