@@ -127,7 +127,7 @@
       if (title) {
         const slug = slugify(baseModelFromTitle(title));
         if (slug) {
-          window.location.href = `/product/${slug}`;
+          window.location.href = `/product/${encodeURIComponent(slug)}`;
           return;
         }
         window.location.href = `/catalog/?q=${encodeURIComponent(title)}`;

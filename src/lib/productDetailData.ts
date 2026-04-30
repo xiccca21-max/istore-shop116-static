@@ -57,9 +57,19 @@ async function restProducts<T>(params: URLSearchParams): Promise<T> {
 function paramsForProduct(slug: string, select: string) {
   const params = new URLSearchParams();
   params.set("select", select);
-  params.set("slug", `eq.${slug}`);
+  params.set("slug", `eq.${normalizeRouteSlug(slug)}`);
   params.set("limit", "1");
   return params;
+}
+
+function normalizeRouteSlug(raw: string): string {
+  const value = String(raw || "").trim();
+  if (!value) return value;
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return value;
+  }
 }
 
 function isMissingProductSettingsColumn(error: unknown) {

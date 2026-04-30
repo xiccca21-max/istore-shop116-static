@@ -35,7 +35,7 @@ export default async function ProductVariantPage(props: { params: Promise<{ slug
         <span className="sep">/</span>
         <a href="/catalog/">Каталог</a>
         <span className="sep">/</span>
-        <a href={`/product/${data.slug}/`}>{data.title}</a>
+        <a href={`/product/${encodeURIComponent(data.slug)}/`}>{data.title}</a>
         <span className="sep">/</span>
         <span style={{ opacity: 0.95 }}>{title}</span>
       </nav>
