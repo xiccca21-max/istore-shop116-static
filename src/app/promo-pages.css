@@ -299,45 +299,125 @@
 .promoPage .raffleBannerInfoGrid {
   margin-top: 14px;
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  text-align: left;
 }
 
-.promoPage .raffleBannerInfoItem {
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  box-shadow:
-    0 16px 50px rgba(0, 0, 0, 0.45),
-    inset 0 1px 0 rgba(255, 255, 255, 0.10);
-  padding: 10px 10px 11px;
+/* Карточки как в каталоге (product-card): медиа 1:1 + заголовок, без цены */
+.promoPage .rafflePrizeCard {
+  position: relative;
+  display: block;
+  background: var(--panel, #1b1b1b);
+  border: 1px solid #2d2d2d;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: var(--shadow, 0 12px 36px rgba(0, 0, 0, 0.35));
+  transition: border-color 0.15s ease;
+  color: inherit;
+}
+
+.promoPage a.rafflePrizeCard--link:hover {
+  border-color: var(--accent, #ff6600);
+}
+
+.promoPage .rafflePrizeCardBadge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+  min-width: 30px;
+  height: 30px;
+  padding: 0 9px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  font-weight: 800;
+  font-size: 16px;
+  letter-spacing: -0.02em;
+  color: #ff8533;
+  background: rgba(12, 12, 12, 0.94);
+  border: 1px solid rgba(255, 102, 0, 0.4);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+}
+
+.promoPage .rafflePrizeCardMedia {
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  background: #181818;
   display: flex;
   align-items: center;
-  gap: 10px;
   justify-content: center;
+  overflow: hidden;
 }
 
-.promoPage .raffleBannerInfoNum {
-  width: 22px;
-  height: 22px;
-  border-radius: 8px;
-  display: grid;
-  place-items: center;
-  font-weight: 1000;
-  font-size: 12px;
-  color: rgba(255, 140, 60, 0.98);
-  background: rgba(255, 102, 0, 0.16);
-  border: 1px solid rgba(255, 102, 0, 0.45);
+.promoPage .rafflePrizeCardMedia img {
+  max-width: 100%;
+  max-height: 100%;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.promoPage .rafflePrizeCardPlaceholder {
+  opacity: 0.55;
+  font-weight: 700;
+  font-size: 14px;
+  color: rgba(242, 242, 242, 0.65);
+  padding: 0 12px;
+  text-align: center;
+}
+
+.promoPage .rafflePrizeCardBody {
+  padding: 16px 18px 20px;
+}
+
+.promoPage .rafflePrizeCardTitle {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: rgba(242, 242, 242, 0.96);
+}
+
+.promoPage .rafflePrizeRowThumb {
   flex: 0 0 auto;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.promoPage .raffleBannerInfoText {
-  font-size: 13px;
-  line-height: 1.2;
-  color: rgba(242, 242, 242, 0.78);
-  font-weight: 800;
+.promoPage .rafflePrizeRowThumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.promoPage .rafflePrizeRowTitle {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.promoPage .rafflePrizeRowTitle a {
+  color: rgba(242, 242, 242, 0.92);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.promoPage .rafflePrizeRowTitle a:hover {
+  color: #fff;
+}
+
+@media (max-width: 900px) {
+  .promoPage .raffleBannerInfoGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 1100px) {
@@ -1261,9 +1341,5 @@
 
   .promoPage .raffleBannerInfoGrid {
     grid-template-columns: 1fr;
-  }
-
-  .promoPage .raffleBannerInfoItem {
-    justify-content: flex-start;
   }
 }

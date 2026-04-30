@@ -2,26 +2,50 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { supabaseAnon } from "@/lib/supabaseServer";
 import { SiteHeader } from "@/components/SiteHeader";
 
-async function getPrizes(): Promise<string[]> {
+type RafflePrizeDisplay = {
+  label: string;
+  /** Первое изображение из карточки товара в каталоге */
+  imageUrl: string | null;
+  /** Ссылка на страницу товара, если приз привязан к товару */
+  productHref: string | null;
+};
+
+function firstProductImageUrl(raw: unknown): string | null {
+  if (!Array.isArray(raw) || raw.length === 0) return null;
+  const u = raw[0];
+  return typeof u === "string" && u.trim() ? u.trim() : null;
+}
+
+async function getPrizes(): Promise<RafflePrizeDisplay[]> {
   try {
     const sb = supabaseAnon();
     const { data, error } = await sb
       .from("raffle_prizes")
-      .select("title,is_active,sort_order,products:product_id(title)")
+      .select("title,is_active,sort_order,products:product_id(slug,title,image_urls)")
       .eq("is_active", true)
       .order("sort_order", { ascending: true });
     if (error) return [];
-    const rows = (data || []) as unknown as Array<{ title: string; products: { title: string } | null }>;
-    return rows.map((r) => (r.title || r.products?.title || "").trim()).filter(Boolean);
+    const rows = (data || []) as unknown as Array<{
+      title: string | null;
+      products: { slug: string; title: string; image_urls: unknown } | null;
+    }>;
+    const out: RafflePrizeDisplay[] = [];
+    for (const r of rows) {
+      const label = (r.title || r.products?.title || "").trim();
+      if (!label) continue;
+      const slug = r.products?.slug?.trim();
+      const imageUrl = firstProductImageUrl(r.products?.image_urls ?? null);
+      const productHref = slug ? `/product/${encodeURIComponent(slug)}/` : null;
+      out.push({ label, imageUrl, productHref });
+    }
+    return out;
   } catch {
     return [];
   }
 }
 
 export default async function RafflePage() {
-  const prizes =
-    (await getPrizes()) || [];
-  const list = prizes;
+  const list = (await getPrizes()) || [];
   return (
     <div className="page promoPage">
       <SiteHeader />
@@ -86,12 +110,34 @@ export default async function RafflePage() {
           <div className="raffleBannerInfoTitle">Розыгрыш призов</div>
           {list.length ? (
             <div className="raffleBannerInfoGrid" role="list">
-              {list.slice(0, 9).map((t, idx) => (
-                <div key={idx} className="raffleBannerInfoItem" role="listitem">
-                  <span className="raffleBannerInfoNum">{idx + 1}</span>
-                  <span className="raffleBannerInfoText">{t}</span>
-                </div>
-              ))}
+              {list.slice(0, 9).map((p, idx) => {
+                const cardInner = (
+                  <>
+                    <span className="rafflePrizeCardBadge" aria-hidden="true">
+                      {idx + 1}
+                    </span>
+                    <div className="rafflePrizeCardMedia">
+                      {p.imageUrl ? (
+                        <img src={p.imageUrl} alt="" loading="lazy" decoding="async" />
+                      ) : (
+                        <span className="rafflePrizeCardPlaceholder">Фото позже</span>
+                      )}
+                    </div>
+                    <div className="rafflePrizeCardBody">
+                      <div className="rafflePrizeCardTitle">{p.label}</div>
+                    </div>
+                  </>
+                );
+                return p.productHref ? (
+                  <a key={idx} href={p.productHref} className="rafflePrizeCard rafflePrizeCard--link" role="listitem">
+                    {cardInner}
+                  </a>
+                ) : (
+                  <div key={idx} className="rafflePrizeCard" role="listitem">
+                    {cardInner}
+                  </div>
+                );
+              })}
             </div>
           ) : (
             <div className="empty-state" style={{ marginTop: 12 }}>
@@ -114,11 +160,21 @@ export default async function RafflePage() {
           <div className="tradeInFactors">
             <h2>{list.length ? `Призы: ${list.length}` : "Призы скоро появятся"}</h2>
             {list.length ? (
-              <ul className="tradeInCheck">
-                {list.map((t, idx) => (
+              <ul className="tradeInCheck rafflePrizeList">
+                {list.map((p, idx) => (
                   <li key={idx}>
-                    <span className="cb" aria-hidden="true" />
-                    <span>{t}</span>
+                    {p.imageUrl ? (
+                      <span className="rafflePrizeRowThumb" aria-hidden="true">
+                        <img src={p.imageUrl} alt="" loading="lazy" decoding="async" />
+                      </span>
+                    ) : null}
+                    <span className="rafflePrizeRowTitle">
+                      {p.productHref ? (
+                        <a href={p.productHref}>{p.label}</a>
+                      ) : (
+                        p.label
+                      )}
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -128,7 +184,7 @@ export default async function RafflePage() {
 
             <div className="cta" style={{ marginTop: 12 }}>
               <a className="btn" href="/catalog/">
-                Каталог (выбрать приз заранее)
+                Каталог
               </a>
               <a className="btn" href="https://t.me/iStore116Bot" target="_blank" rel="noopener">
                 Вопросы в Telegram
