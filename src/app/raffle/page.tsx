@@ -1,6 +1,7 @@
 import { SiteFooter } from "@/components/SiteFooter";
 import { supabaseAnon } from "@/lib/supabaseServer";
 import { SiteHeader } from "@/components/SiteHeader";
+import { RaffleReportsFeed, type RaffleReportView } from "@/components/raffle/RaffleReportsFeed";
 
 type RafflePrizeDisplay = {
   label: string;
@@ -44,8 +45,49 @@ async function getPrizes(): Promise<RafflePrizeDisplay[]> {
   }
 }
 
+async function getReports(): Promise<RaffleReportView[]> {
+  try {
+    const sb = supabaseAnon();
+    const { data, error } = await sb
+      .from("raffle_reports")
+      .select("id,title,body,image_urls,is_active,sort_order,created_at")
+      .eq("is_active", true)
+      .order("sort_order", { ascending: true })
+      .order("created_at", { ascending: false });
+    if (error) return [];
+    const rows = (data || []) as Array<{
+      id: string;
+      title: string | null;
+      body: string | null;
+      image_urls: unknown;
+    }>;
+    const out: RaffleReportView[] = [];
+    for (const row of rows) {
+      const body = String(row.body || "").trim();
+      if (!body) continue;
+      const imageUrls = Array.isArray(row.image_urls)
+        ? row.image_urls
+            .map((x) => String(x || "").trim())
+            .filter(Boolean)
+            .filter((v, i, arr) => arr.indexOf(v) === i)
+            .slice(0, 5)
+        : [];
+      out.push({
+        id: row.id,
+        title: String(row.title || "").trim(),
+        body,
+        imageUrls,
+      });
+    }
+    return out;
+  } catch {
+    return [];
+  }
+}
+
 export default async function RafflePage() {
   const list = (await getPrizes()) || [];
+  const reports = (await getReports()) || [];
   return (
     <div className="page promoPage">
       <SiteHeader />
@@ -203,6 +245,8 @@ export default async function RafflePage() {
           </div>
         </div>
       </section>
+
+      <RaffleReportsFeed reports={reports} />
 
       <SiteFooter />
     </div>
