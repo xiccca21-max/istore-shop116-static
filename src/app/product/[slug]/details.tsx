@@ -137,6 +137,12 @@ export function ProductDetail941(props: {
   const subtitle = variantSubtitle(selected) || props.product.subtitle;
   const price = Number(selected.price || 0);
   const images = uniqueStrings([selected.imageUrl, ...(props.product.imageUrls || []), ...variants.map((v) => v.imageUrl)]);
+  const variantByImage = new Map<string, ProductDetailVariant>();
+  for (const variant of variants) {
+    const key = String(variant.imageUrl || "").trim();
+    if (!key || variantByImage.has(key)) continue;
+    variantByImage.set(key, variant);
+  }
   const mainImage = images[0] || null;
   const showSim = shouldShowSim(props.product, variants);
   const groups = optionGroups(variants, selected, showSim);
@@ -159,12 +165,29 @@ export function ProductDetail941(props: {
           </div>
           {images.length > 1 ? (
             <div className="pdp-941-thumbs" aria-label="Фото товара">
-              {images.slice(0, 8).map((src, index) => (
-                <div className="pdp-941-thumb" key={`${src}-${index}`}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={src} alt="" style={imageStyle} />
-                </div>
-              ))}
+              {images.slice(0, 8).map((src, index) => {
+                const variant = variantByImage.get(String(src || "").trim()) || null;
+                const thumb = (
+                  <>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={src} alt="" style={imageStyle} />
+                  </>
+                );
+                return variant ? (
+                  <a
+                    className={`pdp-941-thumb${variant.id === selected.id ? " is-active" : ""}`}
+                    href={variantHref(props.product.slug, variant.id)}
+                    key={`${src}-${index}`}
+                    aria-label={`Открыть вариант: ${variantSubtitle(variant) || props.product.title}`}
+                  >
+                    {thumb}
+                  </a>
+                ) : (
+                  <div className="pdp-941-thumb" key={`${src}-${index}`}>
+                    {thumb}
+                  </div>
+                );
+              })}
             </div>
           ) : null}
         </div>

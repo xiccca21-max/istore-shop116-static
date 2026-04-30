@@ -57,6 +57,14 @@
   overflow: hidden;
 }
 
+.istore-product-root a.pdp-941-thumb {
+  cursor: pointer;
+}
+
+.istore-product-root .pdp-941-thumb.is-active {
+  border-color: #ff6600;
+}
+
 .istore-product-root .pdp-941-thumb img {
   width: 100%;
   height: 100%;
