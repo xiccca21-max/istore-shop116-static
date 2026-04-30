@@ -49,6 +49,14 @@ export default function AdminProductsPage() {
   const [uploading, setUploading] = useState<Record<string, boolean>>({});
   const [uploadMessages, setUploadMessages] = useState<Record<string, string>>({});
   const [cardColorDrafts, setCardColorDrafts] = useState<Record<string, string>>({});
+  const [bulkLoading, setBulkLoading] = useState(false);
+  const [bulkNotice, setBulkNotice] = useState("");
+  const [bulkReport, setBulkReport] = useState<{
+    updated: number;
+    errors: { row: number; message: string }[];
+    unmatched: { row: number; detail: string }[];
+    hint?: string;
+  } | null>(null);
 
   async function load() {
     setLoadError("");
@@ -157,6 +165,70 @@ export default function AdminProductsPage() {
         delete next[key];
         return next;
       });
+    }
+  }
+
+  async function downloadPriceTemplate() {
+    setLoadError("");
+    try {
+      const res = await fetch("/api/admin/products/price-template", { cache: "no-store" });
+      if (res.status === 401) {
+        window.location.href = "/admin/login";
+        return;
+      }
+      if (!res.ok) {
+        setLoadError(`Шаблон Excel не скачался (HTTP ${res.status})`);
+        return;
+      }
+      const blob = await res.blob();
+      const a = document.createElement("a");
+      const url = URL.createObjectURL(blob);
+      a.href = url;
+      a.download = `istore-prices-${new Date().toISOString().slice(0, 10)}.xlsx`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      setLoadError(`Скачивание шаблона: ${e instanceof Error ? e.message : String(e)}`);
+    }
+  }
+
+  async function uploadBulkPrices(file: File) {
+    setBulkLoading(true);
+    setBulkNotice("");
+    setBulkReport(null);
+    setLoadError("");
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      const res = await fetch("/api/admin/products/bulk-prices", { method: "POST", body: fd });
+      if (res.status === 401) {
+        window.location.href = "/admin/login";
+        return;
+      }
+      const json = (await res.json()) as {
+        ok?: boolean;
+        updated?: number;
+        errors?: { row: number; message: string }[];
+        unmatched?: { row: number; detail: string }[];
+        hint?: string;
+        error?: string;
+      };
+      if (!res.ok || !json.ok) {
+        setLoadError(json.error || `Импорт цен не выполнен (HTTP ${res.status})`);
+        return;
+      }
+      setBulkReport({
+        updated: Number(json.updated || 0),
+        errors: Array.isArray(json.errors) ? json.errors : [],
+        unmatched: Array.isArray(json.unmatched) ? json.unmatched : [],
+        hint: json.hint,
+      });
+      setBulkNotice(`Обновлено строк: ${json.updated ?? 0}`);
+      await load();
+    } catch (e) {
+      setLoadError(`Импорт цен: ${e instanceof Error ? e.message : String(e)}`);
+    } finally {
+      setBulkLoading(false);
     }
   }
 
@@ -367,6 +439,65 @@ export default function AdminProductsPage() {
           {filtered.length} / {products.length}
         </div>
       </div>
+
+      <div style={{ border: "1px solid #333", borderRadius: 16, padding: 12, background: "#111", marginBottom: 14 }}>
+        <div style={{ fontWeight: 950, marginBottom: 8 }}>Массовая замена цен (Excel)</div>
+        <div style={{ opacity: 0.78, fontSize: 12, lineHeight: 1.45, marginBottom: 10 }}>
+          Скачайте файл с актуальными ценами: колонка «Наименование» совпадает с каталогом (модель · память · SIM · цвет). Меняйте{" "}
+          <b>только цены</b> в третьей колонке или правьте по коду строки <code style={{ opacity: 0.9 }}>v:</code>/<code style={{ opacity: 0.9 }}>p:</code> — так сопоставление надёжнее.
+          Загрузите сохранённый .xlsx обратно.
+        </div>
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
+          <button type="button" onClick={() => void downloadPriceTemplate()} style={btnPrimary}>
+            Скачать шаблон (.xlsx)
+          </button>
+          <label style={{ ...btnChip("#1b1b1b"), cursor: bulkLoading ? "not-allowed" : "pointer" }}>
+            {bulkLoading ? "Обрабатываю…" : "Загрузить Excel и применить цены"}
+            <input
+              type="file"
+              accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+              style={{ display: "none" }}
+              disabled={bulkLoading}
+              onChange={(e) => {
+                const f = e.target.files?.[0];
+                e.currentTarget.value = "";
+                if (f) void uploadBulkPrices(f);
+              }}
+            />
+          </label>
+          {bulkNotice ? <span style={{ fontSize: 13, opacity: 0.9 }}>{bulkNotice}</span> : null}
+        </div>
+        {bulkReport ? (
+          <div style={{ marginTop: 10, fontSize: 12, display: "grid", gap: 8 }}>
+            {bulkReport.hint ? <div style={{ opacity: 0.75 }}>{bulkReport.hint}</div> : null}
+            {bulkReport.errors.length ? (
+              <div style={{ border: "1px solid #5b2f2f", borderRadius: 10, padding: 8, background: "#221313", color: "#ffc9c9" }}>
+                <div style={{ fontWeight: 800, marginBottom: 4 }}>Ошибки строк</div>
+                <ul style={{ margin: 0, paddingLeft: 18 }}>
+                  {bulkReport.errors.map((e, i) => (
+                    <li key={`e-${e.row}-${i}`}>
+                      Стр. {e.row}: {e.message}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
+            {bulkReport.unmatched.length ? (
+              <div style={{ border: "1px solid #4a4a2f", borderRadius: 10, padding: 8, background: "#1f1f14", color: "#fff3c4" }}>
+                <div style={{ fontWeight: 800, marginBottom: 4 }}>Не сопоставлено с каталогом</div>
+                <ul style={{ margin: 0, paddingLeft: 18 }}>
+                  {bulkReport.unmatched.map((u, i) => (
+                    <li key={`u-${u.row}-${i}`}>
+                      Стр. {u.row}: {u.detail}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
+          </div>
+        ) : null}
+      </div>
+
       {loadError ? (
         <div style={{ marginBottom: 12, border: "1px solid #6b2b2b", borderRadius: 12, padding: 10, background: "#2a1616", color: "#ffd4d4", display: "flex", gap: 10, alignItems: "center", justifyContent: "space-between" }}>
           <span style={{ fontSize: 13 }}>{loadError}</span>
