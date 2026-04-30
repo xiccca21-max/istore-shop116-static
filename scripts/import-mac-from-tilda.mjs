@@ -32,14 +32,14 @@ const ITEMS = [
   },
   {
     slug: "apple-imac-24-retina-4k-16-1tb-roste",
-    title: "Apple iMac 24 Retina 4k 10CPU/10GPU 16/1Tb",
+    title: "Apple iMac 24 Retina 4k 10CPU/10GPU 16/1Tb Ростест",
     price: 209990,
     storageGb: 1024,
     imageUrl: "https://static.tildacdn.com/tild3031-3838-4165-b662-313832626338/4BDCE4E0-48F7-4B72-8.jpeg",
   },
   {
     slug: "apple-imac-24-retina-4k-16-512-roste",
-    title: "Apple iMac 24 Retina 4k 10CPU/10GPU 16/512",
+    title: "Apple iMac 24 Retina 4k 10CPU/10GPU 16/512 Ростест",
     price: 179990,
     storageGb: 512,
     imageUrl: "https://static.tildacdn.com/tild3031-3838-4165-b662-313832626338/4BDCE4E0-48F7-4B72-8.jpeg",
