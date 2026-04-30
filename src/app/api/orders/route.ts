@@ -46,7 +46,7 @@ async function sendOrderToTelegram(params: {
 }) {
   const token = env("TELEGRAM_BOT_TOKEN");
   const chatId = env("TELEGRAM_CHAT_ID");
-  if (!token || !chatId) return;
+  if (!token || !chatId) throw new Error("telegram_env_missing");
 
   const itemLines = params.items
     .map((it, idx) => {
@@ -87,15 +87,23 @@ async function sendOrderToTelegram(params: {
   }
 }
 
-async function sendOrderToTelegramSafe(params: Parameters<typeof sendOrderToTelegram>[0]) {
-  try {
-    await Promise.race([
-      sendOrderToTelegram(params),
-      new Promise((_, reject) => setTimeout(() => reject(new Error("telegram_send_timeout")), 7000)),
-    ]);
-  } catch (error) {
-    console.error("Telegram send failed:", error);
+async function sendOrderToTelegramStrict(params: Parameters<typeof sendOrderToTelegram>[0]) {
+  const attempts = 2;
+  let lastError: unknown = null;
+  for (let i = 0; i < attempts; i += 1) {
+    const timeoutMs = 7000;
+    try {
+      await Promise.race([
+        sendOrderToTelegram(params),
+        new Promise((_, reject) => setTimeout(() => reject(new Error("telegram_send_timeout")), timeoutMs)),
+      ]);
+      return;
+    } catch (error) {
+      lastError = error;
+      if (i < attempts - 1) await new Promise((resolve) => setTimeout(resolve, 400));
+    }
   }
+  throw lastError instanceof Error ? lastError : new Error(String(lastError));
 }
 
 export async function POST(req: Request) {
@@ -166,19 +174,26 @@ export async function POST(req: Request) {
   const { error: itemsErr } = await sb.from("order_items").insert(items);
   if (itemsErr) return NextResponse.json({ error: itemsErr.message }, { status: 500 });
 
-  await sendOrderToTelegramSafe({
-    orderId,
-    name: payload.name,
-    phone: payload.phone,
-    comment: payload.comment,
-    total,
-    items: normalizedItems.map((it) => ({
-      title: it.title,
-      subtitle: it.subtitle,
-      qty: it.qty,
-      price: it.price,
-    })),
-  });
+  try {
+    await sendOrderToTelegramStrict({
+      orderId,
+      name: payload.name,
+      phone: payload.phone,
+      comment: payload.comment,
+      total,
+      items: normalizedItems.map((it) => ({
+        title: it.title,
+        subtitle: it.subtitle,
+        qty: it.qty,
+        price: it.price,
+      })),
+    });
+  } catch (error) {
+    const reason = error instanceof Error ? error.message : String(error);
+    console.error("Telegram send failed:", reason);
+    await sb.from("orders").update({ status: "telegram_failed" }).eq("id", orderId);
+    return NextResponse.json({ error: "telegram_delivery_failed", reason, orderId }, { status: 502 });
+  }
 
   return NextResponse.json({ data: { id: orderId } }, { status: 201 });
 }
