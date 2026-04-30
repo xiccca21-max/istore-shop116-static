@@ -81,9 +81,22 @@ async function sendOrderToTelegram(params: {
       disable_web_page_preview: true,
     }),
   });
+
+  const payloadText = await res.text().catch(() => "");
   if (!res.ok) {
-    const body = await res.text().catch(() => "");
-    throw new Error(`telegram_send_failed_${res.status}: ${body}`);
+    throw new Error(`telegram_send_failed_${res.status}_chat_${chatId}: ${payloadText}`);
+  }
+
+  let parsed: any = null;
+  try {
+    parsed = payloadText ? JSON.parse(payloadText) : null;
+  } catch {
+    throw new Error(`telegram_send_failed_invalid_json_chat_${chatId}: ${payloadText}`);
+  }
+
+  if (!parsed || parsed.ok !== true) {
+    const description = parsed && typeof parsed.description === "string" ? parsed.description : payloadText || "unknown";
+    throw new Error(`telegram_send_failed_chat_${chatId}: ${description}`);
   }
 }
 
