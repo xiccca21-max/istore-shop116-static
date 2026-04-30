@@ -96,6 +96,37 @@ async function sendOrderToTelegram(params: {
 
   if (!parsed || parsed.ok !== true) {
     const description = parsed && typeof parsed.description === "string" ? parsed.description : payloadText || "unknown";
+
+    // Some Telegram groups are addressed only as supergroup ids (-100...).
+    // If API explicitly says chat not found for a legacy negative id, retry once with -100 prefix.
+    if (/chat not found/i.test(description) && /^-\d+$/.test(chatId) && !chatId.startsWith("-100")) {
+      const supergroupId = `-100${chatId.slice(1)}`;
+      const retryRes = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          chat_id: supergroupId,
+          text,
+          parse_mode: "HTML",
+          disable_web_page_preview: true,
+        }),
+      });
+      const retryText = await retryRes.text().catch(() => "");
+      if (!retryRes.ok) {
+        throw new Error(`telegram_send_failed_${retryRes.status}_chat_${supergroupId}: ${retryText}`);
+      }
+      let retryParsed: any = null;
+      try {
+        retryParsed = retryText ? JSON.parse(retryText) : null;
+      } catch {
+        throw new Error(`telegram_send_failed_invalid_json_chat_${supergroupId}: ${retryText}`);
+      }
+      if (retryParsed && retryParsed.ok === true) return;
+      const retryDescription =
+        retryParsed && typeof retryParsed.description === "string" ? retryParsed.description : retryText || "unknown";
+      throw new Error(`telegram_send_failed_chat_${supergroupId}: ${retryDescription}`);
+    }
+
     throw new Error(`telegram_send_failed_chat_${chatId}: ${description}`);
   }
 }
